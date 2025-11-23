@@ -4,7 +4,8 @@ compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
 
 # Pages 설정
-pages_build_output_dir = ".next"
+# Cloudflare Pages는 .vercel/output/static을 사용
+# pages_build_output_dir = ".vercel/output/static"
 
 # D1 데이터베이스 설정
 [[d1_databases]]

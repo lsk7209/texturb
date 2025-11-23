@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm run build",
+  "buildCommand": "pnpm run build:cf",
   "buildOutputDir": ".vercel/output/static",
   "rootDir": ".",
   "framework": "nextjs",

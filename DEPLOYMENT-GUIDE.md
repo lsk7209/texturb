@@ -7,8 +7,8 @@
 Cloudflare Pages 대시보드에서 다음 설정을 사용하세요:
 
 #### 빌드 설정
-- **Framework preset**: `Next.js (Static HTML Export)`
-- **Build command**: `pnpm run build`
+- **Framework preset**: `None` 또는 `Next.js (Static HTML Export)`
+- **Build command**: `pnpm run build:cf`
 - **Build output directory**: `.vercel/output/static`
 - **Root directory**: `/` (프로젝트 루트)
 - **Node.js version**: `22`
