@@ -164,7 +164,7 @@ export function CountTools({ text, toolId }: CountToolsProps) {
       status,
       statusColor,
     }
-  }
+  }, [text])
 
   // 통계 계산 결과를 useMemo로 메모이제이션
   const sentenceStats = useMemo(() => getSentenceStats(), [getSentenceStats])
