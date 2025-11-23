@@ -66,6 +66,13 @@ export function HomeClient() {
     [saveHistory, activeTab],
   )
 
+  const handleTabChange = useCallback(
+    (tab: string) => {
+      setActiveTab(tab as TabId)
+    },
+    [],
+  )
+
   return (
     <>
       <section aria-label="텍스트 작업 스튜디오">
@@ -74,7 +81,7 @@ export function HomeClient() {
         )}
         <TextStudioMain
           activeTab={activeTab}
-          onTabChange={setActiveTab}
+          onTabChange={handleTabChange}
           initialText={restoredText}
           onTextChange={handleTextChange}
           enableTracking={false}
