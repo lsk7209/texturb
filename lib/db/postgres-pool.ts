@@ -88,7 +88,7 @@ export function getPoolStatus() {
   if (postgresClient) {
     return {
       type: "postgres",
-      maxConnections: 20,
+      maxConnections: 10, // 실제 설정값과 일치하도록 수정
       note: "Using postgres package for parameterized queries",
     }
   }
