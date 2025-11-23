@@ -40,7 +40,11 @@ export async function POST(request: Request) {
         validateId(sessionId)
       }
     } catch (validationError) {
-      logger.warn("Invalid input format", validationError, { toolId, toolSlug })
+      logger.warn("Invalid input format", {
+        toolId,
+        toolSlug,
+        error: validationError instanceof Error ? validationError.message : String(validationError),
+      })
       return NextResponse.json(
         { error: "Invalid input format" },
         { status: 400 }
