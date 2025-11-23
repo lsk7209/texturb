@@ -31,7 +31,8 @@ export function isRateLimitError(error: unknown): boolean {
  * Rate limit 에러는 재시도하지 않고 즉시 실패 처리
  */
 export function handleRateLimitError(error: unknown): never {
-  logger.warn("Rate limit exceeded", error instanceof Error ? error : new Error(String(error)), {
+  logger.warn("Rate limit exceeded", {
+    error: error instanceof Error ? error.message : String(error),
     action: "rate_limit_detected",
     recommendation: "Wait before retrying",
   })

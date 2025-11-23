@@ -4,7 +4,10 @@ import { useState } from "react"
 import { cn } from "@/lib/utils"
 
 interface HighlightToolsProps {
-  onInsert: (char: string) => void
+  onInsert?: (char: string) => void
+  onPreviewChange?: (text: string) => void
+  text?: string
+  toolId?: string
 }
 
 const CATEGORIES = [
@@ -67,7 +70,7 @@ const CHAR_MAP: Record<string, { char: string; desc: string }[]> = {
   ],
 }
 
-export function HighlightTools({ onInsert }: HighlightToolsProps) {
+export function HighlightTools({ onInsert, onPreviewChange, text = "" }: HighlightToolsProps) {
   const [activeCat, setActiveCat] = useState("decor")
 
   return (
@@ -95,7 +98,13 @@ export function HighlightTools({ onInsert }: HighlightToolsProps) {
         {CHAR_MAP[activeCat]?.map((item, idx) => (
           <button
             key={idx}
-            onClick={() => onInsert(item.char)}
+            onClick={() => {
+              if (onInsert) {
+                onInsert(item.char)
+              } else if (onPreviewChange) {
+                onPreviewChange(text + item.char)
+              }
+            }}
             className="flex flex-col items-center justify-center p-3 bg-white border border-slate-200 rounded-lg hover:border-blue-400 hover:shadow-sm transition-all group"
           >
             <span className="text-xl font-medium text-slate-800 mb-1 group-hover:text-blue-600">{item.char}</span>

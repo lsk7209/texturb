@@ -87,12 +87,12 @@ export function ToolContentSection({ toolId }: ToolContentSectionProps) {
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-3">관련 가이드</h3>
               <div className="grid gap-2">
-                {content.relatedGuides.map((guideId) => {
-                  const guide = GUIDES.find((g) => g.id === guideId)
+                {content.relatedGuides.map((guideSlug) => {
+                  const guide = GUIDES.find((g) => g.slug === guideSlug)
                   if (!guide) return null
                   return (
                     <Link
-                      key={guideId}
+                      key={guideSlug}
                       href={`/guides/${guide.slug}`}
                       className="flex items-center justify-between p-3 rounded-md bg-muted/50 hover:bg-muted transition-colors group"
                     >

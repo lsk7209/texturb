@@ -28,7 +28,7 @@ export function useToolTracking(toolId: string) {
       name: "tool_use",
       params: {
         tool_id: toolId,
-        source,
+        source: source as "direct" | "guide" | "workflow" | "embed" | "extension",
         input_length: inputLength,
       },
     })
@@ -58,9 +58,9 @@ export function useToolView(toolId: string) {
     const source = getSourceFromReferrer()
 
     trackEvent({
-      name: "tool_view",
+      name: "guide_view",
       params: {
-        tool_id: toolId,
+        guide_id: toolId,
         device: getDeviceType(),
         source,
       },

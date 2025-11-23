@@ -110,7 +110,7 @@ export function TextStudioMain(props: TextStudioMainProps) {
 
         <div className="flex flex-1 gap-4 overflow-hidden pt-4">
           <ErrorBoundary>
-            <EditorPanel text={currentText} onTextChange={handleTextUpdate} activeTab={currentTab} />
+            <EditorPanel text={currentText} setText={handleTextUpdate} onTextChange={handleTextUpdate} activeTab={currentTab} />
           </ErrorBoundary>
 
           <TabsContent value="cleanup" className="m-0 flex-1">
@@ -129,7 +129,7 @@ export function TextStudioMain(props: TextStudioMainProps) {
 
         {ActiveToolComponent && (
           <div className="mt-4">
-            <ActiveToolComponent text={currentText} onPreview={handlePreviewUpdate} />
+            <ActiveToolComponent text={currentText} onPreviewChange={handlePreviewUpdate} />
           </div>
         )}
       </Tabs>

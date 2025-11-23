@@ -63,12 +63,12 @@ export async function periodicHealthCheck(): Promise<void> {
   const result = await checkD1Health()
 
   if (!result.healthy) {
-    logger.warn("D1 health check failed", undefined, {
+    logger.warn("D1 health check failed", {
       error: result.error,
       latency: result.latency,
     })
   } else {
-    logger.debug("D1 health check passed", undefined, {
+    logger.debug("D1 health check passed", {
       latency: result.latency,
     })
   }

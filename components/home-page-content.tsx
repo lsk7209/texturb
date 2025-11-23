@@ -13,34 +13,36 @@ import { LocalHistoryBanner } from "./local-history-banner"
 import { StepTabs } from "./text-studio/step-tabs"
 import { EditorPanel } from "./text-studio/editor-panel"
 
-type TabId = "cleanup" | "count" | "format" | "highlight"
+import type { TabId } from "@/components/text-studio/text-studio-main"
 
 export function HomePageContent() {
   const [activeTab, setActiveTab] = useState<TabId>("cleanup")
   const [inputText, setInputText] = useState("")
   const [previewText, setPreviewText] = useState("")
-  const { history, loadHistory, clearHistory } = useLocalHistory()
+  const { history, saveHistory, clearHistory } = useLocalHistory()
   const { recentTools } = useRecentTools()
   const { favorites } = useFavorites()
 
-  const handleLoadHistory = () => {
+  const handleRestore = () => {
     if (history) {
       setInputText(history.inputText)
-      setPreviewText(history.previewText)
-      setActiveTab(history.activeTab as TabId)
+      setShowBanner(false)
     }
   }
 
   return (
     <div className="min-h-screen bg-background">
-      {history && <LocalHistoryBanner onLoad={handleLoadHistory} onClear={clearHistory} />}
+      {history && <LocalHistoryBanner history={history} onRestore={handleRestore} onDismiss={clearHistory} />}
 
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-7xl mx-auto space-y-12">
           {/* Main Studio */}
           <div className="space-y-6">
-            <StepTabs activeTab={activeTab} onTabChange={setActiveTab} />
-            <EditorPanel activeTab={activeTab} text={inputText} setText={setInputText} onTextChange={setInputText} />
+            <StepTabs
+              activeTab={activeTab as TabId}
+              onTabChange={(tab) => setActiveTab(tab as TabId)}
+            />
+            <EditorPanel activeTab={activeTab as TabId} text={inputText} setText={setInputText} onTextChange={setInputText} />
           </div>
 
           {/* Favorites Section */}
@@ -96,7 +98,7 @@ export function HomePageContent() {
               {WORKFLOW_PRESETS.map((workflow) => (
                 <Card key={workflow.id}>
                   <CardHeader>
-                    <CardTitle>{workflow.name}</CardTitle>
+                    <CardTitle>{workflow.title}</CardTitle>
                     <CardDescription>{workflow.description}</CardDescription>
                   </CardHeader>
                   <CardContent>

@@ -8,7 +8,7 @@
  * - 알림 전송
  */
 
-import type { OnRequestHandler } from "@cloudflare/next-on-pages"
+import type { OnRequestHandler, D1Database } from "@/types/cloudflare"
 import { logger } from "@/lib/logger"
 
 export const onRequest: OnRequestHandler = async (context) => {

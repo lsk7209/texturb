@@ -4,12 +4,8 @@ const nextConfig = {
     ignoreBuildErrors: false, // 타입 에러를 빌드 시점에 확인
   },
   images: {
-    unoptimized: true, // Cloudflare Pages는 이미지 최적화를 자체적으로 처리
     formats: ['image/webp', 'image/avif'], // 최신 포맷 지원
   },
-  // Cloudflare Pages 최적화
-  // @cloudflare/next-on-pages는 자동으로 output을 처리하므로 명시하지 않음
-  // output: process.env.CF_PAGES ? 'export' : 'standalone',
   trailingSlash: true,
   compress: true, // Gzip 압축 활성화
   poweredByHeader: false, // 보안: X-Powered-By 헤더 제거
@@ -82,8 +78,8 @@ const nextConfig = {
   },
   // 환경 변수
   env: {
-    CF_PAGES: process.env.CF_PAGES || '0',
-    CF_PAGES_BRANCH: process.env.CF_PAGES_BRANCH || '',
+    POSTGRES_URL: process.env.POSTGRES_URL,
+    DATABASE_URL: process.env.DATABASE_URL,
   },
 }
 

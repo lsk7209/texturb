@@ -72,7 +72,7 @@ export class SelectBuilder {
   private columns: string[] = []
   private table: string = ""
   private whereBuilder = new WhereBuilder()
-  private orderBy: string = ""
+  private orderByClause: string = ""
   private limitValue?: number
 
   /**
@@ -102,7 +102,7 @@ export class SelectBuilder {
    * 정렬
    */
   orderBy(column: string, direction: "ASC" | "DESC" = "ASC"): this {
-    this.orderBy = `ORDER BY ${column} ${direction}`
+    this.orderByClause = `ORDER BY ${column} ${direction}`
     return this
   }
 
@@ -126,8 +126,8 @@ export class SelectBuilder {
       query += ` ${where.sql}`
     }
 
-    if (this.orderBy) {
-      query += ` ${this.orderBy}`
+    if (this.orderByClause) {
+      query += ` ${this.orderByClause}`
     }
 
     if (this.limitValue !== undefined) {
@@ -147,7 +147,7 @@ export class SelectBuilder {
  */
 export class InsertBuilder {
   private table: string = ""
-  private values: Record<string, unknown> = {}
+  private insertValues: Record<string, unknown> = {}
 
   /**
    * 테이블 지정
@@ -161,7 +161,7 @@ export class InsertBuilder {
    * 값 설정
    */
   values(data: Record<string, unknown>): this {
-    this.values = data
+    this.insertValues = data
     return this
   }
 
@@ -169,9 +169,9 @@ export class InsertBuilder {
    * SQL 쿼리 생성
    */
   toSQL(): { query: string; params: unknown[] } {
-    const columns = Object.keys(this.values)
+    const columns = Object.keys(this.insertValues)
     const placeholders = columns.map(() => "?").join(", ")
-    const params = Object.values(this.values)
+    const params = Object.values(this.insertValues)
 
     const query = `INSERT INTO ${this.table} (${columns.join(", ")}) VALUES (${placeholders})`
 

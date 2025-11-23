@@ -148,8 +148,8 @@ export function EditorPanel({
 
           <div className="bg-muted rounded-lg p-4 md:p-5 border border-border relative">
             {activeTab === "cleanup" && <CleanupTools text={debouncedText} onPreviewChange={setPreviewText} />}
-            {activeTab === "count" && <CountTools text={debouncedText} />}
-            {activeTab === "format" && <FormatTools text={debouncedText} onPreviewChange={setPreviewText} />}
+            {activeTab === "analysis" && <CountTools text={debouncedText} />}
+            {activeTab === "transform" && <FormatTools text={debouncedText} onPreviewChange={setPreviewText} />}
             {activeTab === "highlight" && <HighlightTools onInsert={(char) => setText(text + char)} />}
 
             {showApplyButton && (

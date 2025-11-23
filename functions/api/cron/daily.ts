@@ -8,7 +8,7 @@
  * - 캐시 무효화
  */
 
-import type { OnRequestHandler } from "@cloudflare/next-on-pages"
+import type { OnRequestHandler, D1Database } from "@/types/cloudflare"
 import { autoCleanupMemory } from "@/lib/db/memory-manager"
 import { logger } from "@/lib/logger"
 import { periodicHealthCheck } from "@/lib/db/health-check"

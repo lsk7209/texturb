@@ -32,7 +32,7 @@ export function cleanupMemory(): void {
   clearStatementCache()
   const afterSize = getStatementCacheSize()
 
-  logger.debug("Memory cleanup completed", undefined, {
+  logger.debug("Memory cleanup completed", {
     beforeSize,
     afterSize,
     cleared: beforeSize - afterSize,

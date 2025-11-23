@@ -19,7 +19,7 @@ export const runtime = "edge"
 export async function POST(request: Request) {
   try {
     // Rate Limiting 체크 (IP당 1분에 최대 10개)
-    const ip = request.headers.get("cf-connecting-ip") || request.headers.get("x-forwarded-for") || "unknown"
+    const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown"
     const rateLimit = checkRateLimit(ip, 10, 60000)
 
     if (!rateLimit.allowed) {

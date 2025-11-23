@@ -26,7 +26,7 @@ async function loadGetRequestContext(): Promise<typeof getRequestContextFn> {
     }
   } catch (error) {
     // 모듈을 사용할 수 없는 경우 (예: Workers 환경)
-    logger.debug("getRequestContext not available", undefined, {
+    logger.debug("getRequestContext not available", {
       error: error instanceof Error ? error.message : String(error),
     })
   }
@@ -48,7 +48,9 @@ export async function getD1FromContext(): Promise<D1Database | null> {
     const { env } = getRequestContext()
     return env.DB || null
   } catch (error) {
-    logger.warn("Failed to get D1 from context", error instanceof Error ? error : new Error(String(error)))
+    logger.warn("Failed to get D1 from context", {
+      error: error instanceof Error ? error.message : String(error),
+    })
     return null
   }
 }

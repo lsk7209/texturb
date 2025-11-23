@@ -1,0 +1,130 @@
+/**
+ * Vercel Cron Job - Daily
+ * 매일 자정에 실행되는 크론 작업
+ * 
+ * Vercel Cron Jobs 설정:
+ * vercel.json에 cron 설정 추가 필요
+ */
+
+import { NextResponse } from "next/server"
+import { sql } from "@vercel/postgres"
+import { logger } from "@/lib/logger"
+
+// Cron Jobs는 Node.js Runtime에서 실행
+export const runtime = "nodejs"
+
+export async function GET(request: Request) {
+  // Cron 요청 검증 (Vercel Cron Secret)
+  const authHeader = request.headers.get("authorization")
+  const expectedAuth = `Bearer ${process.env.CRON_SECRET || "your-secret-key"}`
+
+  if (authHeader !== expectedAuth) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
+  const startTime = Date.now()
+  const timeout = 5 * 60 * 1000 // 5분 타임아웃
+
+  try {
+    // 어제 날짜 계산
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    const dateStr = yesterday.toISOString().split("T")[0]
+
+    // 병렬 실행으로 최적화: 통계 집계와 세션 정리를 동시에
+    const [statsResult, cleanupResult] = await Promise.all([
+      // 일일 통계 집계
+      sql.query(
+        `
+        SELECT 
+          COUNT(*) as total_usage,
+          COUNT(DISTINCT user_session_id) as unique_sessions,
+          json_agg(json_build_object('tool_id', tool_id, 'count', cnt))::text as top_tools
+        FROM (
+          SELECT 
+            tool_id,
+            COUNT(*) as cnt
+          FROM tool_usage
+          WHERE DATE(created_at) = $1
+          GROUP BY tool_id
+          ORDER BY cnt DESC
+          LIMIT 10
+        ) subquery
+      `,
+        [dateStr]
+      ),
+      // 오래된 세션 데이터 정리 (30일 이상)
+      sql.query(
+        `
+        DELETE FROM sessions
+        WHERE last_accessed < NOW() - INTERVAL '30 days'
+      `
+      ),
+    ])
+
+    const stats = statsResult.rows[0] as {
+      total_usage: number
+      unique_sessions: number
+      top_tools: string
+    }
+
+    // 통계 저장
+    if (stats) {
+      await sql.query(
+        `
+        INSERT INTO daily_stats (date, total_usage, unique_sessions, top_tools, updated_at)
+        VALUES ($1, $2, $3, $4, NOW())
+        ON CONFLICT(date) DO UPDATE SET
+          total_usage = $2,
+          unique_sessions = $3,
+          top_tools = $4,
+          updated_at = NOW()
+      `,
+        [dateStr, stats.total_usage, stats.unique_sessions, stats.top_tools]
+      )
+    }
+
+    const duration = Date.now() - startTime
+
+    // 타임아웃 체크
+    if (duration > timeout) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Operation timeout",
+          duration: `${duration}ms`,
+          timestamp: new Date().toISOString(),
+        },
+        { status: 504 }
+      )
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Daily cron job completed",
+      date: dateStr,
+      duration: `${duration}ms`,
+      sessionsCleaned: cleanupResult.rowCount || 0,
+      timestamp: new Date().toISOString(),
+    })
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error"
+    const errorStack = error instanceof Error ? error.stack : undefined
+
+    logger.error("Daily cron job failed", error instanceof Error ? error : new Error(errorMessage), {
+      cron: "daily",
+      duration: `${Date.now() - startTime}ms`,
+      stack: errorStack,
+    })
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: errorMessage,
+        timestamp: new Date().toISOString(),
+      },
+      { status: 500 }
+    )
+  }
+}
+

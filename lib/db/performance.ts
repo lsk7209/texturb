@@ -20,7 +20,7 @@ export function logQueryMetrics(metrics: QueryMetrics): void {
   const isSlowQuery = metrics.duration > 1000 // 1초 이상
 
   if (isSlowQuery) {
-    logger.warn("Slow database query detected", new Error("Slow query"), {
+    logger.warn("Slow database query detected", {
       query: metrics.query.substring(0, 100), // 처음 100자만
       duration: `${metrics.duration}ms`,
       rowsRead: metrics.rowsRead,

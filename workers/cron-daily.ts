@@ -6,10 +6,17 @@
  * wrangler publish --name cron-daily
  */
 
+import type { ScheduledEvent, ExecutionContext, D1Database } from "@/types/cloudflare"
+
 interface LogContext {
   date?: string
   operation?: string
   [key: string]: unknown
+}
+
+interface Env {
+  DB: D1Database
+  CRON_SECRET?: string
 }
 
 function log(level: "info" | "error", message: string, context?: LogContext): void {
@@ -125,7 +132,7 @@ export default {
 
       // Rate limit 에러는 재시도하지 않음 (Cloudflare가 자동으로 재시도하므로)
       if (error instanceof Error && error.message.toLowerCase().includes("rate limit")) {
-        log("warn", "Rate limit encountered, skipping retry", {
+        log("error", "Rate limit encountered, skipping retry", {
           cron: event.cron,
           scheduledTime: new Date(event.scheduledTime).toISOString(),
         })

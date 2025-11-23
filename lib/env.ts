@@ -1,23 +1,15 @@
 /**
  * 타입 안전한 환경 변수 접근
- * Cloudflare 환경에서 안전하게 환경 변수에 접근
+ * Vercel 환경에서 안전하게 환경 변수에 접근
  */
 
 /**
  * 서버 사이드 환경 변수 (타입 안전)
  */
 export function getEnvVar(key: string, defaultValue?: string): string {
-  // Cloudflare Pages Functions 환경
+  // Vercel/Node.js 환경
   if (typeof process !== "undefined" && process.env[key]) {
     return process.env[key]!
-  }
-
-  // Cloudflare Workers 환경
-  if (typeof globalThis !== "undefined") {
-    const env = (globalThis as { env?: Record<string, string> }).env
-    if (env && env[key]) {
-      return env[key]
-    }
   }
 
   if (defaultValue !== undefined) {
@@ -64,54 +56,19 @@ export function getEnvBoolean(key: string, defaultValue: boolean = false): boole
 }
 
 /**
- * Cloudflare D1 Database 바인딩 가져오기
+ * Vercel Postgres 연결 문자열 가져오기
  */
-export function getD1Binding(): D1Database | null {
-  // Cloudflare Pages Functions
-  if (typeof process !== "undefined" && process.env.DB) {
-    return process.env.DB as unknown as D1Database
+export function getPostgresUrl(): string | null {
+  // Vercel Postgres URL 우선
+  if (typeof process !== "undefined" && process.env.POSTGRES_URL) {
+    return process.env.POSTGRES_URL
   }
 
-  // Cloudflare Workers
-  if (typeof globalThis !== "undefined") {
-    const env = (globalThis as { env?: { DB?: D1Database } }).env
-    if (env?.DB) {
-      return env.DB
-    }
+  // 일반 DATABASE_URL도 지원
+  if (typeof process !== "undefined" && process.env.DATABASE_URL) {
+    return process.env.DATABASE_URL
   }
 
   return null
-}
-
-// 타입 정의
-interface D1Database {
-  prepare(query: string): D1PreparedStatement
-  exec(query: string): Promise<D1ExecResult>
-  batch<T = unknown>(statements: D1PreparedStatement[]): Promise<D1Result<T>[]>
-}
-
-interface D1PreparedStatement {
-  bind(...values: unknown[]): D1PreparedStatement
-  first<T = unknown>(colName?: string): Promise<T | null>
-  run(): Promise<D1Result>
-  all<T = unknown>(): Promise<D1Result<T>>
-  raw<T = unknown>(): Promise<T[]>
-}
-
-interface D1Result<T = unknown> {
-  results: T[]
-  success: boolean
-  meta: {
-    duration: number
-    rows_read: number
-    rows_written: number
-    last_row_id: number
-    changed_db: boolean
-  }
-}
-
-interface D1ExecResult {
-  count: number
-  duration: number
 }
 

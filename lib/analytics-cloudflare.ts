@@ -87,7 +87,10 @@ export async function trackToolUsageClient(params: {
     }
   } catch (error) {
     // 네트워크 오류 등은 조용히 처리 (사용자 경험에 영향 없음)
-    logger.debug("Failed to track usage (network error)", error, { toolId: params.toolId })
+    logger.debug("Failed to track usage (network error)", {
+      error: error instanceof Error ? error.message : String(error),
+      toolId: params.toolId,
+    })
   }
 }
 

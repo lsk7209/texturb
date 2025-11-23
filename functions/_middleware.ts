@@ -2,7 +2,7 @@
  * Cloudflare Pages Functions Middleware
  * Cloudflare Pages에서 Next.js 미들웨어를 대체하는 함수
  */
-import type { OnRequestHandler } from "@cloudflare/next-on-pages"
+import type { OnRequestHandler } from "@/types/cloudflare"
 
 export const onRequest: OnRequestHandler = async (context) => {
   const { request, next, env } = context

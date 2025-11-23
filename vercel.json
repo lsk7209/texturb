@@ -1,5 +1,12 @@
 {
-  "buildCommand": "rm -rf .next && bun run build",
-  "framework": null,
-  "cache": []
+  "crons": [
+    {
+      "path": "/api/cron/daily",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/hourly",
+      "schedule": "0 * * * *"
+    }
+  ]
 }

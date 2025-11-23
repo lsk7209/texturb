@@ -6,8 +6,15 @@
  * wrangler publish --name cron-hourly
  */
 
+import type { ScheduledEvent, ExecutionContext, D1Database } from "@/types/cloudflare"
+
 interface LogContext {
   [key: string]: unknown
+}
+
+interface Env {
+  DB: D1Database
+  CRON_SECRET?: string
 }
 
 function log(level: "info" | "error", message: string, context?: LogContext): void {
@@ -72,9 +79,5 @@ export default {
       throw error
     }
   },
-}
-
-interface Env {
-  DB: D1Database
 }
 

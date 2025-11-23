@@ -9,7 +9,8 @@ import type { ComponentType } from "react"
  */
 export interface ToolComponentProps {
   text: string
-  onPreviewChange: (text: string) => void
+  onPreviewChange?: (text: string) => void
+  onInsert?: (char: string) => void
   toolId?: string
 }
 

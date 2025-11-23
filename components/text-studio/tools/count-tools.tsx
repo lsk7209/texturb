@@ -14,7 +14,7 @@ interface CountToolsProps {
 
 export function CountTools({ text, toolId }: CountToolsProps) {
   const [targetCount, setTargetCount] = useState<string>("1000")
-  const [paragraphMode, setParagraphMode] = useState<"empty" | "whitespace">("empty")
+  const [paragraphMode, setParagraphMode] = useState<"empty" | "whitespace" | "count" | "split">("empty")
   const [metaLang, setMetaLang] = useState<"ko" | "en">("ko")
 
   const [sentenceEndings, setSentenceEndings] = useState({

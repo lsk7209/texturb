@@ -1,47 +1,24 @@
 /**
  * API Route: 통계 조회
- * Cloudflare D1 데이터베이스에서 통계를 조회하는 API
+ * Vercel Postgres 데이터베이스에서 통계를 조회하는 API
  */
 
 import { NextResponse } from "next/server"
-import { getToolStats, getDailyStats } from "@/lib/db/queries"
+import { getToolStats, getDailyStats } from "@/lib/db/queries-vercel"
 import { logger } from "@/lib/logger"
 import { validateId, validateDateString } from "@/lib/db/validation"
-import { getRequestContext } from "@cloudflare/next-on-pages"
 import { createSafeErrorResponse } from "@/lib/errors/sanitize"
-import { safePromise } from "@/lib/utils/promise-handler"
 
-export const runtime = "edge" // Cloudflare Edge Runtime 사용
+// Vercel Postgres는 Node.js Runtime에서 더 안정적으로 동작
+export const runtime = "nodejs" // Vercel Node.js Runtime 사용
 
 // 통계 조회는 캐싱 가능 (5분)
 export const revalidate = 300
 
 export async function GET(request: Request) {
   try {
-    const { ctx } = getRequestContext()
-    
-    // Cloudflare 캐시 확인 (Edge에서만 동작)
-    // 안전한 Promise 실행으로 에러 처리
-    const cacheKey = new Request(request.url, request)
-    // Cloudflare Cache API는 런타임에 사용 가능하지만 타입 정의가 없을 수 있음
-    const cache = typeof caches !== "undefined" ? (caches as { default?: Cache }).default : undefined
-    
-    // 캐시가 사용 가능한 경우에만 확인
-    let cachedResponse: Response | null = null
-    if (cache) {
-      const result = await safePromise(cache.match(cacheKey), "cache.match")
-      cachedResponse = result.data || null
-    }
-    
-    if (cachedResponse) {
-      return new Response(cachedResponse.body, {
-        status: cachedResponse.status,
-        headers: {
-          ...Object.fromEntries(cachedResponse.headers),
-          "X-Cache": "HIT",
-        },
-      })
-    }
+    // Vercel Edge Runtime에서는 Next.js 캐싱을 사용
+    // revalidate 설정으로 자동 캐싱됨
 
     const { searchParams } = new URL(request.url)
     const toolId = searchParams.get("toolId")
@@ -67,15 +44,7 @@ export async function GET(request: Request) {
       
       const response = NextResponse.json({ data: result.data })
       response.headers.set("X-Cache", "MISS")
-      
-      // Cloudflare 캐시에 저장 (5분) - 비동기로 실행 (에러 무시)
-      if (cache && ctx?.waitUntil) {
-        ctx.waitUntil(
-          safePromise(cache.put(cacheKey, response.clone()), "cache.put").catch(() => {
-            // 캐시 저장 실패는 무시 (응답은 정상 반환)
-          })
-        )
-      }
+      response.headers.set("Cache-Control", "public, s-maxage=300, stale-while-revalidate=60")
       
       return response
     }
@@ -100,15 +69,7 @@ export async function GET(request: Request) {
       
       const response = NextResponse.json({ data: result.data })
       response.headers.set("X-Cache", "MISS")
-      
-      // Cloudflare 캐시에 저장 (5분) - 비동기로 실행 (에러 무시)
-      if (cache && ctx?.waitUntil) {
-        ctx.waitUntil(
-          safePromise(cache.put(cacheKey, response.clone()), "cache.put").catch(() => {
-            // 캐시 저장 실패는 무시 (응답은 정상 반환)
-          })
-        )
-      }
+      response.headers.set("Cache-Control", "public, s-maxage=300, stale-while-revalidate=60")
       
       return response
     }

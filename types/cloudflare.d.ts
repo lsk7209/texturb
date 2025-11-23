@@ -1,8 +1,9 @@
 /**
- * Cloudflare 환경 타입 정의
+ * Vercel 환경 타입 정의
+ * Cloudflare 타입은 호환성을 위해 유지하되, Vercel 우선 사용
  */
 
-// Cloudflare D1 Database 타입
+// Cloudflare D1 Database 타입 (레거시 호환성)
 export interface D1Database {
   prepare(query: string): D1PreparedStatement
   exec(query: string): Promise<D1ExecResult>
@@ -64,6 +65,14 @@ export interface CloudflareRequestContext {
   }
   ctx?: ExecutionContext
 }
+
+// Cloudflare Pages Functions 타입
+export type OnRequestHandler = (context: {
+  request: Request
+  next: () => Promise<Response>
+  env: CloudflareEnv
+  waitUntil: (promise: Promise<unknown>) => void
+}) => Response | Promise<Response>
 
 // Cloudflare Workers 환경 타입
 export interface WorkersEnv extends Env {

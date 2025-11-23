@@ -49,8 +49,9 @@ export function getD1Database(): D1Database | null {
   // 1. @cloudflare/next-on-pages의 getRequestContext 우선 사용 (권장)
   try {
     const { env } = getRequestContext()
-    if (env?.DB) {
-      return env.DB as D1Database
+    const cloudflareEnv = env as CloudflareEnv
+    if (cloudflareEnv?.DB) {
+      return cloudflareEnv.DB as D1Database
     }
   } catch (error) {
     // getRequestContext가 사용 불가능한 경우 (함수 외부 호출 등)
@@ -72,7 +73,7 @@ export function getD1Database(): D1Database | null {
 
   // 로깅은 성능에 영향을 줄 수 있으므로 개발 환경에서만
   if (process.env.NODE_ENV === "development") {
-    logger.warn("D1 Database binding not found", undefined, {
+    logger.warn("D1 Database binding not found", {
       environment: typeof process !== "undefined" ? "pages" : "workers",
     })
   }

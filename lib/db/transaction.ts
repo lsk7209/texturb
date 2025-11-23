@@ -56,7 +56,7 @@ export async function executeTransaction<T>(
         .map((r, i) => (!r.success ? i : null))
         .filter((i) => i !== null) as number[]
 
-      logger.warn("Transaction partially failed", undefined, {
+      logger.warn("Transaction partially failed", {
         failedOperations: failedIndices,
         totalOperations: operations.length,
       })

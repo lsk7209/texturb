@@ -32,7 +32,7 @@ export function HomeClient() {
       recentTools
         .slice(0, 3)
         .map((id) => UTILITIES.find((u) => u.id === id))
-        .filter(Boolean),
+        .filter((tool): tool is NonNullable<typeof tool> => tool !== undefined),
     [recentTools],
   )
 
@@ -41,7 +41,7 @@ export function HomeClient() {
       favorites
         .slice(0, 4)
         .map((id) => UTILITIES.find((u) => u.id === id))
-        .filter(Boolean),
+        .filter((tool): tool is NonNullable<typeof tool> => tool !== undefined),
     [favorites],
   )
 
