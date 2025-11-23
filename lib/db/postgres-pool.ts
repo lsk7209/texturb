@@ -15,6 +15,11 @@ let postgresClient: ReturnType<typeof postgres> | null = null
 /**
  * postgres 클라이언트 가져오기 (일반 문자열 쿼리용)
  * $1, $2 형식의 파라미터화된 쿼리 지원
+ * 
+ * Vercel 서버리스 환경 최적화:
+ * - 연결 풀은 자동으로 재사용됨 (같은 인스턴스 내에서)
+ * - Cold start 시 새 연결 생성
+ * - Warm start 시 기존 연결 재사용
  */
 export function getPostgresClient() {
   if (!postgresClient) {
@@ -24,15 +29,29 @@ export function getPostgresClient() {
       return null
     }
     
-    postgresClient = postgres(connectionString, {
-      max: 20, // 최대 연결 수
-      idle_timeout: 30, // 30초
-      connect_timeout: 2, // 2초
-    })
-    
-    logger.debug("Postgres client created", {
-      maxConnections: 20,
-    })
+    try {
+      // Vercel 서버리스 환경에 최적화된 설정
+      postgresClient = postgres(connectionString, {
+        max: 10, // 서버리스 환경에서는 더 작은 풀 크기 권장
+        idle_timeout: 20, // 20초 (서버리스 함수 수명 고려)
+        connect_timeout: 5, // 5초 (연결 타임아웃 증가)
+        // 서버리스 환경 최적화 옵션
+        prepare: false, // prepared statement 비활성화 (서버리스 환경에서 더 안정적)
+        transform: {
+          undefined: null, // undefined를 null로 변환
+        },
+      })
+      
+      logger.debug("Postgres client created", {
+        maxConnections: 10,
+        environment: process.env.NODE_ENV || "unknown",
+      })
+    } catch (error) {
+      logger.error("Failed to create postgres client", error instanceof Error ? error : new Error(String(error)), {
+        context: "postgres-pool",
+      })
+      return null
+    }
   }
   return postgresClient
 }
