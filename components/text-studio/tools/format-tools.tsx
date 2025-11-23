@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast"
 
 interface FormatToolsProps {
   text: string
-  onPreviewChange: (text: string) => void
+  onPreviewChange?: (text: string) => void
   toolId?: string
 }
 
@@ -274,7 +274,7 @@ export function FormatTools({ text, onPreviewChange, toolId }: FormatToolsProps)
       }
     }
 
-    onPreviewChange(result)
+    onPreviewChange?.(result)
   }, [
     text,
     mode,

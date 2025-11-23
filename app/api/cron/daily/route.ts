@@ -50,7 +50,7 @@ export async function GET(request: Request) {
     // 병렬 실행으로 최적화: 통계 집계와 세션 정리를 동시에
     const [statsResult, cleanupResult] = await Promise.all([
       // 일일 통계 집계
-      (client as any).query(
+      (client as any).unsafe(
         `
         SELECT 
           COUNT(*) as total_usage,
@@ -70,11 +70,12 @@ export async function GET(request: Request) {
         [dateStr]
       ),
       // 오래된 세션 데이터 정리 (30일 이상)
-      (client as any).query(
+      (client as any).unsafe(
         `
         DELETE FROM sessions
         WHERE last_accessed < NOW() - INTERVAL '30 days'
-      `
+      `,
+        []
       ),
     ])
 
@@ -86,7 +87,7 @@ export async function GET(request: Request) {
 
     // 통계 저장
     if (stats) {
-      await (client as any).query(
+      await (client as any).unsafe(
         `
         INSERT INTO daily_stats (date, total_usage, unique_sessions, top_tools, updated_at)
         VALUES ($1, $2, $3, $4, NOW())
@@ -101,7 +102,7 @@ export async function GET(request: Request) {
     }
     
     // 시간별 통계도 함께 집계 (Hobby 플랜 제한으로 시간별 크론 작업 제거됨)
-    const hourlyStats = await (client as any).query(
+    const hourlyStats = await (client as any).unsafe(
       `
       SELECT 
         DATE_TRUNC('hour', created_at) as hour,

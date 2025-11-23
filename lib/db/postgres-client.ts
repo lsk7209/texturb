@@ -32,7 +32,8 @@ export async function safeQuery<T = unknown>(
       throw new Error("Postgres client not available")
     }
     
-    const result = await client.unsafe(query, params) as unknown as { rows: T[]; count: number }
+    // postgres 패키지의 unsafe 메서드는 타입이 엄격하므로 타입 단언 필요
+    const result = await (client as any).unsafe(query, params as any) as unknown as { rows: T[]; count: number } | T[]
     
     return {
       data: Array.isArray(result) ? result : (result.rows || []),
@@ -65,8 +66,8 @@ export async function safeExecute(
       throw new Error("Postgres client not available")
     }
     
-    // postgres 패키지는 query 메서드로 파라미터화된 쿼리 실행
-    const result = await (client as any).query(query, params) as { count: number }[]
+    // postgres 패키지는 unsafe 메서드로 일반 문자열 쿼리 실행
+    const result = await (client as any).unsafe(query, params as any) as { count: number }[]
     
     return {
       success: true,
@@ -106,7 +107,7 @@ export async function safeBatchExecute(
     await (client as any).begin(async (sql: any) => {
       for (const op of operations) {
         try {
-          await sql.query(op.query, op.params)
+          await sql.unsafe(op.query, op.params as any)
           successCount++
         } catch (error) {
           errorCount++
@@ -140,8 +141,8 @@ export async function safeQueryFirst<T = unknown>(
       throw new Error("Postgres client not available")
     }
     
-    // postgres 패키지는 query 메서드로 파라미터화된 쿼리 실행
-    const result = await (client as any).query(query, params) as T[]
+    // postgres 패키지는 unsafe 메서드로 일반 문자열 쿼리 실행
+    const result = await (client as any).unsafe(query, params as any) as T[]
     
     return {
       data: Array.isArray(result) && result.length > 0 ? result[0] : null,
@@ -169,7 +170,7 @@ export async function checkDatabaseConnection(): Promise<boolean> {
     if (!client) {
       return false
     }
-    await (client as any).query("SELECT 1")
+    await (client as any).unsafe("SELECT 1", [])
     return true
   } catch (error) {
     logger.error("Database connection check failed", error instanceof Error ? error : new Error(String(error)))

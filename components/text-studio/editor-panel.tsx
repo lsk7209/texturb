@@ -82,13 +82,13 @@ export function EditorPanel({
       title: "복사해 온 글, 줄바꿈부터 먼저 정리해 볼까요?",
       desc: "복붙하면서 깨진 줄바꿈과 공백을 한 번에 정리합니다.",
     },
-    count: {
-      title: "글자수·단어수, 타이핑과 동시에 바로 확인하세요.",
-      desc: "블로그, 자소서, 보고서에 필요한 분량을 실시간으로 체크합니다.",
-    },
-    format: {
+    transform: {
       title: "영문 제목과 문장, 보기 좋게 한 번에 변환하세요.",
       desc: "UPPERCASE / lowercase / Title Case / Sentence case를 지원합니다.",
+    },
+    analysis: {
+      title: "글자수·단어수, 타이핑과 동시에 바로 확인하세요.",
+      desc: "블로그, 자소서, 보고서에 필요한 분량을 실시간으로 체크합니다.",
     },
     highlight: {
       title: "제목·닉네임에 쓸 특수문자, 클릭 한 번으로 복사하세요.",

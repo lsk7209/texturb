@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 
 interface CleanupToolsProps {
   text: string
-  onPreviewChange: (text: string) => void
+  onPreviewChange?: (text: string) => void
   toolId?: string
 }
 
@@ -110,7 +110,7 @@ export function CleanupTools({ text, onPreviewChange, toolId }: CleanupToolsProp
 
   // Preview 변경 시 onPreviewChange 호출
   useEffect(() => {
-    onPreviewChange(preview)
+    onPreviewChange?.(preview)
   }, [preview, onPreviewChange])
 
   // Controls 렌더링을 useMemo로 최적화

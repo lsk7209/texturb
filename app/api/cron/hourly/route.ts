@@ -43,7 +43,7 @@ export async function GET(request: Request) {
     const client = getPostgresClient()
     
     // 시간별 통계 업데이트
-    const hourlyStats = await (client as any).query(
+    const hourlyStats = await (client as any).unsafe(
       `
       SELECT 
         DATE_TRUNC('hour', created_at) as hour,
@@ -51,7 +51,8 @@ export async function GET(request: Request) {
       FROM tool_usage
       WHERE created_at >= NOW() - INTERVAL '1 hour'
       GROUP BY DATE_TRUNC('hour', created_at)
-    `
+    `,
+      []
     )
     
     // 클라이언트 정리
