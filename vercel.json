@@ -1,0 +1,5 @@
+{
+  "buildCommand": "rm -rf .next && bun run build",
+  "framework": null,
+  "cache": []
+}

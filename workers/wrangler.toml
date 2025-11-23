@@ -1,0 +1,33 @@
+# Cloudflare Workers 크론 작업 설정
+# 이 파일은 workers/ 디렉토리의 크론 작업용입니다
+
+name = "cron-daily"
+main = "cron-daily.ts"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# D1 데이터베이스 바인딩
+[[d1_databases]]
+binding = "DB"
+database_name = "text-studio-db"
+database_id = "" # wrangler.toml과 동일한 ID 사용
+
+# 크론 트리거: 매일 자정
+[[triggers.crons]]
+schedule = "0 0 * * *"
+
+---
+name = "cron-hourly"
+main = "cron-hourly.ts"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "text-studio-db"
+database_id = "" # wrangler.toml과 동일한 ID 사용
+
+# 크론 트리거: 매시간
+[[triggers.crons]]
+schedule = "0 * * * *"
+

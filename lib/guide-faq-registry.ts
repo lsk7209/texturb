@@ -1,0 +1,96 @@
+export type GuideFAQItem = {
+  question: string
+  answer: string
+}
+
+export type GuideFAQ = {
+  guideSlug: string
+  items: GuideFAQItem[]
+}
+
+export const GUIDE_FAQS: GuideFAQ[] = [
+  {
+    guideSlug: "blog-post-cleanup",
+    items: [
+      {
+        question: "블로그 글을 복붙했을 때 줄바꿈이 깨지면 어떻게 하나요?",
+        answer:
+          "먼저 줄바꿈·공백 정리 도구로 복사해 온 텍스트를 정리한 뒤, 글자수·문장 수를 확인하는 순서를 추천합니다. 이 가이드에서 제시하는 워크플로를 따라하시면 됩니다.",
+      },
+      {
+        question: "네이버/티스토리/브런치 모두 이 순서를 적용해도 되나요?",
+        answer:
+          "네, 각 플랫폼의 편집기 특성은 다르지만 복붙 후 줄바꿈·글자수·제목을 점검하는 기본 흐름은 동일하게 적용할 수 있습니다.",
+      },
+      {
+        question: "이미 작성한 글에도 적용할 수 있나요?",
+        answer:
+          "기존 글을 복사해 와서 한 번 정리한 뒤, 수정본을 다시 붙여넣어도 됩니다. 가독성과 분량을 개선하는 데 효과적입니다.",
+      },
+    ],
+  },
+  {
+    guideSlug: "resume-cover-letter-length",
+    items: [
+      {
+        question: "자소서 글자수는 어떻게 세는 것이 정확한가요?",
+        answer:
+          "대부분의 기업은 공백 포함 기준을 사용합니다. 텍스터브의 글자수 세기 도구에서 '공백 포함' 옵션을 선택하면 정확한 분량을 확인할 수 있습니다.",
+      },
+      {
+        question: "문장 수가 너무 적으면 안 되나요?",
+        answer:
+          "문장 수 자체보다는 각 문장이 너무 길지 않은지가 중요합니다. 평균 문장 길이가 50자를 넘으면 짧게 나누는 것을 고려해보세요.",
+      },
+      {
+        question: "워드나 한글 파일의 글자수와 다르게 나오는 이유는?",
+        answer:
+          "워드나 한글 프로그램은 숨겨진 서식이나 특수문자를 포함하는 경우가 있습니다. 복사 후 텍스트 정리 도구로 한 번 정리하면 정확한 글자수를 확인할 수 있습니다.",
+      },
+    ],
+  },
+  {
+    guideSlug: "report-table-number-format",
+    items: [
+      {
+        question: "엑셀 표를 마크다운으로 변환하면 어디에 쓸 수 있나요?",
+        answer:
+          "깃허브 README, 노션, 블로그(마크다운 지원), 기술 문서 등에 바로 붙여넣을 수 있습니다. 표 변환기를 사용하면 복잡한 표도 쉽게 옮길 수 있습니다.",
+      },
+      {
+        question: "숫자에 천 단위 콤마를 넣으면 계산이 안 되지 않나요?",
+        answer:
+          "네, 콤마가 들어가면 텍스트로 취급됩니다. 엑셀에서 계산할 때는 콤마 없는 원본을 사용하고, 보고서나 문서용으로만 콤마 포맷을 적용하세요.",
+      },
+      {
+        question: "날짜 포맷은 어떤 기준으로 변환하나요?",
+        answer:
+          "입력 포맷과 출력 포맷을 각각 선택할 수 있습니다. 예를 들어 2025-01-01을 2025년 1월 1일로 바꾸거나 그 반대도 가능합니다.",
+      },
+    ],
+  },
+  {
+    guideSlug: "dev-docs-markdown-format",
+    items: [
+      {
+        question: "마크다운 포맷 정리는 어떤 규칙을 적용하나요?",
+        answer:
+          "헤더 앞뒤 공백, 리스트 들여쓰기, 연속 빈 줄 정리 등을 자동으로 처리합니다. AI가 생성한 마크다운이나 여러 소스를 합친 문서를 정리할 때 유용합니다.",
+      },
+      {
+        question: "깃허브 README에 바로 쓸 수 있나요?",
+        answer:
+          "네, 정리된 마크다운을 복사해서 깃허브, 깃랩 등 어디든 붙여넣으면 됩니다. 슬러그 생성기로 파일명도 함께 만들 수 있습니다.",
+      },
+      {
+        question: "HTML을 마크다운으로 변환할 수도 있나요?",
+        answer:
+          "HTML to Text 도구를 사용하면 HTML 태그를 제거하고 순수 텍스트나 마크다운으로 변환할 수 있습니다. 웹페이지 내용을 문서로 옮길 때 편리합니다.",
+      },
+    ],
+  },
+]
+
+export function getGuideFAQBySlug(guideSlug: string): GuideFAQ | undefined {
+  return GUIDE_FAQS.find((faq) => faq.guideSlug === guideSlug)
+}
