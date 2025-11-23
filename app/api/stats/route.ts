@@ -66,7 +66,7 @@ export async function GET(request: Request) {
       response.headers.set("X-Cache", "MISS")
       
       // Cloudflare 캐시에 저장 (5분) - 비동기로 실행 (에러 무시)
-      if (ctx?.waitUntil) {
+      if (cache && ctx?.waitUntil) {
         ctx.waitUntil(
           safePromise(cache.put(cacheKey, response.clone()), "cache.put").catch(() => {
             // 캐시 저장 실패는 무시 (응답은 정상 반환)
