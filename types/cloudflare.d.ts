@@ -42,6 +42,29 @@ export interface Env {
   [key: string]: unknown
 }
 
+// @cloudflare/next-on-pages의 getRequestContext 반환 타입
+export interface CloudflareEnv extends Env {
+  DB?: D1Database
+}
+
+export interface CloudflareRequestContext {
+  env: CloudflareEnv
+  cf?: {
+    country?: string
+    colo?: string
+    timezone?: string
+    region?: string
+    city?: string
+    continent?: string
+    latitude?: string
+    longitude?: string
+    postalCode?: string
+    metroCode?: string
+    regionCode?: string
+  }
+  ctx?: ExecutionContext
+}
+
 // Cloudflare Workers 환경 타입
 export interface WorkersEnv extends Env {
   DB: D1Database
