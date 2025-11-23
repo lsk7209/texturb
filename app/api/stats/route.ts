@@ -13,11 +13,12 @@ import { createSafeErrorResponse } from "@/lib/errors/sanitize"
 export const runtime = "nodejs" // Vercel Node.js Runtime 사용
 
 // 통계 조회는 캐싱 가능 (5분)
-export const revalidate = 300
+// revalidate는 Next.js 13+ App Router에서 사용되지 않음
+// 대신 Cache-Control 헤더로 캐싱 제어
 
-// 동적 렌더링 설정
-export const dynamic = "force-static" // 정적 생성 (캐싱 최적화)
-export const fetchCache = "force-cache" // fetch 캐시 강제 사용
+// 동적 렌더링 설정 (데이터베이스 쿼리는 동적)
+export const dynamic = "force-dynamic" // 동적 렌더링 (DB 쿼리 필요)
+export const fetchCache = "default-no-store" // 캐시 사용 안 함 (항상 최신 데이터)
 
 export async function GET(request: Request) {
   try {

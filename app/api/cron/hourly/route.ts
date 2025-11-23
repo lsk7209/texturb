@@ -46,8 +46,8 @@ export async function GET(request: Request) {
       []
     )
     
-    // 클라이언트 정리
-    await client.end()
+    // 연결 풀은 자동으로 관리되므로 end() 호출 불필요
+    // Vercel 서버리스 환경에서는 요청 종료 시 자동으로 정리됨
 
     const duration = Date.now() - startTime
 
