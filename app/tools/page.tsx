@@ -12,8 +12,12 @@ export default function ToolsPage() {
   const { recentTools } = useRecentTools()
   const { favorites } = useFavorites()
 
-  const recentUtilities = recentTools.map((id) => UTILITIES.find((u) => u.id === id)).filter(Boolean)
-  const favoriteUtilities = favorites.map((id) => UTILITIES.find((u) => u.id === id)).filter(Boolean)
+  const recentUtilities = recentTools
+    .map((id) => UTILITIES.find((u) => u.id === id))
+    .filter((tool): tool is NonNullable<typeof tool> => tool !== undefined)
+  const favoriteUtilities = favorites
+    .map((id) => UTILITIES.find((u) => u.id === id))
+    .filter((tool): tool is NonNullable<typeof tool> => tool !== undefined)
 
   const filteredUtilities = useMemo(() => {
     let result = UTILITIES
