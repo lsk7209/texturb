@@ -1,6 +1,7 @@
 # Cloudflare Workers & Pages 설정
 name = "text-studio"
-compatibility_date = "2024-01-01"
+# FinalizationRegistry 지원을 위해 2025-05-05 이상 권장
+compatibility_date = "2025-05-05"
 compatibility_flags = ["nodejs_compat"]
 
 # Pages 설정

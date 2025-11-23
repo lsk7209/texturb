@@ -65,3 +65,17 @@ CF_PAGES=1
 - 환경 변수는 대시보드에서만 설정 가능합니다
 - D1 데이터베이스 바인딩은 `wrangler.toml`에서 설정합니다
 
+## ⚠️ 중요 알림
+
+### @cloudflare/next-on-pages Deprecated
+`@cloudflare/next-on-pages` 패키지가 deprecated되었습니다. 장기적으로는 [OpenNext adapter](https://opennext.js.org/cloudflare)로 마이그레이션을 권장합니다.
+
+현재 버전(`^1.9.0`)은 여전히 작동하지만, 향후 업데이트가 없을 수 있습니다.
+
+### 마이그레이션 계획
+1. **단기**: 현재 설정 유지 (`@cloudflare/next-on-pages`)
+2. **장기**: OpenNext adapter로 마이그레이션 검토
+   - 더 나은 Next.js 16+ 호환성
+   - 활발한 유지보수
+   - 더 많은 기능 지원
+
