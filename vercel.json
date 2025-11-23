@@ -8,6 +8,9 @@
     },
     "app/api/cron/daily/route.ts": {
       "maxDuration": 300
+    },
+    "app/api/cron/hourly/route.ts": {
+      "maxDuration": 120
     }
   },
   "headers": [
