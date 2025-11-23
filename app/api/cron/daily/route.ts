@@ -7,20 +7,8 @@
  */
 
 import { NextResponse } from "next/server"
-import postgres from "postgres"
+import { getPostgresClient } from "@/lib/db/postgres-pool"
 import { logger } from "@/lib/logger"
-
-// postgres 클라이언트 생성 (일반 문자열 쿼리용)
-const getPostgresClient = () => {
-  if (!process.env.POSTGRES_URL) {
-    throw new Error("POSTGRES_URL not set")
-  }
-  return postgres(process.env.POSTGRES_URL, {
-    max: 20,
-    idle_timeout: 30,
-    connect_timeout: 2,
-  })
-}
 
 // Cron Jobs는 Node.js Runtime에서 실행
 export const runtime = "nodejs"
@@ -46,6 +34,9 @@ export async function GET(request: Request) {
     const dateStr = yesterday.toISOString().split("T")[0]
 
     const client = getPostgresClient()
+    if (!client) {
+      throw new Error("Postgres client not available")
+    }
     
     // 병렬 실행으로 최적화: 통계 집계와 세션 정리를 동시에
     const [statsResult, cleanupResult] = await Promise.all([

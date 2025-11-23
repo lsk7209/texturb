@@ -17,8 +17,14 @@ let postgresClient: ReturnType<typeof postgres> | null = null
  * $1, $2 형식의 파라미터화된 쿼리 지원
  */
 export function getPostgresClient() {
-  if (!postgresClient && process.env.POSTGRES_URL) {
-    postgresClient = postgres(process.env.POSTGRES_URL, {
+  if (!postgresClient) {
+    const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL
+    if (!connectionString) {
+      logger.error("POSTGRES_URL or DATABASE_URL is not set", { context: "postgres-pool" })
+      return null
+    }
+    
+    postgresClient = postgres(connectionString, {
       max: 20, // 최대 연결 수
       idle_timeout: 30, // 30초
       connect_timeout: 2, // 2초
