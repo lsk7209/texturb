@@ -14,11 +14,8 @@ const nextConfig = {
   compress: true, // Gzip 압축 활성화
   poweredByHeader: false, // 보안: X-Powered-By 헤더 제거
   reactStrictMode: true, // React Strict Mode 활성화
-  swcMinify: true, // SWC 최소화 사용
+  // swcMinify는 Next.js 13+에서 기본적으로 활성화되어 있음
   experimental: {
-    turbo: {
-      resolveAlias: {},
-    },
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'], // 번들 크기 최적화
   },
   // 빌드 ID 생성
@@ -72,8 +69,8 @@ const nextConfig = {
         ],
       },
       {
-        // 이미지 최적화
-        source: '/(.*\\.(jpg|jpeg|png|gif|ico|svg|webp|avif))',
+        // 이미지 최적화 (캡처 그룹 없이 수정)
+        source: '/:path*\\.(jpg|jpeg|png|gif|ico|svg|webp|avif)',
         headers: [
           {
             key: 'Cache-Control',
