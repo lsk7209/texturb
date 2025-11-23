@@ -26,7 +26,7 @@ export function HomePageContent() {
   const handleRestore = () => {
     if (history) {
       setInputText(history.inputText)
-      setShowBanner(false)
+      // LocalHistoryBanner는 history가 없으면 자동으로 사라집니다
     }
   }
 
