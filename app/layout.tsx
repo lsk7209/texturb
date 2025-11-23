@@ -24,6 +24,20 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
+        {/* Google 사이트 인증 */}
+        <meta name="google-site-verification" content="pp446b4VybV_rrn7abw4UbiGPKrZ7wP6KUWZ98XKdYA" />
+        
+        {/* Naver 사이트 인증 */}
+        <meta name="naver-site-verification" content="a1ca64b9740fded60d00d81fb349f78a083727fc" />
+        
+        {/* Google AdSense */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3050601904412736"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+        
         {process.env.NEXT_PUBLIC_GA_ID && (
           <>
             <Script
