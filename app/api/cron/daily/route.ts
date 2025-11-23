@@ -16,20 +16,26 @@ export const dynamic = "force-dynamic" // 동적 렌더링
 export const maxDuration = 300 // 5분 최대 실행 시간
 
 export async function GET(request: Request) {
-  // Cron 요청 검증
-  // Vercel Cron Jobs는 자동으로 호출되지만, 보안을 위해 검증 수행
-  const authHeader = request.headers.get("authorization")
-  const vercelSignature = request.headers.get("x-vercel-signature")
+  // Vercel Cron Jobs 인증
+  // Vercel은 자동으로 Cron Jobs를 호출하지만, 외부 접근을 방지하기 위해 검증 수행
   const cronSecret = process.env.CRON_SECRET
-
-  // 개발 환경에서는 인증을 건너뛸 수 있음 (선택사항)
-  if (process.env.NODE_ENV === "development" && !cronSecret) {
-    // 개발 환경에서만 인증 건너뛰기
-  } else if (cronSecret) {
-    // CRON_SECRET이 설정된 경우 Bearer 토큰 검증
+  
+  // CRON_SECRET이 설정된 경우에만 인증 검증
+  if (cronSecret) {
+    const authHeader = request.headers.get("authorization")
     const expectedAuth = `Bearer ${cronSecret}`
-    if (authHeader !== expectedAuth && !vercelSignature) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    
+    // Bearer 토큰 검증
+    if (authHeader !== expectedAuth) {
+      // 개발 환경에서는 경고만 출력 (선택사항)
+      if (process.env.NODE_ENV === "development") {
+        logger.warn("Cron job called without valid authorization in development", {
+          hasAuthHeader: !!authHeader,
+        })
+      } else {
+        // 프로덕션 환경에서는 인증 실패 시 거부
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      }
     }
   }
 
