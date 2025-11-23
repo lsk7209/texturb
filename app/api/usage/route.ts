@@ -9,7 +9,6 @@ import { safeBatchExecute } from "@/lib/db/batch"
 import { logger } from "@/lib/logger"
 import { getD1Database } from "@/lib/db/d1-client"
 import { validateId } from "@/lib/db/validation"
-import { getRequestContext } from "@cloudflare/next-on-pages"
 import { createSafeErrorResponse } from "@/lib/errors/sanitize"
 
 export const runtime = "edge" // Cloudflare Edge Runtime 사용
@@ -54,15 +53,9 @@ export async function POST(request: Request) {
     const userAgent = request.headers.get("user-agent") || undefined
     const referrer = request.headers.get("referer") || undefined
 
-    // getRequestContext를 사용하여 D1 접근 (Edge runtime 최적화)
-    let db = null
-    try {
-      const { env } = getRequestContext()
-      db = env.DB || null
-    } catch {
-      // getRequestContext가 사용 불가능한 경우 fallback
-      db = getD1Database()
-    }
+    // getD1Database를 사용하여 D1 접근 (Edge runtime 최적화)
+    // getD1Database는 내부적으로 getRequestContext를 사용하며 타입 안전성을 보장합니다
+    const db = getD1Database()
 
     // 배치 실행으로 최적화: 세션 업데이트와 사용 기록을 동시에 실행
     if (db && sessionId) {
