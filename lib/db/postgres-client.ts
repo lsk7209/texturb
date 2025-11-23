@@ -1,10 +1,13 @@
 /**
  * Vercel Postgres 데이터베이스 클라이언트
  * Vercel Postgres를 사용하기 위한 유틸리티 함수들
+ * 연결 풀링 및 성능 최적화 포함
+ * 
+ * 일반 문자열 쿼리($1, $2 형식)를 지원하기 위해 postgres 패키지 사용
  */
 
-import { sql } from "@vercel/postgres"
 import { logger } from "@/lib/logger"
+import { getPostgresClient } from "./postgres-pool"
 
 /**
  * PostgreSQL 쿼리 결과 타입
@@ -22,12 +25,17 @@ export async function safeQuery<T = unknown>(
   params: unknown[] = []
 ): Promise<{ data: T[] | null; error: Error | null }> {
   try {
-    // @vercel/postgres는 파라미터화된 쿼리를 지원
-    // sql.query()를 사용하여 안전한 쿼리 실행
-    const result = await sql.query(query, params) as { rows: T[]; rowCount: number }
+    // postgres 패키지를 사용하여 일반 문자열 쿼리 실행
+    // $1, $2 형식의 파라미터화된 쿼리 지원
+    const client = getPostgresClient()
+    if (!client) {
+      throw new Error("Postgres client not available")
+    }
+    
+    const result = await client.unsafe(query, params) as unknown as { rows: T[]; count: number }
     
     return {
-      data: result.rows || [],
+      data: Array.isArray(result) ? result : (result.rows || []),
       error: null,
     }
   } catch (error) {
@@ -51,12 +59,19 @@ export async function safeExecute(
   params: unknown[] = []
 ): Promise<{ success: boolean; error: Error | null; rowCount?: number }> {
   try {
-    const result = await sql.query(query, params) as { rowCount: number }
+    // postgres 패키지를 사용하여 일반 문자열 쿼리 실행
+    const client = getPostgresClient()
+    if (!client) {
+      throw new Error("Postgres client not available")
+    }
+    
+    // postgres 패키지는 query 메서드로 파라미터화된 쿼리 실행
+    const result = await (client as any).query(query, params) as { count: number }[]
     
     return {
       success: true,
       error: null,
-      rowCount: result.rowCount || 0,
+      rowCount: Array.isArray(result) ? result.length : (result as any).count || 0,
     }
   } catch (error) {
     const dbError = error instanceof Error ? error : new Error("Database execution failed")
@@ -82,7 +97,13 @@ export async function safeBatchExecute(
 
   // PostgreSQL은 트랜잭션으로 배치 실행
   try {
-    await sql.begin(async (sql) => {
+    const client = getPostgresClient()
+    if (!client) {
+      throw new Error("Postgres client not available")
+    }
+    
+    // postgres 패키지의 트랜잭션 사용
+    await (client as any).begin(async (sql: any) => {
       for (const op of operations) {
         try {
           await sql.query(op.query, op.params)
@@ -114,10 +135,16 @@ export async function safeQueryFirst<T = unknown>(
   params: unknown[] = []
 ): Promise<{ data: T | null; error: Error | null }> {
   try {
-    const result = await sql.query(query, params) as { rows: T[]; rowCount: number }
+    const client = getPostgresClient()
+    if (!client) {
+      throw new Error("Postgres client not available")
+    }
+    
+    // postgres 패키지는 query 메서드로 파라미터화된 쿼리 실행
+    const result = await (client as any).query(query, params) as T[]
     
     return {
-      data: result.rows && result.rows.length > 0 ? result.rows[0] : null,
+      data: Array.isArray(result) && result.length > 0 ? result[0] : null,
       error: null,
     }
   } catch (error) {
@@ -138,7 +165,11 @@ export async function safeQueryFirst<T = unknown>(
  */
 export async function checkDatabaseConnection(): Promise<boolean> {
   try {
-    await sql`SELECT 1`
+    const client = getPostgresClient()
+    if (!client) {
+      return false
+    }
+    await (client as any).query("SELECT 1")
     return true
   } catch (error) {
     logger.error("Database connection check failed", error instanceof Error ? error : new Error(String(error)))

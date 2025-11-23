@@ -13,8 +13,9 @@ import { createSafeErrorResponse } from "@/lib/errors/sanitize"
 // Edge Runtime에서는 제한이 있을 수 있으므로 Node.js Runtime 사용
 export const runtime = "nodejs" // Vercel Node.js Runtime 사용
 
-// Edge runtime에서 캐싱 (최대 1분)
-export const revalidate = 60
+// POST 요청은 캐싱하지 않음
+export const dynamic = "force-dynamic" // 동적 렌더링
+export const fetchCache = "default-no-store" // 캐시 사용 안 함
 
 export async function POST(request: Request) {
   let toolId: string | undefined

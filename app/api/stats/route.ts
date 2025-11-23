@@ -15,6 +15,10 @@ export const runtime = "nodejs" // Vercel Node.js Runtime 사용
 // 통계 조회는 캐싱 가능 (5분)
 export const revalidate = 300
 
+// 동적 렌더링 설정
+export const dynamic = "force-static" // 정적 생성 (캐싱 최적화)
+export const fetchCache = "force-cache" // fetch 캐시 강제 사용
+
 export async function GET(request: Request) {
   try {
     // Vercel Edge Runtime에서는 Next.js 캐싱을 사용

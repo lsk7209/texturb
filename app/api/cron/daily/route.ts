@@ -7,11 +7,25 @@
  */
 
 import { NextResponse } from "next/server"
-import { sql } from "@vercel/postgres"
+import postgres from "postgres"
 import { logger } from "@/lib/logger"
+
+// postgres 클라이언트 생성 (일반 문자열 쿼리용)
+const getPostgresClient = () => {
+  if (!process.env.POSTGRES_URL) {
+    throw new Error("POSTGRES_URL not set")
+  }
+  return postgres(process.env.POSTGRES_URL, {
+    max: 20,
+    idle_timeout: 30,
+    connect_timeout: 2,
+  })
+}
 
 // Cron Jobs는 Node.js Runtime에서 실행
 export const runtime = "nodejs"
+export const dynamic = "force-dynamic" // 동적 렌더링
+export const maxDuration = 300 // 5분 최대 실행 시간
 
 export async function GET(request: Request) {
   // Cron 요청 검증 (Vercel Cron Secret)
@@ -31,10 +45,12 @@ export async function GET(request: Request) {
     yesterday.setDate(yesterday.getDate() - 1)
     const dateStr = yesterday.toISOString().split("T")[0]
 
+    const client = getPostgresClient()
+    
     // 병렬 실행으로 최적화: 통계 집계와 세션 정리를 동시에
     const [statsResult, cleanupResult] = await Promise.all([
       // 일일 통계 집계
-      sql.query(
+      (client as any).query(
         `
         SELECT 
           COUNT(*) as total_usage,
@@ -54,7 +70,7 @@ export async function GET(request: Request) {
         [dateStr]
       ),
       // 오래된 세션 데이터 정리 (30일 이상)
-      sql.query(
+      (client as any).query(
         `
         DELETE FROM sessions
         WHERE last_accessed < NOW() - INTERVAL '30 days'
@@ -62,7 +78,7 @@ export async function GET(request: Request) {
       ),
     ])
 
-    const stats = statsResult.rows[0] as {
+    const stats = Array.isArray(statsResult) ? statsResult[0] : (statsResult as any).rows?.[0] as {
       total_usage: number
       unique_sessions: number
       top_tools: string
@@ -70,7 +86,7 @@ export async function GET(request: Request) {
 
     // 통계 저장
     if (stats) {
-      await sql.query(
+      await (client as any).query(
         `
         INSERT INTO daily_stats (date, total_usage, unique_sessions, top_tools, updated_at)
         VALUES ($1, $2, $3, $4, NOW())
@@ -83,6 +99,23 @@ export async function GET(request: Request) {
         [dateStr, stats.total_usage, stats.unique_sessions, stats.top_tools]
       )
     }
+    
+    // 시간별 통계도 함께 집계 (Hobby 플랜 제한으로 시간별 크론 작업 제거됨)
+    const hourlyStats = await (client as any).query(
+      `
+      SELECT 
+        DATE_TRUNC('hour', created_at) as hour,
+        COUNT(*) as usage_count
+      FROM tool_usage
+      WHERE DATE(created_at) = $1
+      GROUP BY DATE_TRUNC('hour', created_at)
+      ORDER BY hour ASC
+    `,
+      [dateStr]
+    )
+
+    // 클라이언트 정리
+    await client.end()
 
     const duration = Date.now() - startTime
 
@@ -99,12 +132,19 @@ export async function GET(request: Request) {
       )
     }
 
+    const cleanupCount = Array.isArray(cleanupResult) 
+      ? cleanupResult.length 
+      : (cleanupResult as any).count || 0
+
+    const hourlyStatsArray = Array.isArray(hourlyStats) ? hourlyStats : (hourlyStats as any).rows || []
+
     return NextResponse.json({
       success: true,
       message: "Daily cron job completed",
       date: dateStr,
       duration: `${duration}ms`,
-      sessionsCleaned: cleanupResult.rowCount || 0,
+      sessionsCleaned: cleanupCount,
+      hourlyStatsCount: hourlyStatsArray.length,
       timestamp: new Date().toISOString(),
     })
   } catch (error) {
