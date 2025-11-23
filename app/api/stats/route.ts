@@ -53,7 +53,10 @@ export async function GET(request: Request) {
       try {
         validateId(toolId)
       } catch (validationError) {
-        logger.warn("Invalid toolId format", validationError, { toolId })
+        logger.warn("Invalid toolId format", {
+          toolId,
+          error: validationError instanceof Error ? validationError.message : String(validationError),
+        })
         return NextResponse.json({ error: "Invalid toolId format" }, { status: 400 })
       }
 
@@ -83,7 +86,10 @@ export async function GET(request: Request) {
       try {
         validateDateString(date)
       } catch (validationError) {
-        logger.warn("Invalid date format", validationError, { date })
+        logger.warn("Invalid date format", {
+          date,
+          error: validationError instanceof Error ? validationError.message : String(validationError),
+        })
         return NextResponse.json({ error: "Invalid date format (expected YYYY-MM-DD)" }, { status: 400 })
       }
 
