@@ -1,0 +1,8 @@
+{
+  "buildCommand": "pnpm run build",
+  "buildOutputDir": ".vercel/output/static",
+  "rootDir": ".",
+  "framework": "nextjs",
+  "nodeVersion": "22"
+}
+

@@ -8,7 +8,8 @@ const nextConfig = {
     formats: ['image/webp', 'image/avif'], // 최신 포맷 지원
   },
   // Cloudflare Pages 최적화
-  output: process.env.CF_PAGES ? 'export' : 'standalone',
+  // @cloudflare/next-on-pages는 자동으로 output을 처리하므로 명시하지 않음
+  // output: process.env.CF_PAGES ? 'export' : 'standalone',
   trailingSlash: true,
   compress: true, // Gzip 압축 활성화
   poweredByHeader: false, // 보안: X-Powered-By 헤더 제거
