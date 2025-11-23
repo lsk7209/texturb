@@ -1,35 +1,44 @@
 /**
  * Vercel Postgres 연결 풀 관리
  * 성능 최적화를 위한 연결 풀 설정
+ * 
+ * 일반 문자열 쿼리($1, $2 형식)를 지원하기 위해 postgres 패키지 사용
  */
 
-import { createPool, sql } from "@vercel/postgres"
+import { sql } from "@vercel/postgres"
+import postgres from "postgres"
 import { logger } from "@/lib/logger"
 
-// 전역 연결 풀 인스턴스
-let poolInstance: ReturnType<typeof createPool> | null = null
+// postgres 클라이언트 인스턴스 (일반 문자열 쿼리용)
+let postgresClient: ReturnType<typeof postgres> | null = null
 
 /**
- * 최적화된 연결 풀 가져오기
- * Vercel Postgres는 자동으로 연결 풀을 관리하지만,
- * 커스텀 설정이 필요한 경우 사용
+ * postgres 클라이언트 가져오기 (일반 문자열 쿼리용)
+ * $1, $2 형식의 파라미터화된 쿼리 지원
  */
-export function getPostgresPool() {
-  if (!poolInstance && process.env.POSTGRES_URL) {
-    poolInstance = createPool({
-      connectionString: process.env.POSTGRES_URL,
-      max: 20, // 최대 연결 수 (Vercel 권장값)
-      idleTimeoutMillis: 30000, // 30초 유휴 타임아웃
-      connectionTimeoutMillis: 2000, // 2초 연결 타임아웃
+export function getPostgresClient() {
+  if (!postgresClient && process.env.POSTGRES_URL) {
+    postgresClient = postgres(process.env.POSTGRES_URL, {
+      max: 20, // 최대 연결 수
+      idle_timeout: 30, // 30초
+      connect_timeout: 2, // 2초
     })
     
-    logger.debug("Postgres connection pool created", {
+    logger.debug("Postgres client created", {
       maxConnections: 20,
     })
   }
-  
-  // 커스텀 풀이 없으면 기본 sql 사용 (이미 최적화됨)
-  return poolInstance || sql
+  return postgresClient
+}
+
+/**
+ * Vercel Postgres sql 템플릿 리터럴 가져오기
+ * 템플릿 리터럴 쿼리용
+ */
+export function getPostgresPool() {
+  // 템플릿 리터럴 쿼리는 기본 sql 사용
+  // 일반 문자열 쿼리는 getPostgresClient() 사용
+  return sql
 }
 
 /**
