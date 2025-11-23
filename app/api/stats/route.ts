@@ -23,12 +23,15 @@ export async function GET(request: Request) {
     // Cloudflare 캐시 확인 (Edge에서만 동작)
     // 안전한 Promise 실행으로 에러 처리
     const cacheKey = new Request(request.url, request)
-    const cache = caches.default
+    // Cloudflare Cache API는 런타임에 사용 가능하지만 타입 정의가 없을 수 있음
+    const cache = typeof caches !== "undefined" ? (caches as { default?: Cache }).default : undefined
     
-    const { data: cachedResponse } = await safePromise(
-      cache.match(cacheKey),
-      "cache.match"
-    )
+    // 캐시가 사용 가능한 경우에만 확인
+    let cachedResponse: Response | null = null
+    if (cache) {
+      const result = await safePromise(cache.match(cacheKey), "cache.match")
+      cachedResponse = result.data || null
+    }
     
     if (cachedResponse) {
       return new Response(cachedResponse.body, {
@@ -93,7 +96,7 @@ export async function GET(request: Request) {
       response.headers.set("X-Cache", "MISS")
       
       // Cloudflare 캐시에 저장 (5분) - 비동기로 실행 (에러 무시)
-      if (ctx?.waitUntil) {
+      if (cache && ctx?.waitUntil) {
         ctx.waitUntil(
           safePromise(cache.put(cacheKey, response.clone()), "cache.put").catch(() => {
             // 캐시 저장 실패는 무시 (응답은 정상 반환)
