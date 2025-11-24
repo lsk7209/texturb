@@ -36,14 +36,14 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.texturb.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
     locale: "ko_KR",
-    url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.texturb.com",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com",
     siteName: "텍스터브",
     title: "텍스터브 - 텍스트 작업실",
     description: "블로그·자소서·보고서 쓰다가 막히면, 그냥 여기다 붙여넣으세요.",

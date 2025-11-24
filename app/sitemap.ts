@@ -4,7 +4,7 @@ import { GUIDES } from "@/lib/guides-registry"
 import { WORKFLOW_PRESETS } from "@/lib/workflows-registry"
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.texturb.com"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"
 
   // 정적 페이지
   const staticPages: MetadataRoute.Sitemap = [

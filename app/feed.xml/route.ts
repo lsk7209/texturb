@@ -3,7 +3,7 @@ import { GUIDES } from "@/lib/guides-registry"
 import { WORKFLOW_PRESETS } from "@/lib/workflows-registry"
 
 export async function GET() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.texturb.com"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"
   const currentDate = new Date().toUTCString()
 
   // RSS 피드 생성
