@@ -19,6 +19,7 @@ import { ToolDetailSection } from "@/components/tool-detail-section"
 import { useToolView } from "@/hooks/use-analytics"
 import { ToolFAQSection } from "@/components/tool-faq-section"
 import { ToolJsonLd } from "@/components/tool-json-ld"
+import { BreadcrumbNav } from "@/components/breadcrumb-nav"
 
 interface ToolPageClientProps {
   slug: string
@@ -49,13 +50,13 @@ export function ToolPageClient({ slug, searchParams }: ToolPageClientProps) {
         <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 lg:space-y-10">
           {/* Header Section */}
           <div className="space-y-4">
-            <Link
-              href="/tools"
-              className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-2 py-1 min-h-[36px]"
-            >
-              <ArrowLeft className="w-4 h-4 mr-1" aria-hidden="true" />
-              다른 유틸 보기
-            </Link>
+            <BreadcrumbNav
+              items={[
+                { label: "홈", href: "/" },
+                { label: "도구", href: "/tools" },
+                { label: tool.name },
+              ]}
+            />
 
             <div className="space-y-3">
               <div className="flex items-center gap-3 flex-wrap">

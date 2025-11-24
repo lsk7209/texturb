@@ -36,8 +36,35 @@ export function HomePageContent() {
 
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10 lg:space-y-12">
+          {/* Hero Section */}
+          <div className="text-center space-y-4 sm:space-y-6 pb-4 sm:pb-6">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
+              텍스트 작업, <span className="text-primary">한 번에</span>
+            </h1>
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              글자수 세기, 줄바꿈 정리, 대소문자 변환 등 텍스트 작업에 필요한 모든 도구를 한곳에서 무료로 사용하세요.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-2">
+              <Link
+                href="/tools"
+                className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:opacity-90 transition-opacity shadow-md hover:shadow-lg text-sm sm:text-base min-h-[48px] flex items-center justify-center"
+              >
+                전체 도구 보기
+              </Link>
+              <Link
+                href="/guides"
+                className="px-6 py-3 bg-card border border-border text-foreground rounded-lg font-semibold hover:bg-accent transition-colors shadow-sm hover:shadow-md text-sm sm:text-base min-h-[48px] flex items-center justify-center"
+              >
+                사용 가이드
+              </Link>
+            </div>
+          </div>
+
           {/* Main Studio */}
           <div className="space-y-4 sm:space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl sm:text-2xl font-semibold">바로 시작하기</h2>
+            </div>
             <StepTabs
               activeTab={activeTab as TabId}
               onTabChange={(tab) => setActiveTab(tab as TabId)}

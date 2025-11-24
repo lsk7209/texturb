@@ -113,7 +113,52 @@ export default function ToolsPage() {
         </div>
       </section>
 
-      <div className="container mx-auto px-4 max-w-5xl py-12">
+      <div className="container mx-auto px-4 max-w-5xl py-8 sm:py-12">
+        {/* 검색 및 필터 섹션 - 상단으로 이동 */}
+        <div className="mb-8 sm:mb-12 space-y-6">
+          <div className="max-w-xl mx-auto">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" aria-hidden="true" />
+              <input
+                type="text"
+                placeholder="도구 이름이나 키워드를 입력하세요 (예: 글자수, 줄바꿈, 대소문자)"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-3.5 sm:py-4 rounded-xl border border-border bg-background shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary transition-all text-sm sm:text-base"
+                aria-label="도구 검색"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2 justify-center">
+            <button
+              onClick={() => setSelectedCategory("전체")}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all min-h-[40px] ${
+                selectedCategory === "전체"
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "bg-card text-foreground border border-border hover:border-primary hover:bg-accent"
+              }`}
+              aria-label="전체 카테고리"
+            >
+              전체
+            </button>
+            {UTILITY_CATEGORIES.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all min-h-[40px] ${
+                  selectedCategory === category
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "bg-card text-foreground border border-border hover:border-primary hover:bg-accent"
+                }`}
+                aria-label={`${category} 카테고리`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {favoriteUtilities.length > 0 && (
           <section className="mb-12" aria-labelledby="favorites-section">
             <h2 id="favorites-section" className="text-xl font-bold mb-6 flex items-center gap-2">
@@ -142,49 +187,36 @@ export default function ToolsPage() {
           </section>
         )}
 
-        <div className="max-w-xl mx-auto mb-8">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-            <input
-              type="text"
-              placeholder="유틸 이름이나 키워드를 입력하세요. (예: 글자수, 줄바꿈, 대소문자)"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-wrap gap-2 justify-center mb-12">
-          <button
-            onClick={() => setSelectedCategory("전체")}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-              selectedCategory === "전체"
-                ? "bg-blue-600 text-white shadow-md"
-                : "bg-white text-slate-600 border border-slate-200 hover:border-blue-300"
-            }`}
-          >
-            전체
-          </button>
-          {UTILITY_CATEGORIES.map((category) => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                selectedCategory === category
-                  ? "bg-blue-600 text-white shadow-md"
-                  : "bg-white text-slate-600 border border-slate-200 hover:border-blue-300"
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-
         {filteredUtilities.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-muted-foreground text-lg mb-2">검색 결과가 없습니다.</p>
-            <p className="text-muted-foreground/60 text-sm">다른 키워드를 입력해 보세요.</p>
+          <div className="text-center py-16 sm:py-20">
+            <div className="max-w-md mx-auto">
+              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                <Search className="w-8 h-8 text-muted-foreground" aria-hidden="true" />
+              </div>
+              <h3 className="text-lg sm:text-xl font-semibold mb-2">검색 결과가 없습니다</h3>
+              <p className="text-muted-foreground mb-6 leading-relaxed">
+                {searchQuery.trim() ? (
+                  <>
+                    "<strong>{searchQuery}</strong>"에 대한 결과를 찾을 수 없습니다.
+                    <br />
+                    다른 키워드로 검색하거나 카테고리를 변경해 보세요.
+                  </>
+                ) : (
+                  "선택한 카테고리에 해당하는 도구가 없습니다."
+                )}
+              </p>
+              {(searchQuery.trim() || selectedCategory !== "전체") && (
+                <button
+                  onClick={() => {
+                    setSearchQuery("")
+                    setSelectedCategory("전체")
+                  }}
+                  className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg font-medium hover:opacity-90 transition-opacity"
+                >
+                  필터 초기화
+                </button>
+              )}
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

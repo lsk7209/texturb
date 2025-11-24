@@ -4,7 +4,6 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
-import { CommandPalette } from "@/components/command-palette"
 import { Toaster } from "@/components/ui/toaster"
 import Script from "next/script"
 
@@ -117,7 +116,6 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
-        <CommandPalette />
         <Toaster />
       </body>
     </html>

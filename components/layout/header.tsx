@@ -2,10 +2,11 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { PenTool, LayoutGrid, Map, BookOpen, Menu, X } from "lucide-react"
+import { PenTool, LayoutGrid, Map, BookOpen, Menu, Search } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
+import { CommandPalette } from "@/components/command-palette"
 
 /**
  * Component: Header
@@ -15,6 +16,7 @@ import { Button } from "@/components/ui/button"
  */
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false)
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80">
@@ -48,6 +50,18 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-2 md:gap-4">
+          {/* 검색 버튼 (Command Palette) */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setCommandPaletteOpen(true)}
+            className="hidden sm:flex"
+            aria-label="검색 (Ctrl + / 또는 Cmd + /)"
+            title="검색 (Ctrl + / 또는 Cmd + /)"
+          >
+            <Search className="w-5 h-5" />
+          </Button>
+
           <ThemeToggle />
           
           {/* 모바일 메뉴 */}
@@ -128,6 +142,7 @@ export function Header() {
           </Link>
         </div>
       </div>
+      <CommandPalette open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
     </header>
   )
 }

@@ -15,11 +15,24 @@ type SearchItem = {
   url: string
 }
 
-export function CommandPalette() {
-  const [isOpen, setIsOpen] = useState(false)
+interface CommandPaletteProps {
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+}
+
+export function CommandPalette({ open: controlledOpen, onOpenChange }: CommandPaletteProps = {}) {
+  const [internalOpen, setInternalOpen] = useState(false)
   const [query, setQuery] = useState("")
   const [selectedIndex, setSelectedIndex] = useState(0)
   const router = useRouter()
+
+  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen
+  const setIsOpen = (value: boolean) => {
+    if (controlledOpen === undefined) {
+      setInternalOpen(value)
+    }
+    onOpenChange?.(value)
+  }
 
   // Build search index
   const searchItems: SearchItem[] = [
@@ -61,7 +74,7 @@ export function CommandPalette() {
       // Open/close palette with Ctrl+/ or Cmd+/
       if ((e.ctrlKey || e.metaKey) && e.key === "/") {
         e.preventDefault()
-        setIsOpen((prev) => !prev)
+        setIsOpen(!isOpen)
         setQuery("")
         setSelectedIndex(0)
         return
@@ -127,23 +140,34 @@ export function CommandPalette() {
   return (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/50 z-50 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
+      <div 
+        className="fixed inset-0 bg-black/50 z-50 backdrop-blur-sm" 
+        onClick={() => {
+          setIsOpen(false)
+          setQuery("")
+        }}
+        aria-hidden="true"
+      />
 
       {/* Palette */}
-      <div className="fixed top-20 left-1/2 -translate-x-1/2 w-full max-w-2xl z-50 px-4">
-        <div className="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
+      <div 
+        className="fixed top-20 left-1/2 -translate-x-1/2 w-full max-w-2xl z-50 px-4"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="bg-card rounded-xl shadow-2xl border border-border overflow-hidden">
           {/* Search input */}
-          <div className="flex items-center gap-3 p-4 border-b border-slate-200">
-            <Search className="w-5 h-5 text-slate-400" />
+          <div className="flex items-center gap-3 p-4 border-b border-border">
+            <Search className="w-5 h-5 text-muted-foreground" aria-hidden="true" />
             <input
               type="text"
               placeholder="도구, 워크플로, 가이드 검색... (Ctrl + / 또는 Cmd + /)"
-              className="flex-1 outline-none text-slate-900 placeholder:text-slate-400"
+              className="flex-1 outline-none bg-transparent text-foreground placeholder:text-muted-foreground"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               autoFocus
+              aria-label="검색 입력"
             />
-            <kbd className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded border border-slate-300">ESC</kbd>
+            <kbd className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded border border-border hidden sm:inline">ESC</kbd>
           </div>
 
           {/* Results */}
@@ -181,9 +205,9 @@ export function CommandPalette() {
           </div>
 
           {/* Footer hint */}
-          <div className="px-4 py-2 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+          <div className="px-4 py-2 bg-muted/50 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1 sm:gap-0 text-xs text-muted-foreground">
             <span>방향키로 이동, Enter로 선택</span>
-            <span>Ctrl + / 또는 Cmd + /로 열기</span>
+            <span className="hidden sm:inline">Ctrl + / 또는 Cmd + /로 열기</span>
           </div>
         </div>
       </div>
