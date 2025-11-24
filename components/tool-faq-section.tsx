@@ -21,24 +21,24 @@ export function ToolFAQSection({ toolId }: ToolFAQSectionProps) {
   }
 
   return (
-    <section className="space-y-6 py-8 border-t border-border" aria-labelledby="faq-heading">
-      <div className="flex items-center gap-2">
-        <HelpCircle className="w-6 h-6 text-primary" aria-hidden="true" />
-        <h2 id="faq-heading" className="text-2xl font-bold">
+    <section className="space-y-4 sm:space-y-6 py-6 sm:py-8 border-t border-border" aria-labelledby="faq-heading">
+      <div className="flex items-center gap-2 sm:gap-3">
+        <HelpCircle className="w-5 h-5 sm:w-6 sm:h-6 text-primary shrink-0" aria-hidden="true" />
+        <h2 id="faq-heading" className="text-xl sm:text-2xl font-bold">
           자주 묻는 질문
         </h2>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2.5 sm:space-y-3">
         {faqData.items.map((item, index) => (
-          <div key={index} className="border border-border rounded-lg overflow-hidden">
+          <div key={index} className="border border-border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
             <button
               onClick={() => toggleItem(index)}
-              className="w-full p-4 text-left flex items-center justify-between gap-4 hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+              className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset min-h-[56px] sm:min-h-[64px]"
               aria-expanded={openIndex === index}
               aria-controls={`faq-answer-${index}`}
             >
-              <span className="font-semibold text-base">{item.question}</span>
+              <span className="font-semibold text-sm sm:text-base leading-tight pr-2">{item.question}</span>
               {openIndex === index ? (
                 <ChevronUp className="w-5 h-5 text-muted-foreground shrink-0" aria-hidden="true" />
               ) : (
@@ -47,7 +47,11 @@ export function ToolFAQSection({ toolId }: ToolFAQSectionProps) {
             </button>
 
             {openIndex === index && (
-              <div id={`faq-answer-${index}`} className="p-4 pt-0 text-muted-foreground leading-relaxed" role="region">
+              <div
+                id={`faq-answer-${index}`}
+                className="p-4 sm:p-5 pt-0 text-sm sm:text-base text-muted-foreground leading-relaxed"
+                role="region"
+              >
                 {item.answer}
               </div>
             )}

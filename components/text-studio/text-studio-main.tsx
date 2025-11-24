@@ -99,39 +99,45 @@ export function TextStudioMain(props: TextStudioMainProps) {
   const ActiveToolComponent = toolId ? toolRegistry[toolId] : toolRegistry[currentTab]
 
   return (
-    <div className="flex h-full flex-col">
-      <Tabs value={currentTab} onValueChange={handleTabUpdate} className="flex flex-1 flex-col">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="cleanup">정리</TabsTrigger>
-          <TabsTrigger value="transform">변환</TabsTrigger>
-          <TabsTrigger value="analysis">분석</TabsTrigger>
-          <TabsTrigger value="highlight">강조</TabsTrigger>
+    <div className="w-full">
+      <Tabs value={currentTab} onValueChange={handleTabUpdate} className="w-full">
+        <TabsList className="grid w-full grid-cols-4 mb-6">
+          <TabsTrigger value="cleanup" className="text-sm sm:text-base">정리</TabsTrigger>
+          <TabsTrigger value="transform" className="text-sm sm:text-base">변환</TabsTrigger>
+          <TabsTrigger value="analysis" className="text-sm sm:text-base">분석</TabsTrigger>
+          <TabsTrigger value="highlight" className="text-sm sm:text-base">강조</TabsTrigger>
         </TabsList>
 
-        <div className="flex flex-1 gap-4 overflow-hidden pt-4">
-          <ErrorBoundary>
-            <EditorPanel text={currentText} setText={handleTextUpdate} onTextChange={handleTextUpdate} activeTab={currentTab} />
-          </ErrorBoundary>
-
-          <TabsContent value="cleanup" className="m-0 flex-1">
-            <PreviewPanel preview={previewOutput} />
-          </TabsContent>
-          <TabsContent value="transform" className="m-0 flex-1">
-            <PreviewPanel preview={previewOutput} />
-          </TabsContent>
-          <TabsContent value="analysis" className="m-0 flex-1">
-            <PreviewPanel preview={previewOutput} />
-          </TabsContent>
-          <TabsContent value="highlight" className="m-0 flex-1">
-            <PreviewPanel preview={previewOutput} />
-          </TabsContent>
-        </div>
-
+        {/* Tool Component - Options and Result */}
         {ActiveToolComponent && (
-          <div className="mt-4">
-            <ActiveToolComponent text={currentText} onPreviewChange={handlePreviewUpdate} />
+          <div className="mb-6">
+            <ErrorBoundary>
+              <ActiveToolComponent text={currentText} onPreviewChange={handlePreviewUpdate} toolId={toolId} />
+            </ErrorBoundary>
           </div>
         )}
+
+        {/* Editor and Preview Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+          <ErrorBoundary>
+            <EditorPanel text={currentText} setText={handleTextUpdate} onTextChange={handleTextUpdate} activeTab={currentTab} toolId={toolId} />
+          </ErrorBoundary>
+
+          <div className="hidden lg:block">
+            <TabsContent value="cleanup" className="m-0 h-full">
+              <PreviewPanel preview={previewOutput} />
+            </TabsContent>
+            <TabsContent value="transform" className="m-0 h-full">
+              <PreviewPanel preview={previewOutput} />
+            </TabsContent>
+            <TabsContent value="analysis" className="m-0 h-full">
+              <PreviewPanel preview={previewOutput} />
+            </TabsContent>
+            <TabsContent value="highlight" className="m-0 h-full">
+              <PreviewPanel preview={previewOutput} />
+            </TabsContent>
+          </div>
+        </div>
       </Tabs>
     </div>
   )

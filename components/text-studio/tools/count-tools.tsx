@@ -180,7 +180,7 @@ export function CountTools({ text, toolId }: CountToolsProps) {
   if (toolId === "sentence-counter") {
     return (
       <div className="space-y-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <StatCard label="전체 문장 수" value={`${sentenceStats.count.toLocaleString()}문장`} />
           <StatCard label="평균 문장 길이" value={`${sentenceStats.avg.toLocaleString()}자`} />
           <StatCard label="최장 문장" value={`${sentenceStats.max.toLocaleString()}자`} />
@@ -229,7 +229,7 @@ export function CountTools({ text, toolId }: CountToolsProps) {
   if (toolId === "paragraph-counter") {
     return (
       <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
           <StatCard label="전체 문단 수" value={`${paragraphStats.count.toLocaleString()}개`} />
           <StatCard label="평균 문단 글자수" value={`${paragraphStats.avgChar.toLocaleString()}자`} />
           <StatCard label="평균 문단 문장수" value={`${paragraphStats.avgSentence.toLocaleString()}문장`} />
@@ -263,7 +263,7 @@ export function CountTools({ text, toolId }: CountToolsProps) {
   if (toolId === "title-length-checker") {
     return (
       <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <StatCard label="글자 수" value={`${titleStats.length.toLocaleString()}자`} />
           <StatCard
             label="예상 픽셀 너비 (Google SERP)"
@@ -321,7 +321,7 @@ export function CountTools({ text, toolId }: CountToolsProps) {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <StatCard label="전체 글자수 (공백포함)" value={`${charCount.toLocaleString()}자`} />
         <StatCard label="글자수 (공백제외)" value={`${charCountNoSpace.toLocaleString()}자`} />
         <StatCard label="단어 수" value={`${wordCount.toLocaleString()}개`} />
@@ -371,10 +371,10 @@ export function CountTools({ text, toolId }: CountToolsProps) {
 function StatCard({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) {
   return (
     <div
-      className={`bg-white p-4 rounded-lg border shadow-sm text-center space-y-1 ${highlight ? "border-red-200 bg-red-50" : "border-slate-200"}`}
+      className={`bg-card p-3 sm:p-4 rounded-lg border shadow-sm text-center space-y-1.5 sm:space-y-2 transition-all hover:shadow-md ${highlight ? "border-red-200 bg-red-50/50" : "border-border"}`}
     >
-      <div className="text-xs text-slate-500">{label}</div>
-      <div className={`text-xl font-bold ${highlight ? "text-red-600" : "text-slate-900"}`}>{value}</div>
+      <div className="text-xs sm:text-sm text-muted-foreground leading-tight">{label}</div>
+      <div className={`text-lg sm:text-xl md:text-2xl font-bold ${highlight ? "text-red-600" : "text-foreground"}`}>{value}</div>
     </div>
   )
 }

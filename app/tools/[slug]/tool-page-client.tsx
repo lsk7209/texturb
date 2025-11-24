@@ -44,50 +44,67 @@ export function ToolPageClient({ slug, searchParams }: ToolPageClientProps) {
   const activeTab = tool.tabId || "cleanup"
 
   return (
-    <main className="min-h-screen bg-background py-8 md:py-12">
-      <div className="container mx-auto px-4 max-w-5xl space-y-8">
-        <div className="space-y-4">
-          <Link
-            href="/tools"
-            className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-2 py-1"
-          >
-            <ArrowLeft className="w-4 h-4 mr-1" aria-hidden="true" />
-            다른 유틸 보기
-          </Link>
+    <main className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+        <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 lg:space-y-10">
+          {/* Header Section */}
+          <div className="space-y-4">
+            <Link
+              href="/tools"
+              className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-2 py-1 min-h-[36px]"
+            >
+              <ArrowLeft className="w-4 h-4 mr-1" aria-hidden="true" />
+              다른 유틸 보기
+            </Link>
 
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="px-2.5 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full">
-                {tool.category}
-              </span>
-              <FavoriteToggle toolId={tool.id} variant="full" />
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="px-2.5 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full">
+                  {tool.category}
+                </span>
+                <FavoriteToggle toolId={tool.id} variant="full" />
+              </div>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight">{tool.name}</h1>
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-3xl">{tool.description}</p>
             </div>
-            <h1 className="text-3xl font-bold mb-2">{tool.name}</h1>
-            <p className="text-lg text-muted-foreground">{tool.description}</p>
           </div>
+
+          {/* Main Tool Section */}
+          <div className="w-full">
+            <ErrorBoundary>
+              <TextStudioMain key={tool.slug} initialTab={activeTab} toolId={tool.slug} searchParams={searchParams} />
+            </ErrorBoundary>
+          </div>
+
+          {/* Ad Slot */}
+          <div className="flex justify-center">
+            <AdSlot slot={process.env.NEXT_PUBLIC_AD_SLOT_TOOL_PAGE || ""} format="horizontal" />
+          </div>
+
+          {/* Additional Content Sections */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+            {/* Left Column - Main Content */}
+            <div className="lg:col-span-2 space-y-6 lg:space-y-8">
+              <ToolDetailSection toolId={tool.id} />
+              <ToolFAQSection toolId={tool.id} />
+              <ToolContentSection toolId={tool.id} />
+            </div>
+
+            {/* Right Column - Sidebar */}
+            <div className="lg:col-span-1 space-y-6">
+              <div className="sticky top-24 space-y-6">
+                <FeedbackWidget toolId={tool.id} />
+                <div className="flex flex-col items-center gap-4">
+                  <BugReportLink toolId={tool.id} />
+                </div>
+                <ShareEmbedPanel toolSlug={tool.slug} toolName={tool.name} currentOptions={searchParams} />
+              </div>
+            </div>
+          </div>
+
+          {/* Privacy Message */}
+          <PrivacyMessage />
         </div>
-
-        <ErrorBoundary>
-          <TextStudioMain key={tool.slug} initialTab={activeTab} toolId={tool.slug} searchParams={searchParams} />
-        </ErrorBoundary>
-
-        <AdSlot slot={process.env.NEXT_PUBLIC_AD_SLOT_TOOL_PAGE || ""} format="horizontal" />
-
-        <ToolDetailSection toolId={tool.id} />
-
-        <ToolFAQSection toolId={tool.id} />
-
-        <ToolContentSection toolId={tool.id} />
-
-        <FeedbackWidget toolId={tool.id} />
-
-        <div className="flex justify-center">
-          <BugReportLink toolId={tool.id} />
-        </div>
-
-        <ShareEmbedPanel toolSlug={tool.slug} toolName={tool.name} currentOptions={searchParams} />
-
-        <PrivacyMessage />
       </div>
       <ToolJsonLd toolName={tool.name} toolDescription={tool.description} toolSlug={tool.slug} />
     </main>

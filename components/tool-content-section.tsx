@@ -16,17 +16,17 @@ export function ToolContentSection({ toolId }: ToolContentSectionProps) {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Usage Tips */}
       {content.usageTips.length > 0 && (
-        <section className="bg-card border border-border rounded-lg p-6">
-          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Lightbulb className="w-5 h-5 text-primary" />
-            사용 팁
+        <section className="bg-card border border-border rounded-lg p-5 sm:p-6 shadow-sm">
+          <h2 className="text-lg sm:text-xl font-semibold mb-4 flex items-center gap-2">
+            <Lightbulb className="w-5 h-5 text-primary shrink-0" />
+            <span>사용 팁</span>
           </h2>
-          <ul className="space-y-3">
+          <ul className="space-y-2.5 sm:space-y-3">
             {content.usageTips.map((tip, index) => (
-              <li key={index} className="flex gap-3 text-sm text-muted-foreground">
+              <li key={index} className="flex gap-3 text-sm sm:text-base text-muted-foreground leading-relaxed">
                 <span className="text-primary font-bold shrink-0">{index + 1}.</span>
                 <span>{tip}</span>
               </li>
@@ -37,16 +37,16 @@ export function ToolContentSection({ toolId }: ToolContentSectionProps) {
 
       {/* FAQ */}
       {content.faq.length > 0 && (
-        <section className="bg-card border border-border rounded-lg p-6">
-          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <HelpCircle className="w-5 h-5 text-primary" />
-            자주 묻는 질문
+        <section className="bg-card border border-border rounded-lg p-5 sm:p-6 shadow-sm">
+          <h2 className="text-lg sm:text-xl font-semibold mb-4 flex items-center gap-2">
+            <HelpCircle className="w-5 h-5 text-primary shrink-0" />
+            <span>자주 묻는 질문</span>
           </h2>
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {content.faq.map((item, index) => (
-              <div key={index} className="border-b border-border last:border-0 pb-4 last:pb-0">
-                <h3 className="font-medium mb-2 text-sm">{item.question}</h3>
-                <p className="text-sm text-muted-foreground">{item.answer}</p>
+              <div key={index} className="border-b border-border last:border-0 pb-3 sm:pb-4 last:pb-0">
+                <h3 className="font-medium mb-2 text-sm sm:text-base leading-tight">{item.question}</h3>
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">{item.answer}</p>
               </div>
             ))}
           </div>
@@ -55,13 +55,13 @@ export function ToolContentSection({ toolId }: ToolContentSectionProps) {
 
       {/* Related Tools and Guides */}
       {(content.relatedTools.length > 0 || content.relatedGuides.length > 0) && (
-        <section className="bg-card border border-border rounded-lg p-6">
-          <h2 className="text-lg font-semibold mb-4">관련 도구 및 가이드</h2>
+        <section className="bg-card border border-border rounded-lg p-5 sm:p-6 shadow-sm">
+          <h2 className="text-lg sm:text-xl font-semibold mb-4">관련 도구 및 가이드</h2>
 
           {content.relatedTools.length > 0 && (
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-muted-foreground mb-3">관련 도구</h3>
-              <div className="grid gap-2">
+            <div className="mb-6 last:mb-0">
+              <h3 className="text-sm sm:text-base font-medium text-muted-foreground mb-3">관련 도구</h3>
+              <div className="grid gap-2.5 sm:gap-3">
                 {content.relatedTools.map((toolId) => {
                   const tool = getUtilityBySlug(toolId)
                   if (!tool) return null
@@ -69,13 +69,15 @@ export function ToolContentSection({ toolId }: ToolContentSectionProps) {
                     <Link
                       key={toolId}
                       href={`/tools/${tool.slug}`}
-                      className="flex items-center justify-between p-3 rounded-md bg-muted/50 hover:bg-muted transition-colors group"
+                      className="flex items-center justify-between p-3 sm:p-4 rounded-md bg-muted/50 hover:bg-muted transition-all group border border-transparent hover:border-border shadow-sm hover:shadow-md"
                     >
-                      <div>
-                        <div className="font-medium text-sm">{tool.name}</div>
-                        <div className="text-xs text-muted-foreground">{tool.description}</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm sm:text-base leading-tight mb-1">{tool.name}</div>
+                        <div className="text-xs sm:text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+                          {tool.description}
+                        </div>
                       </div>
-                      <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                      <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-hover:text-foreground transition-colors shrink-0 ml-3" />
                     </Link>
                   )
                 })}
@@ -85,8 +87,8 @@ export function ToolContentSection({ toolId }: ToolContentSectionProps) {
 
           {content.relatedGuides.length > 0 && (
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-3">관련 가이드</h3>
-              <div className="grid gap-2">
+              <h3 className="text-sm sm:text-base font-medium text-muted-foreground mb-3">관련 가이드</h3>
+              <div className="grid gap-2.5 sm:gap-3">
                 {content.relatedGuides.map((guideSlug) => {
                   const guide = GUIDES.find((g) => g.slug === guideSlug)
                   if (!guide) return null
@@ -94,13 +96,15 @@ export function ToolContentSection({ toolId }: ToolContentSectionProps) {
                     <Link
                       key={guideSlug}
                       href={`/guides/${guide.slug}`}
-                      className="flex items-center justify-between p-3 rounded-md bg-muted/50 hover:bg-muted transition-colors group"
+                      className="flex items-center justify-between p-3 sm:p-4 rounded-md bg-muted/50 hover:bg-muted transition-all group border border-transparent hover:border-border shadow-sm hover:shadow-md"
                     >
-                      <div>
-                        <div className="font-medium text-sm">{guide.title}</div>
-                        <div className="text-xs text-muted-foreground">{guide.description}</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm sm:text-base leading-tight mb-1">{guide.title}</div>
+                        <div className="text-xs sm:text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+                          {guide.description}
+                        </div>
                       </div>
-                      <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                      <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-hover:text-foreground transition-colors shrink-0 ml-3" />
                     </Link>
                   )
                 })}
