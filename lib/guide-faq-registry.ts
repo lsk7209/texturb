@@ -10,7 +10,7 @@ export type GuideFAQ = {
 
 export const GUIDE_FAQS: GuideFAQ[] = [
   {
-    guideSlug: "blog-post-cleanup",
+    guideSlug: "blog-post-cleanup-guide",
     items: [
       {
         question: "블로그 글을 복붙했을 때 줄바꿈이 깨지면 어떻게 하나요?",
@@ -27,10 +27,15 @@ export const GUIDE_FAQS: GuideFAQ[] = [
         answer:
           "기존 글을 복사해 와서 한 번 정리한 뒤, 수정본을 다시 붙여넣어도 됩니다. 가독성과 분량을 개선하는 데 효과적입니다.",
       },
+      {
+        question: "SEO를 위해 제목 길이는 어떻게 해야 하나요?",
+        answer:
+          "검색 결과에서 제목이 잘리지 않으려면 36~55자 범위로 작성하는 것이 좋습니다. 핵심 키워드는 제목 앞부분에 배치하세요.",
+      },
     ],
   },
   {
-    guideSlug: "resume-cover-letter-length",
+    guideSlug: "resume-length-guide",
     items: [
       {
         question: "자소서 글자수는 어떻게 세는 것이 정확한가요?",
@@ -47,10 +52,15 @@ export const GUIDE_FAQS: GuideFAQ[] = [
         answer:
           "워드나 한글 프로그램은 숨겨진 서식이나 특수문자를 포함하는 경우가 있습니다. 복사 후 텍스트 정리 도구로 한 번 정리하면 정확한 글자수를 확인할 수 있습니다.",
       },
+      {
+        question: "문항별 글자수 제한을 어떻게 맞추나요?",
+        answer:
+          "각 문항의 제한 글자수를 목표로 설정하고, 실시간으로 진행률을 확인하면서 작성하세요. 목표에 가까워지면 문장을 다듬어 정확히 맞출 수 있습니다.",
+      },
     ],
   },
   {
-    guideSlug: "report-table-number-format",
+    guideSlug: "report-table-guide",
     items: [
       {
         question: "엑셀 표를 마크다운으로 변환하면 어디에 쓸 수 있나요?",
@@ -67,10 +77,15 @@ export const GUIDE_FAQS: GuideFAQ[] = [
         answer:
           "입력 포맷과 출력 포맷을 각각 선택할 수 있습니다. 예를 들어 2025-01-01을 2025년 1월 1일로 바꾸거나 그 반대도 가능합니다.",
       },
+      {
+        question: "TSV와 CSV의 차이는 무엇인가요?",
+        answer:
+          "TSV는 탭(Tab)으로 구분된 데이터이고, CSV는 쉼표(Comma)로 구분된 데이터입니다. 엑셀에서 복사하면 보통 TSV 형식입니다.",
+      },
     ],
   },
   {
-    guideSlug: "dev-docs-markdown-format",
+    guideSlug: "dev-docs-guide",
     items: [
       {
         question: "마크다운 포맷 정리는 어떤 규칙을 적용하나요?",
@@ -86,6 +101,11 @@ export const GUIDE_FAQS: GuideFAQ[] = [
         question: "HTML을 마크다운으로 변환할 수도 있나요?",
         answer:
           "HTML to Text 도구를 사용하면 HTML 태그를 제거하고 순수 텍스트나 마크다운으로 변환할 수 있습니다. 웹페이지 내용을 문서로 옮길 때 편리합니다.",
+      },
+      {
+        question: "슬러그 생성 시 한글이 포함되면 어떻게 되나요?",
+        answer:
+          "한글은 영문 소문자로 변환되거나 제거됩니다. URL 친화적인 형태로 자동 변환되며, 필요시 수동으로 수정할 수 있습니다.",
       },
     ],
   },
