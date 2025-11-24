@@ -165,6 +165,32 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     relatedTools: ["line-break-cleaner", "trim-whitespace"],
     relatedGuides: ["blog-post-cleanup-guide"],
   },
+  "sentence-counter": {
+    usageTips: [
+      "평균 문장 길이를 확인하여 가독성을 체크하세요.",
+      "50자 이상의 긴 문장이 많으면 짧게 나누는 것을 고려해보세요.",
+      "자소서나 에세이 작성 시 문장 호흡을 조절하는 데 유용합니다.",
+    ],
+    faq: [
+      {
+        question: "문장은 어떤 기준으로 구분하나요?",
+        answer:
+          "마침표(.), 느낌표(!), 물음표(?)를 기준으로 문장을 구분합니다. 줄임표(...)나 특수한 경우는 하나의 문장으로 처리됩니다.",
+      },
+      {
+        question: "평균 문장 길이가 얼마나 되어야 좋나요?",
+        answer:
+          "일반적으로 30~50자 사이가 읽기 편한 길이입니다. 50자가 넘는 문장이 많다면 짧게 나누는 것을 고려해보세요.",
+      },
+      {
+        question: "문장별 상세 정보는 어떻게 보나요?",
+        answer:
+          "결과 영역에서 각 문장의 글자 수와 단어 수를 표 형태로 확인할 수 있습니다. 특히 긴 문장을 찾아서 수정할 때 유용합니다.",
+      },
+    ],
+    relatedTools: ["paragraph-counter", "char-counter", "line-break-cleaner"],
+    relatedGuides: ["resume-length-guide", "blog-post-cleanup-guide"],
+  },
   "dedupe-lines": {
     usageTips: [
       "정렬 후 중복 제거를 하면 결과가 더 깔끔합니다.",
