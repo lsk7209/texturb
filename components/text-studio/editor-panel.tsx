@@ -105,61 +105,64 @@ export function EditorPanel({
 
   return (
     <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
-      <div className="px-4 py-4 md:px-6 md:py-5 border-b border-border bg-muted/50">
-        <h2 className="text-base md:text-lg font-bold mb-1">{headerContent.title}</h2>
-        <p className="text-xs md:text-sm text-muted-foreground">{headerContent.desc}</p>
+      <div className="px-4 sm:px-5 md:px-6 py-4 sm:py-5 border-b border-border bg-muted/50">
+        <h2 className="text-base sm:text-lg md:text-xl font-bold mb-1.5 sm:mb-2 leading-tight">{headerContent.title}</h2>
+        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{headerContent.desc}</p>
       </div>
 
-      <div className="p-4 md:p-6 space-y-6 md:space-y-8">
-        <div className="space-y-2">
-          <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Input Text</label>
+      <div className="p-4 sm:p-5 md:p-6 space-y-5 sm:space-y-6 md:space-y-8">
+        <div className="space-y-2.5 sm:space-y-3">
+          <label className="text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wider block">
+            Input Text
+          </label>
           <textarea
             value={text}
             onChange={(e) => handleTextChange(e.target.value)}
             placeholder="지금 작성 중인 글을 여기에 붙여넣고, 위 탭을 눌러 필요한 기능을 사용해 보세요."
             className={cn(
-              "w-full min-h-[150px] md:min-h-[200px] p-3 md:p-4 rounded-lg border bg-background placeholder:text-muted-foreground text-sm md:text-base",
-              "focus:outline-none focus:ring-2 focus:ring-ring transition-all resize-y leading-relaxed",
-              isOverLimit ? "border-destructive" : "border-input",
+              "w-full min-h-[160px] sm:min-h-[180px] md:min-h-[200px] p-3 sm:p-4 rounded-lg border bg-background placeholder:text-muted-foreground",
+              "text-sm sm:text-base leading-relaxed",
+              "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-all resize-y",
+              isOverLimit ? "border-destructive focus:ring-destructive" : "border-input",
             )}
             aria-label="입력 텍스트"
             aria-describedby="text-length-info"
           />
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1 sm:gap-0">
             <span
               id="text-length-info"
-              className={cn("text-xs", isOverLimit ? "text-destructive font-medium" : "text-muted-foreground")}
+              className={cn("text-xs sm:text-sm", isOverLimit ? "text-destructive font-medium" : "text-muted-foreground")}
             >
               {isOverLimit && "텍스트가 너무 깁니다. "}
               최대 {MAX_TEXT_LENGTH.toLocaleString()}자
             </span>
-            <span className="text-xs text-muted-foreground">{text.length.toLocaleString()}자 (공백포함)</span>
+            <span className="text-xs sm:text-sm text-muted-foreground">{text.length.toLocaleString()}자 (공백포함)</span>
           </div>
         </div>
 
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
+        <div className="space-y-4 sm:space-y-5">
+          <div className="flex items-center gap-2 sm:gap-3">
             <div className="h-px flex-1 bg-border"></div>
-            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-2">
+            <span className="text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wider px-2 sm:px-3">
               Options & Result
             </span>
             <div className="h-px flex-1 bg-border"></div>
           </div>
 
-          <div className="bg-muted rounded-lg p-4 md:p-5 border border-border relative">
+          <div className="bg-muted rounded-lg p-4 sm:p-5 md:p-6 border border-border relative">
             {activeTab === "cleanup" && <CleanupTools text={debouncedText} onPreviewChange={setPreviewText} />}
             {activeTab === "analysis" && <CountTools text={debouncedText} />}
             {activeTab === "transform" && <FormatTools text={debouncedText} onPreviewChange={setPreviewText} />}
             {activeTab === "highlight" && <HighlightTools onInsert={(char) => setText(text + char)} />}
 
             {showApplyButton && (
-              <div className="absolute bottom-4 right-4 md:bottom-5 md:right-5">
+              <div className="absolute bottom-4 sm:bottom-5 right-4 sm:right-5">
                 <button
                   onClick={handleApplyToInput}
-                  className="px-3 py-1.5 bg-background border border-primary/20 text-primary text-xs font-medium rounded-md shadow-sm hover:bg-primary/10 transition-colors flex items-center gap-1"
+                  className="px-3 sm:px-4 py-2 sm:py-2.5 bg-background border border-primary/20 text-primary text-xs sm:text-sm font-medium rounded-md shadow-sm hover:bg-primary/10 transition-colors flex items-center gap-1.5 min-h-[36px] sm:min-h-[40px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   aria-label="변환된 텍스트를 입력창에 적용"
                 >
-                  <ArrowDown className="w-3 h-3" />
+                  <ArrowDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <span className="hidden sm:inline">입력창에 적용하기</span>
                   <span className="sm:hidden">적용</span>
                 </button>
@@ -168,20 +171,20 @@ export function EditorPanel({
           </div>
         </div>
 
-        <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 pt-2">
+        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3 sm:gap-4 pt-2 sm:pt-3">
           <button
             onClick={handleReset}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-5 sm:px-6 py-3 sm:py-2.5 rounded-lg text-sm sm:text-base font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex items-center justify-center gap-2 min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-label="텍스트 초기화"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5" />
             초기화
           </button>
 
           <button
             onClick={handleCopy}
             className={cn(
-              "w-full sm:w-auto px-6 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-sm",
+              "w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-2.5 rounded-lg text-sm sm:text-base font-bold transition-all flex items-center justify-center gap-2 shadow-sm min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               copied
                 ? "bg-green-600 text-white hover:bg-green-700"
                 : "bg-primary text-primary-foreground hover:opacity-90",
@@ -190,12 +193,12 @@ export function EditorPanel({
           >
             {copied ? (
               <>
-                <Check className="w-4 h-4" />
+                <Check className="w-4 h-4 sm:w-5 sm:h-5" />
                 복사 완료!
               </>
             ) : (
               <>
-                <Copy className="w-4 h-4" />
+                <Copy className="w-4 h-4 sm:w-5 sm:h-5" />
                 결과 복사
               </>
             )}
