@@ -21,6 +21,9 @@ export function Header() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
+            <Link href="/tools" className="hover:text-foreground transition-colors">
+              전체 도구
+            </Link>
             <Link href="/workflows" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
               <Map className="w-4 h-4" />
               워크플로
@@ -28,6 +31,9 @@ export function Header() {
             <Link href="/guides" className="flex items-center gap-1.5 hover:text-foreground transition-colors">
               <BookOpen className="w-4 h-4" />
               가이드
+            </Link>
+            <Link href="/about" className="hover:text-foreground transition-colors">
+              소개
             </Link>
           </nav>
         </div>
