@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation"
+import { HomePageContent } from "@/components/home-page-content"
 
 export default function Home() {
-  redirect("/tools")
+  return <HomePageContent />
 }
