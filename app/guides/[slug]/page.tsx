@@ -52,10 +52,50 @@ export default function GuideDetailPage({ params }: { params: { slug: string } }
             {guide.sections.map((section, index) => {
               const tool = section.relatedToolId ? getUtilityBySlug(section.relatedToolId) : null
 
+              // 마크다운 형식의 텍스트를 HTML로 변환하는 간단한 함수
+              const formatContent = (text: string) => {
+                let formatted = text
+                  // 코드 블록 처리 (```로 감싼 부분)
+                  .replace(/```([\s\S]*?)```/g, '<pre class="bg-slate-100 p-4 rounded-lg my-4 overflow-x-auto"><code class="text-sm">$1</code></pre>')
+                  // 인라인 코드 처리 (`로 감싼 부분)
+                  .replace(/`([^`]+)`/g, '<code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono">$1</code>')
+                  // 볼드 텍스트 처리 (**텍스트**)
+                  .replace(/\*\*([^*]+)\*\*/g, '<strong class="font-bold text-slate-900">$1</strong>')
+                  // 줄바꿈 처리
+                  .split('\n')
+                  .map((line, idx, arr) => {
+                    // 빈 줄은 <br>로 처리
+                    if (line.trim() === '') {
+                      return idx < arr.length - 1 ? '<br />' : ''
+                    }
+                    // 리스트 항목 처리 (- 또는 숫자.)
+                    if (/^[-•]\s/.test(line.trim()) || /^\d+\.\s/.test(line.trim())) {
+                      return `<li class="ml-4 mb-2">${line.replace(/^[-•]\s/, '').replace(/^\d+\.\s/, '')}</li>`
+                    }
+                    // 헤더 처리 (##)
+                    if (/^##\s/.test(line.trim())) {
+                      return `<h3 class="text-xl font-bold text-slate-900 mt-6 mb-3">${line.replace(/^##\s/, '')}</h3>`
+                    }
+                    // 일반 텍스트
+                    return `<p class="mb-3">${line}</p>`
+                  })
+                  .join('')
+                
+                // 리스트 항목들을 <ul>로 감싸기
+                formatted = formatted.replace(/(<li[^>]*>.*?<\/li>(?:\s*<br \/>)?)+/g, (match) => {
+                  return `<ul class="list-disc list-inside space-y-2 my-4">${match.replace(/<br \/>/g, '')}</ul>`
+                })
+                
+                return formatted
+              }
+
               return (
                 <section key={index} className="relative">
                   <h2 className="text-2xl font-bold text-slate-900 mb-4">{section.title}</h2>
-                  <p className="text-slate-600 leading-relaxed mb-6 text-lg">{section.content}</p>
+                  <div 
+                    className="text-slate-600 leading-relaxed mb-6 text-lg prose prose-slate max-w-none"
+                    dangerouslySetInnerHTML={{ __html: formatContent(section.content) }}
+                  />
 
                   {tool && (
                     <Link
