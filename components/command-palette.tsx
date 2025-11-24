@@ -173,30 +173,38 @@ export function CommandPalette({ open: controlledOpen, onOpenChange }: CommandPa
           {/* Results */}
           <div className="max-h-96 overflow-y-auto">
             {filteredItems.length === 0 ? (
-              <div className="p-8 text-center text-slate-500">검색 결과가 없습니다.</div>
+              <div className="p-8 text-center text-muted-foreground">
+                <p className="text-sm">검색 결과가 없습니다.</p>
+                {query.trim() && (
+                  <p className="text-xs text-muted-foreground/70 mt-1">다른 키워드로 검색해 보세요.</p>
+                )}
+              </div>
             ) : (
               <div className="py-2">
                 {filteredItems.map((item, index) => (
                   <button
                     key={item.id}
-                    className={`w-full flex items-start gap-3 px-4 py-3 hover:bg-slate-50 transition-colors ${
-                      index === selectedIndex ? "bg-slate-100" : ""
+                    className={`w-full flex items-start gap-3 px-4 py-3 hover:bg-accent transition-colors text-left ${
+                      index === selectedIndex ? "bg-accent" : ""
                     }`}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation()
                       router.push(item.url)
                       setIsOpen(false)
+                      setQuery("")
                     }}
                     onMouseEnter={() => setSelectedIndex(index)}
+                    aria-label={`${item.title} - ${getTypeLabel(item.type)}`}
                   >
-                    <div className="mt-1 text-slate-500">{getIcon(item.type)}</div>
-                    <div className="flex-1 text-left">
+                    <div className="mt-1 text-muted-foreground shrink-0">{getIcon(item.type)}</div>
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-sm font-medium text-slate-900">{item.title}</span>
-                        <span className="px-1.5 py-0.5 bg-slate-100 text-slate-600 text-xs rounded">
+                        <span className="text-sm font-medium text-foreground">{item.title}</span>
+                        <span className="px-1.5 py-0.5 bg-muted text-muted-foreground text-xs rounded shrink-0">
                           {getTypeLabel(item.type)}
                         </span>
                       </div>
-                      <p className="text-sm text-slate-600 line-clamp-1">{item.description}</p>
+                      <p className="text-sm text-muted-foreground line-clamp-1">{item.description}</p>
                     </div>
                   </button>
                 ))}
