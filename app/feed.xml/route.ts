@@ -1,6 +1,7 @@
 import { UTILITIES } from "@/lib/utilities-registry"
 import { GUIDES } from "@/lib/guides-registry"
 import { WORKFLOW_PRESETS } from "@/lib/workflows-registry"
+import { BLOG_POSTS } from "@/lib/blog-registry"
 
 export async function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"
@@ -35,6 +36,13 @@ export async function GET() {
       link: `${baseUrl}/workflow/${workflow.slug}`,
       description: workflow.description,
       pubDate: currentDate,
+    })),
+    // 블로그 포스트
+    ...BLOG_POSTS.map((post) => ({
+      title: post.title,
+      link: `${baseUrl}/blog/${post.slug}`,
+      description: post.description,
+      pubDate: new Date(post.publishedAt).toUTCString(),
     })),
   ]
 

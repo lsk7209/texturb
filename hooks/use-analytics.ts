@@ -18,6 +18,20 @@ export function useGuideView(guideId: string) {
   }, [guideId])
 }
 
+// Hook to track blog views
+export function useBlogView(blogSlug: string) {
+  useEffect(() => {
+    trackEvent({
+      name: "blog_view",
+      params: {
+        blog_slug: blogSlug,
+        device: getDeviceType(),
+        source: getSourceFromReferrer(),
+      },
+    })
+  }, [blogSlug])
+}
+
 // Hook to track tool usage
 export function useToolTracking(toolId: string) {
   return (inputLength?: number) => {

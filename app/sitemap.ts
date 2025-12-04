@@ -2,6 +2,7 @@ import { MetadataRoute } from "next"
 import { UTILITIES } from "@/lib/utilities-registry"
 import { GUIDES } from "@/lib/guides-registry"
 import { WORKFLOW_PRESETS } from "@/lib/workflows-registry"
+import { BLOG_POSTS } from "@/lib/blog-registry"
 
 // Sitemap 재생성 주기 설정 (ISR)
 export const revalidate = 3600 // 1시간마다 재생성
@@ -79,6 +80,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }))
 
-  return [...staticPages, ...toolPages, ...guidePages, ...workflowPages]
+  // 블로그 페이지
+  const blogPages: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    ...BLOG_POSTS.map((post) => ({
+      url: `${baseUrl}/blog/${post.slug}`,
+      lastModified: new Date(post.publishedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
+  ]
+
+  return [...staticPages, ...toolPages, ...guidePages, ...workflowPages, ...blogPages]
 }
 
