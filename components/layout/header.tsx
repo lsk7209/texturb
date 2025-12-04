@@ -135,7 +135,7 @@ export function Header() {
           {/* 데스크톱 전체 도구 버튼 */}
           <Link
             href="/tools"
-            className="hidden md:flex items-center gap-2 px-5 py-2.5 text-sm font-bold bg-primary text-primary-foreground hover:opacity-90 rounded-full transition-all shadow-md hover:shadow-lg active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="hidden md:flex items-center gap-2 px-5 py-2.5 text-sm font-bold bg-primary text-primary-foreground hover:bg-primary/90 rounded-full transition-all shadow-md hover:shadow-primary hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <LayoutGrid className="w-4 h-4" aria-hidden="true" />
             전체 도구
