@@ -10,6 +10,7 @@ import { CleanupTools } from "./tools/cleanup-tools"
 import { CountTools } from "./tools/count-tools"
 import { FormatTools } from "./tools/format-tools"
 import { HighlightTools } from "./tools/highlight-tools"
+import { AnalysisTools } from "./tools/analysis-tools"
 
 const MAX_TEXT_LENGTH = 20000
 
@@ -151,7 +152,7 @@ export function EditorPanel({
 
           <div className="bg-muted rounded-lg p-4 sm:p-5 md:p-6 border border-border relative">
             {activeTab === "cleanup" && <CleanupTools text={debouncedText} onPreviewChange={setPreviewText} toolId={toolId} />}
-            {activeTab === "analysis" && <CountTools text={debouncedText} toolId={toolId} />}
+            {activeTab === "analysis" && <AnalysisTools text={debouncedText} onPreviewChange={setPreviewText} toolId={toolId} />}
             {activeTab === "transform" && <FormatTools text={debouncedText} onPreviewChange={setPreviewText} toolId={toolId} />}
             {activeTab === "highlight" && <HighlightTools onInsert={(char) => setText(text + char)} toolId={toolId} />}
 

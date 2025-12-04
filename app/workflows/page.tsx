@@ -1,6 +1,36 @@
 import Link from "next/link"
 import { ArrowRight, PenTool, FileText, Table, Code } from "lucide-react"
 import { WORKFLOW_PRESETS } from "@/lib/workflows-registry"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "상황별 텍스트 작업 워크플로 - 블로그 포스팅, 자소서 작성 | 텍스터브",
+  description: "블로그 포스팅부터 보고서 작성까지, 상황에 딱 맞는 도구 조합으로 텍스트 작업을 더 빠르게 끝내세요. 단계별 워크플로를 따라하면 효율적으로 작업할 수 있습니다.",
+  keywords: [
+    "텍스트 작업 워크플로",
+    "블로그 포스팅",
+    "자소서 작성",
+    "보고서 작성",
+    "텍스트 편집 순서",
+    "상황별 텍스트 작업",
+  ],
+  alternates: {
+    canonical: "/workflows",
+  },
+  openGraph: {
+    title: "상황별 텍스트 작업 워크플로 - 블로그 포스팅, 자소서 작성 | 텍스터브",
+    description: "블로그 포스팅부터 보고서 작성까지, 상황에 딱 맞는 도구 조합으로 텍스트 작업을 더 빠르게 끝내세요.",
+    url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"}/workflows`,
+    type: "website",
+    locale: "ko_KR",
+    siteName: "텍스터브",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "상황별 텍스트 작업 워크플로 - 블로그 포스팅, 자소서 작성 | 텍스터브",
+    description: "블로그 포스팅부터 보고서 작성까지, 상황에 딱 맞는 도구 조합으로 텍스트 작업을 더 빠르게 끝내세요.",
+  },
+}
 
 const iconMap = {
   PenTool: PenTool,

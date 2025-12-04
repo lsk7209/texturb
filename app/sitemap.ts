@@ -3,6 +3,9 @@ import { UTILITIES } from "@/lib/utilities-registry"
 import { GUIDES } from "@/lib/guides-registry"
 import { WORKFLOW_PRESETS } from "@/lib/workflows-registry"
 
+// Sitemap 재생성 주기 설정 (ISR)
+export const revalidate = 3600 // 1시간마다 재생성
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"
 
@@ -52,12 +55,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ]
 
-  // 도구 페이지
+  // 도구 페이지 (중복 방지: trailing slash 제거)
   const toolPages: MetadataRoute.Sitemap = UTILITIES.map((tool) => ({
     url: `${baseUrl}/tools/${tool.slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly",
-    priority: 0.7,
+    priority: 0.8, // 도구 페이지는 높은 우선순위
   }))
 
   // 가이드 페이지

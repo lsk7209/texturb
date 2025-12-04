@@ -2,8 +2,16 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "개인정보처리방침 | 텍스터브",
-  description: "텍스터브의 개인정보처리방침입니다.",
+  title: "개인정보처리방침 - 텍스터브 | 개인정보 보호 정책",
+  description: "텍스터브의 개인정보처리방침입니다. 사용자의 개인정보를 최우선으로 생각하며, 모든 텍스트 처리는 브라우저에서만 이루어집니다.",
+  keywords: ["개인정보처리방침", "개인정보 보호", "텍스터브 정책"],
+  alternates: {
+    canonical: "/privacy",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 export default function PrivacyPage() {

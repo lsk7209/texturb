@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
@@ -9,9 +9,20 @@ import { UTILITIES } from "@/lib/utilities-registry"
 import { useLocalHistory } from "@/hooks/use-local-history"
 import { useRecentTools } from "@/hooks/use-recent-tools"
 import { useFavorites } from "@/hooks/use-favorites"
-import { LocalHistoryBanner } from "./local-history-banner"
-import { StepTabs } from "./text-studio/step-tabs"
-import { EditorPanel } from "./text-studio/editor-panel"
+import dynamic from "next/dynamic"
+
+// 큰 컴포넌트들을 dynamic import로 lazy load
+const LocalHistoryBanner = dynamic(() => import("./local-history-banner").then((mod) => ({ default: mod.LocalHistoryBanner })), {
+  ssr: false, // 클라이언트 전용 컴포넌트
+})
+
+const StepTabs = dynamic(() => import("./text-studio/step-tabs").then((mod) => ({ default: mod.StepTabs })), {
+  loading: () => <div className="h-12 w-full animate-pulse bg-muted rounded-md" />,
+})
+
+const EditorPanel = dynamic(() => import("./text-studio/editor-panel").then((mod) => ({ default: mod.EditorPanel })), {
+  loading: () => <div className="h-96 w-full animate-pulse bg-muted rounded-md" />,
+})
 
 import type { TabId } from "@/components/text-studio/text-studio-main"
 
@@ -22,6 +33,20 @@ export function HomePageContent() {
   const { history, saveHistory, clearHistory } = useLocalHistory()
   const { recentTools } = useRecentTools()
   const { favorites } = useFavorites()
+
+  // 즐겨찾기 도구 목록 메모이제이션
+  const favoriteTools = useMemo(() => {
+    return favorites.slice(0, 6)
+      .map((toolId) => UTILITIES.find((u) => u.id === toolId))
+      .filter((tool): tool is NonNullable<typeof tool> => tool !== undefined)
+  }, [favorites])
+
+  // 최근 사용 도구 목록 메모이제이션
+  const recentToolsList = useMemo(() => {
+    return recentTools.slice(0, 6)
+      .map((toolId) => UTILITIES.find((u) => u.id === toolId))
+      .filter((tool): tool is NonNullable<typeof tool> => tool !== undefined)
+  }, [recentTools])
 
   const handleRestore = () => {
     if (history) {
@@ -73,47 +98,39 @@ export function HomePageContent() {
           </div>
 
           {/* Favorites Section */}
-          {favorites.length > 0 && (
+          {favoriteTools.length > 0 && (
             <section className="space-y-4 sm:space-y-6">
               <h2 className="text-xl sm:text-2xl font-semibold leading-tight">즐겨찾기</h2>
               <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {favorites.slice(0, 6).map((toolId) => {
-                  const tool = UTILITIES.find((u) => u.id === toolId)
-                  if (!tool) return null
-                  return (
-                    <Link key={tool.id} href={`/tools/${tool.id}`} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg">
-                      <Card className="hover:bg-accent transition-colors cursor-pointer h-full hover:shadow-md">
-                        <CardHeader className="pb-3">
-                          <CardTitle className="text-base sm:text-lg leading-snug">{tool.name}</CardTitle>
-                          <CardDescription className="text-sm leading-relaxed mt-1.5">{tool.description}</CardDescription>
-                        </CardHeader>
-                      </Card>
-                    </Link>
-                  )
-                })}
+                {favoriteTools.map((tool) => (
+                  <Link key={tool.id} href={`/tools/${tool.slug}`} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg">
+                    <Card className="hover:bg-accent transition-colors cursor-pointer h-full hover:shadow-md">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-base sm:text-lg leading-snug">{tool.name}</CardTitle>
+                        <CardDescription className="text-sm leading-relaxed mt-1.5">{tool.description}</CardDescription>
+                      </CardHeader>
+                    </Card>
+                  </Link>
+                ))}
               </div>
             </section>
           )}
 
           {/* Recent Tools Section */}
-          {recentTools.length > 0 && (
+          {recentToolsList.length > 0 && (
             <section className="space-y-4 sm:space-y-6">
               <h2 className="text-xl sm:text-2xl font-semibold leading-tight">최근 사용한 도구</h2>
               <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {recentTools.slice(0, 6).map((toolId) => {
-                  const tool = UTILITIES.find((u) => u.id === toolId)
-                  if (!tool) return null
-                  return (
-                    <Link key={tool.id} href={`/tools/${tool.id}`} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg">
-                      <Card className="hover:bg-accent transition-colors cursor-pointer h-full hover:shadow-md">
-                        <CardHeader className="pb-3">
-                          <CardTitle className="text-base sm:text-lg leading-snug">{tool.name}</CardTitle>
-                          <CardDescription className="text-sm leading-relaxed mt-1.5">{tool.description}</CardDescription>
-                        </CardHeader>
-                      </Card>
-                    </Link>
-                  )
-                })}
+                {recentToolsList.map((tool) => (
+                  <Link key={tool.id} href={`/tools/${tool.slug}`} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg">
+                    <Card className="hover:bg-accent transition-colors cursor-pointer h-full hover:shadow-md">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-base sm:text-lg leading-snug">{tool.name}</CardTitle>
+                        <CardDescription className="text-sm leading-relaxed mt-1.5">{tool.description}</CardDescription>
+                      </CardHeader>
+                    </Card>
+                  </Link>
+                ))}
               </div>
             </section>
           )}

@@ -9,6 +9,8 @@
 import { NextResponse } from "next/server"
 import { getPostgresClient } from "@/lib/db/postgres-pool"
 import { logger } from "@/lib/logger"
+import { normalizePostgresResult } from "@/lib/db/postgres-types"
+import type { PostgresRow } from "@/lib/db/postgres-types"
 
 // Cron Jobs는 Node.js Runtime에서 실행
 export const runtime = "nodejs"
@@ -49,7 +51,7 @@ export async function GET(request: Request) {
     }
     
     // 시간별 통계 업데이트
-    const hourlyStats = await (client as any).unsafe(
+    const hourlyStatsResult = await (client as { unsafe: (query: string, params: unknown[]) => Promise<unknown> }).unsafe(
       `
       SELECT 
         DATE_TRUNC('hour', created_at) as hour,
@@ -79,7 +81,7 @@ export async function GET(request: Request) {
       )
     }
 
-    const statsArray = Array.isArray(hourlyStats) ? hourlyStats : (hourlyStats as any).rows || []
+    const statsArray = normalizePostgresResult<PostgresRow & { hour: string; usage_count: number }>(hourlyStatsResult)
 
     return NextResponse.json({
       success: true,

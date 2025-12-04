@@ -3,7 +3,7 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight, Map, PenTool } from "lucide-react"
-import { getGuideBySlug } from "@/lib/guides-registry"
+import { getGuideBySlug, GUIDES } from "@/lib/guides-registry"
 import { getUtilityBySlug } from "@/lib/utilities-registry"
 import { useGuideView } from "@/hooks/use-analytics"
 import { GuideFAQSection } from "@/components/guide-faq-section"
@@ -123,6 +123,86 @@ export function GuideDetailClient({ slug }: GuideDetailClientProps) {
         </article>
 
         <GuideFAQSection guideSlug={slug} />
+
+        {/* CTA 섹션 - 사용자 행동 유도 */}
+        <section className="mt-12 p-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-200">
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">지금 바로 시작해보세요</h2>
+          <p className="text-slate-700 mb-6 leading-relaxed">
+            이 가이드에서 배운 내용을 바로 실전에 적용해보세요. 텍스터브의 다양한 도구를 사용하여 텍스트 작업을 더 효율적으로 할 수 있습니다.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link
+              href="/tools"
+              className="px-6 py-3 bg-primary text-primary-foreground rounded-xl font-bold hover:bg-primary/90 transition-colors shadow-sm hover:shadow-md text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              모든 도구 보기 →
+            </Link>
+            {guide.relatedWorkflowId && (
+              <Link
+                href={`/workflow/${guide.relatedWorkflowId}`}
+                className="px-6 py-3 bg-white text-slate-900 border-2 border-slate-300 rounded-xl font-bold hover:border-slate-400 transition-colors shadow-sm hover:shadow-md text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                워크플로 시작하기 →
+              </Link>
+            )}
+          </div>
+        </section>
+
+        {/* 관련 가이드 섹션 - Inlink */}
+        <section className="mt-12">
+          <h2 className="text-2xl font-bold text-slate-900 mb-6">관련 가이드</h2>
+          <div className="grid md:grid-cols-2 gap-6">
+            {GUIDES.filter((g) => g.slug !== slug)
+              .slice(0, 2)
+              .map((relatedGuide) => (
+                <Link
+                  key={relatedGuide.slug}
+                  href={`/guides/${relatedGuide.slug}`}
+                  className="block p-6 bg-white rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all group"
+                >
+                  <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-primary transition-colors">
+                    {relatedGuide.title}
+                  </h3>
+                  <p className="text-slate-600 text-sm line-clamp-2">{relatedGuide.description}</p>
+                </Link>
+              ))}
+          </div>
+        </section>
+
+        {/* 외부 참고 자료 - Outlink */}
+        <section className="mt-12 p-6 bg-slate-50 rounded-xl border border-slate-200">
+          <h2 className="text-xl font-bold text-slate-900 mb-4">추가 참고 자료</h2>
+          <ul className="space-y-3">
+            <li>
+              <a
+                href="https://developers.google.com/search/docs/fundamentals/seo-starter-guide"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-2"
+              >
+                <span>Google SEO 가이드</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
+              <p className="text-sm text-slate-600 mt-1 ml-6">
+                Google에서 제공하는 검색 엔진 최적화 가이드라인을 확인하세요.
+              </p>
+            </li>
+            <li>
+              <a
+                href="https://www.w3.org/WAI/WCAG21/quickref/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-2"
+              >
+                <span>웹 접근성 가이드라인 (WCAG)</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
+              <p className="text-sm text-slate-600 mt-1 ml-6">
+                웹 콘텐츠 접근성 가이드라인을 참고하여 더 나은 콘텐츠를 작성하세요.
+              </p>
+            </li>
+          </ul>
+        </section>
       </div>
 
       {faqData && faqData.items.length > 0 && <GuideJsonLd faqItems={faqData.items} />}

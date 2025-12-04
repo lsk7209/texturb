@@ -20,6 +20,10 @@ import { useToolView } from "@/hooks/use-analytics"
 import { ToolFAQSection } from "@/components/tool-faq-section"
 import { ToolJsonLd } from "@/components/tool-json-ld"
 import { BreadcrumbNav } from "@/components/breadcrumb-nav"
+import { BreadcrumbJsonLd } from "@/components/breadcrumb-json-ld"
+import { ToolFAQJsonLd } from "@/components/tool-faq-json-ld"
+import { getToolFAQById } from "@/lib/tool-faq-registry"
+import { AEOSummarySection } from "@/components/aeo-summary-section"
 
 interface ToolPageClientProps {
   slug: string
@@ -43,9 +47,30 @@ export function ToolPageClient({ slug, searchParams }: ToolPageClientProps) {
   }
 
   const activeTab = tool.tabId || "cleanup"
+  const faqData = getToolFAQById(tool.id)
+  // baseUrl은 JSON-LD 컴포넌트 내부에서 처리되므로 여기서는 제거
 
   return (
     <main className="min-h-screen bg-background">
+      {/* 구조화된 데이터 (JSON-LD) */}
+      <BreadcrumbJsonLd
+        items={[
+          { name: "홈", url: "/" },
+          { name: "도구", url: "/tools" },
+          { name: tool.name, url: `/tools/${tool.slug}` },
+        ]}
+      />
+      <ToolJsonLd
+        toolName={tool.name}
+        toolDescription={tool.description}
+        toolSlug={tool.slug}
+        category={tool.category}
+        keywords={tool.keywords}
+      />
+      {faqData && faqData.items.length > 0 && (
+        <ToolFAQJsonLd faqItems={faqData.items} toolName={tool.name} toolSlug={tool.slug} />
+      )}
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 lg:space-y-10">
           {/* Header Section */}
@@ -69,6 +94,13 @@ export function ToolPageClient({ slug, searchParams }: ToolPageClientProps) {
               <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-3xl">{tool.description}</p>
             </div>
           </div>
+
+          {/* AEO 최적화: 질문-답변 형식 요약 섹션 */}
+          <AEOSummarySection
+            question={`${tool.name}는 무엇인가요?`}
+            answer={`${tool.description} ${tool.keywords.join(", ")} 등 텍스트 작업을 빠르고 쉽게 처리할 수 있는 무료 온라인 도구입니다. 모든 작업은 브라우저에서 안전하게 처리되며, 서버에 데이터가 전송되지 않습니다.`}
+            keywords={tool.keywords}
+          />
 
           {/* Main Tool Section */}
           <div className="w-full">
@@ -107,7 +139,6 @@ export function ToolPageClient({ slug, searchParams }: ToolPageClientProps) {
           <PrivacyMessage />
         </div>
       </div>
-      <ToolJsonLd toolName={tool.name} toolDescription={tool.description} toolSlug={tool.slug} />
     </main>
   )
 }

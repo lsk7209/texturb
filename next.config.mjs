@@ -16,7 +16,16 @@ const nextConfig = {
   reactStrictMode: true, // React Strict Mode 활성화
   // swcMinify는 Next.js 13+에서 기본적으로 활성화되어 있음
   experimental: {
-    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons', '@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'], // 번들 크기 최적화
+    optimizePackageImports: [
+      'lucide-react', 
+      '@radix-ui/react-icons', 
+      '@radix-ui/react-dialog', 
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-tabs',
+      '@radix-ui/react-select',
+      '@radix-ui/react-popover',
+      '@radix-ui/react-toast',
+    ], // 번들 크기 최적화
     // Next.js 16 최적화
     serverActions: {
       bodySizeLimit: '2mb',
@@ -24,6 +33,8 @@ const nextConfig = {
     // 메모리 사용량 최적화
     preloadEntriesOnStart: false,
   },
+  // 서버 컴포넌트 최적화 (Next.js 16에서는 루트 레벨로 이동)
+  serverExternalPackages: ['@vercel/postgres', 'postgres'],
   // 빌드 ID 생성 (Vercel 환경)
   generateBuildId: async () => {
     if (process.env.VERCEL_GIT_COMMIT_SHA) {

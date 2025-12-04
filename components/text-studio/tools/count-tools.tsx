@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Progress } from "@/components/ui/progress"
 import { Checkbox } from "@/components/ui/checkbox"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { AnalysisTools } from "./analysis-tools"
 
 interface CountToolsProps {
   text: string
@@ -13,6 +14,11 @@ interface CountToolsProps {
 }
 
 export function CountTools({ text, toolId }: CountToolsProps) {
+  // 가독성 점수 계산기 또는 키워드 밀도 분석기는 AnalysisTools로 위임
+  if (toolId === "readability-score" || toolId === "keyword-density") {
+    return <AnalysisTools text={text} toolId={toolId} />
+  }
+
   const [targetCount, setTargetCount] = useState<string>("1000")
   const [paragraphMode, setParagraphMode] = useState<"empty" | "whitespace" | "count" | "split">("empty")
   const [metaLang, setMetaLang] = useState<"ko" | "en">("ko")

@@ -1,6 +1,37 @@
 import Link from "next/link"
 import { ArrowRight, BookOpen, Map } from "lucide-react"
 import { GUIDES } from "@/lib/guides-registry"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "텍스트 편집 가이드 - 블로그 글 정리, 자소서 작성법 | 텍스터브",
+  description: "블로그 글 정리, 자소서 작성, 보고서 작성 등 상황별 텍스트 작업 노하우와 텍스터브 활용법을 확인하세요. 단계별 가이드로 텍스트 작업을 더 효율적으로 할 수 있습니다.",
+  keywords: [
+    "텍스트 편집 가이드",
+    "블로그 글 정리",
+    "자소서 작성법",
+    "텍스트 작업 가이드",
+    "글자수 맞추기",
+    "줄바꿈 정리",
+    "텍스트 정리 방법",
+  ],
+  alternates: {
+    canonical: "/guides",
+  },
+  openGraph: {
+    title: "텍스트 편집 가이드 - 블로그 글 정리, 자소서 작성법 | 텍스터브",
+    description: "블로그 글 정리, 자소서 작성 등 상황별 텍스트 작업 노하우와 텍스터브 활용법을 확인하세요.",
+    url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"}/guides`,
+    type: "website",
+    locale: "ko_KR",
+    siteName: "텍스터브",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "텍스트 편집 가이드 - 블로그 글 정리, 자소서 작성법 | 텍스터브",
+    description: "블로그 글 정리, 자소서 작성 등 상황별 텍스트 작업 노하우와 텍스터브 활용법을 확인하세요.",
+  },
+}
 
 export default function GuidesPage() {
   return (

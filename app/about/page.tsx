@@ -3,8 +3,27 @@ import Link from "next/link"
 import { PenTool, Shield, Zap, Heart } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "텍스터브 소개 | 텍스터브",
-  description: "텍스터브는 글 쓰는 사람을 위한 텍스트 유틸리티 작업실입니다.",
+  title: "텍스터브 소개 - 무료 텍스트 편집 도구 제공 | 텍스트 작업실",
+  description: "텍스터브는 글 쓰는 사람을 위한 텍스트 유틸리티 작업실입니다. 글자수 세기, 줄바꿈 정리, 대소문자 변환 등 30개 이상의 무료 텍스트 편집 도구를 제공합니다.",
+  keywords: [
+    "텍스터브 소개",
+    "텍스트 편집 도구",
+    "무료 텍스트 도구",
+    "텍스트 작업실",
+    "글자수 세기",
+    "줄바꿈 정리",
+  ],
+  alternates: {
+    canonical: "/about",
+  },
+  openGraph: {
+    title: "텍스터브 소개 - 무료 텍스트 편집 도구 제공",
+    description: "텍스터브는 글 쓰는 사람을 위한 텍스트 유틸리티 작업실입니다.",
+    url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"}/about`,
+    type: "website",
+    locale: "ko_KR",
+    siteName: "텍스터브",
+  },
 }
 
 export default function AboutPage() {

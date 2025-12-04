@@ -2,8 +2,16 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "이용약관 | 텍스터브",
-  description: "텍스터브의 이용약관입니다.",
+  title: "이용약관 - 텍스터브 | 서비스 이용 약관",
+  description: "텍스터브의 이용약관입니다. 서비스 이용과 관련된 권리, 의무 및 책임사항을 확인하세요.",
+  keywords: ["이용약관", "서비스 약관", "텍스터브 약관"],
+  alternates: {
+    canonical: "/terms",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 export default function TermsPage() {

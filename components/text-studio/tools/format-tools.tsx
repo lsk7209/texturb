@@ -82,6 +82,16 @@ export function FormatTools({ text, onPreviewChange, toolId }: FormatToolsProps)
     collapseBlankLines: false,
     tabToSpace: false,
   })
+  const [csvOptions, setCsvOptions] = useState({
+    format: "csv" as "csv" | "tsv",
+    removeEmptyRows: true,
+    trimCells: true,
+    removeDuplicates: false,
+  })
+  const [jsonOptions, setJsonOptions] = useState({
+    indent: 2,
+    minify: false,
+  })
 
   useEffect(() => {
     let result = text
@@ -257,6 +267,40 @@ export function FormatTools({ text, onPreviewChange, toolId }: FormatToolsProps)
       if (mdCleanOptions.collapseBlankLines) result = result.replace(/\n\s*\n/g, "\n\n")
       if (mdCleanOptions.tabToSpace) result = result.replace(/\t/g, "  ")
       result = result.replace(/([^\n])\n(#+)/g, "$1\n\n$2")
+    } else if (toolId === "csv-cleaner") {
+      const separator = csvOptions.format === "csv" ? "," : "\t"
+      let rows = result.split("\n").map((row) => row.split(separator))
+
+      if (csvOptions.trimCells) {
+        rows = rows.map((row) => row.map((cell) => cell.trim()))
+      }
+
+      if (csvOptions.removeEmptyRows) {
+        rows = rows.filter((row) => row.some((cell) => cell.trim().length > 0))
+      }
+
+      if (csvOptions.removeDuplicates) {
+        const seen = new Set<string>()
+        rows = rows.filter((row) => {
+          const key = row.join(separator)
+          if (seen.has(key)) return false
+          seen.add(key)
+          return true
+        })
+      }
+
+      result = rows.map((row) => row.join(separator)).join("\n")
+    } else if (toolId === "json-formatter") {
+      try {
+        const parsed = JSON.parse(text)
+        if (jsonOptions.minify) {
+          result = JSON.stringify(parsed)
+        } else {
+          result = JSON.stringify(parsed, null, jsonOptions.indent)
+        }
+      } catch (e) {
+        result = `JSON 파싱 오류: ${e instanceof Error ? e.message : String(e)}`
+      }
     } else {
       switch (mode) {
         case "upper":
@@ -288,6 +332,8 @@ export function FormatTools({ text, onPreviewChange, toolId }: FormatToolsProps)
     dateOptions,
     widthOptions,
     quoteOptions,
+    csvOptions,
+    jsonOptions,
     toolId,
     onPreviewChange,
   ])
@@ -914,6 +960,100 @@ export function FormatTools({ text, onPreviewChange, toolId }: FormatToolsProps)
                 탭(Tab)을 공백 2개로 변환
               </Label>
             </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (toolId === "csv-cleaner") {
+      return (
+        <div className="space-y-4">
+          <Label className="text-sm font-medium text-slate-700">CSV/TSV 정리 옵션</Label>
+          <div className="space-y-3">
+            <div className="space-y-2">
+              <Label className="text-xs text-slate-600">포맷 선택</Label>
+              <RadioGroup
+                value={csvOptions.format}
+                onValueChange={(v) => setCsvOptions((prev) => ({ ...prev, format: v as "csv" | "tsv" }))}
+                className="flex gap-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="csv" id="csv-format" />
+                  <Label htmlFor="csv-format" className="font-normal cursor-pointer">
+                    CSV (쉼표)
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="tsv" id="tsv-format" />
+                  <Label htmlFor="tsv-format" className="font-normal cursor-pointer">
+                    TSV (탭)
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="trimCells"
+                checked={csvOptions.trimCells}
+                onCheckedChange={(c) => setCsvOptions((prev) => ({ ...prev, trimCells: c as boolean }))}
+              />
+              <Label htmlFor="trimCells" className="font-normal cursor-pointer">
+                셀 앞뒤 공백 제거
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="removeEmptyRows"
+                checked={csvOptions.removeEmptyRows}
+                onCheckedChange={(c) => setCsvOptions((prev) => ({ ...prev, removeEmptyRows: c as boolean }))}
+              />
+              <Label htmlFor="removeEmptyRows" className="font-normal cursor-pointer">
+                빈 행 제거
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="removeDuplicates"
+                checked={csvOptions.removeDuplicates}
+                onCheckedChange={(c) => setCsvOptions((prev) => ({ ...prev, removeDuplicates: c as boolean }))}
+              />
+              <Label htmlFor="removeDuplicates" className="font-normal cursor-pointer">
+                중복 행 제거
+              </Label>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    if (toolId === "json-formatter") {
+      return (
+        <div className="space-y-4">
+          <Label className="text-sm font-medium text-slate-700">JSON 포맷 옵션</Label>
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="minify"
+                checked={jsonOptions.minify}
+                onCheckedChange={(c) => setJsonOptions((prev) => ({ ...prev, minify: c as boolean }))}
+              />
+              <Label htmlFor="minify" className="font-normal cursor-pointer">
+                압축 (한 줄로)
+              </Label>
+            </div>
+            {!jsonOptions.minify && (
+              <div className="space-y-2">
+                <Label className="text-xs text-slate-600">들여쓰기 공백 수</Label>
+                <Input
+                  type="number"
+                  min={0}
+                  max={8}
+                  value={jsonOptions.indent}
+                  onChange={(e) => setJsonOptions((prev) => ({ ...prev, indent: Number.parseInt(e.target.value) || 2 }))}
+                  className="max-w-[100px]"
+                />
+              </div>
+            )}
           </div>
         </div>
       )

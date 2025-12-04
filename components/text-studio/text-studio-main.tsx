@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useMemo } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { EditorPanel } from "@/components/text-studio/editor-panel"
 import { PreviewPanel } from "@/components/text-studio/preview-panel"
@@ -95,8 +95,10 @@ export function TextStudioMain(props: TextStudioMainProps) {
     [onPreviewChange],
   )
 
-  // Get current tool component
-  const ActiveToolComponent = toolId ? toolRegistry[toolId] : toolRegistry[currentTab]
+  // Get current tool component (메모이제이션으로 불필요한 재계산 방지)
+  const ActiveToolComponent = useMemo(() => {
+    return toolId ? toolRegistry[toolId] : toolRegistry[currentTab]
+  }, [toolId, currentTab])
 
   return (
     <div className="w-full">

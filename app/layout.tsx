@@ -5,6 +5,7 @@ import "./globals.css"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { Toaster } from "@/components/ui/toaster"
+import { Analytics } from "@vercel/analytics/react"
 import Script from "next/script"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -46,6 +47,14 @@ export const metadata: Metadata = {
     siteName: "텍스터브",
     title: "텍스터브 - 텍스트 작업실",
     description: "블로그·자소서·보고서 쓰다가 막히면, 그냥 여기다 붙여넣으세요.",
+    images: [
+      {
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: "텍스터브 - 텍스트 작업실",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -117,6 +126,7 @@ export default function RootLayout({
         {children}
         <Footer />
         <Toaster />
+        <Analytics />
       </body>
     </html>
   )

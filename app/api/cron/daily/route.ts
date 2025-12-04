@@ -9,6 +9,8 @@
 import { NextResponse } from "next/server"
 import { getPostgresClient } from "@/lib/db/postgres-pool"
 import { logger } from "@/lib/logger"
+import { normalizePostgresResult, extractSingleRow, extractRowCount } from "@/lib/db/postgres-types"
+import type { PostgresRow } from "@/lib/db/postgres-types"
 
 // Cron Jobs는 Node.js Runtime에서 실행
 export const runtime = "nodejs"
@@ -56,7 +58,7 @@ export async function GET(request: Request) {
     // 병렬 실행으로 최적화: 통계 집계와 세션 정리를 동시에
     const [statsResult, cleanupResult] = await Promise.all([
       // 일일 통계 집계
-      (client as any).unsafe(
+      (client as { unsafe: (query: string, params: unknown[]) => Promise<unknown> }).unsafe(
         `
         SELECT 
           COUNT(*) as total_usage,
@@ -76,7 +78,7 @@ export async function GET(request: Request) {
         [dateStr]
       ),
       // 오래된 세션 데이터 정리 (30일 이상)
-      (client as any).unsafe(
+      (client as { unsafe: (query: string, params: unknown[]) => Promise<unknown> }).unsafe(
         `
         DELETE FROM sessions
         WHERE last_accessed < NOW() - INTERVAL '30 days'
@@ -85,15 +87,21 @@ export async function GET(request: Request) {
       ),
     ])
 
-    const stats = Array.isArray(statsResult) ? statsResult[0] : (statsResult as any).rows?.[0] as {
-      total_usage: number
-      unique_sessions: number
+    const statsRow = extractSingleRow<PostgresRow & {
+      total_usage: number | string
+      unique_sessions: number | string
       top_tools: string
-    }
+    }>(statsResult)
+    
+    const stats = statsRow ? {
+      total_usage: typeof statsRow.total_usage === "number" ? statsRow.total_usage : Number.parseInt(String(statsRow.total_usage), 10),
+      unique_sessions: typeof statsRow.unique_sessions === "number" ? statsRow.unique_sessions : Number.parseInt(String(statsRow.unique_sessions), 10),
+      top_tools: String(statsRow.top_tools || "[]"),
+    } : null
 
     // 통계 저장
     if (stats) {
-      await (client as any).unsafe(
+      await (client as { unsafe: (query: string, params: unknown[]) => Promise<unknown> }).unsafe(
         `
         INSERT INTO daily_stats (date, total_usage, unique_sessions, top_tools, updated_at)
         VALUES ($1, $2, $3, $4, NOW())
@@ -108,7 +116,7 @@ export async function GET(request: Request) {
     }
     
     // 시간별 통계도 함께 집계 (Hobby 플랜 제한으로 시간별 크론 작업 제거됨)
-    const hourlyStats = await (client as any).unsafe(
+    const hourlyStatsResult = await (client as { unsafe: (query: string, params: unknown[]) => Promise<unknown> }).unsafe(
       `
       SELECT 
         DATE_TRUNC('hour', created_at) as hour,
@@ -139,11 +147,8 @@ export async function GET(request: Request) {
       )
     }
 
-    const cleanupCount = Array.isArray(cleanupResult) 
-      ? cleanupResult.length 
-      : (cleanupResult as any).count || 0
-
-    const hourlyStatsArray = Array.isArray(hourlyStats) ? hourlyStats : (hourlyStats as any).rows || []
+    const cleanupCount = extractRowCount(cleanupResult)
+    const hourlyStatsArray = normalizePostgresResult<PostgresRow & { hour: string; usage_count: number }>(hourlyStatsResult)
 
     return NextResponse.json({
       success: true,

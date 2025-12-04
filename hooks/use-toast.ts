@@ -179,7 +179,8 @@ function useToast() {
         listeners.splice(index, 1)
       }
     }
-  }, [state])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // setState는 안정적이므로 의존성 배열을 비워도 안전
 
   return {
     ...state,
