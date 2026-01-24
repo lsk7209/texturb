@@ -39,6 +39,10 @@ export function Header() {
               <Map className="w-4 h-4" aria-hidden="true" />
               워크플로
             </Link>
+            <Link href="/blog" className="flex items-center gap-1.5 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-2 py-1">
+              <BookOpen className="w-4 h-4" aria-hidden="true" />
+              블로그
+            </Link>
             <Link href="/guides" className="flex items-center gap-1.5 hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-2 py-1">
               <BookOpen className="w-4 h-4" aria-hidden="true" />
               가이드
@@ -63,7 +67,7 @@ export function Header() {
           </Button>
 
           <ThemeToggle />
-          
+
           {/* 모바일 메뉴 */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
@@ -96,6 +100,14 @@ export function Header() {
                 >
                   <Map className="w-5 h-5" aria-hidden="true" />
                   워크플로
+                </Link>
+                <Link
+                  href="/blog"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 text-base font-medium rounded-lg hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <BookOpen className="w-5 h-5" aria-hidden="true" />
+                  블로그
                 </Link>
                 <Link
                   href="/guides"

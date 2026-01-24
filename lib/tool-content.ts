@@ -5,6 +5,7 @@ export interface ToolContent {
   faq: Array<{ question: string; answer: string }>
   relatedTools: string[]
   relatedGuides: string[]
+  guideContent?: string // Markdown content for comprehensive guide
 }
 
 export const TOOL_CONTENT: Record<string, ToolContent> = {
@@ -38,6 +39,32 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
     relatedTools: ["sentence-counter", "paragraph-counter", "title-length-checker"],
     relatedGuides: ["resume-length-guide", "blog-post-cleanup-guide"],
+    guideContent: `
+## 글자수 세기 도구 100% 활용하기
+
+텍스터브의 글자수 세기 도구는 단순한 카운터를 넘어, 자소서와 블로그 작성을 돕는 강력한 유틸리티입니다.
+
+### 주요 기능 상세 가이드
+
+1.  **공백 포함 vs 제외**: 
+    - **공백 포함**: 띄어쓰기, 줄바꿈을 모두 포함합니다. 네이버 글자수 계산기와 동일한 로직으로, 대부분의 자소서 제출 사이트(사람인, 잡코리아 등) 표준입니다.
+    - **공백 제외**: 순수하게 글자(자음, 모음, 알파벳, 숫자 등)만 계산합니다. 논문이나 특정 과제 제출 시 사용됩니다.
+
+2.  **바이트(Byte) 계산**:
+    - 한글은 2byte 또는 3byte로 계산될 수 있습니다. 텍스터브는 일반적인 웹 표준인 **UTF-8 (한글 3byte)** 기준과 레거시 시스템인 **EUC-KR (한글 2byte)** 기준을 모두 참고할 수 있도록 설계되었습니다. (현재 기본값: 한글 2byte 기준 - 많은 기업 채용 사이트가 이 기준을 따름)
+
+3.  **목표 달성률 체크**:
+    - 상단의 '목표 설정' 기능을 켜고 원하는 글자수를 입력하세요. (예: 500자, 1000자)
+    - 입력량에 따라 프로그레스 바가 차오르며, 목표 달성 시 시각적 피드백을 제공합니다.
+
+### 자주 묻는 질문 (심화)
+
+**Q. 자소서 500자 제한이면 몇 자까지 써야 하나요?**
+A. 보통 450~495자 사이를 권장합니다. 너무 짧으면 성의가 없어 보이고, 꽉 채우면 가독성이 떨어질 수 있습니다. 텍스터브 도구로 90~99% 구간을 목표로 작성해보세요.
+
+**Q. 복사 붙여넣기 하면 서식이 깨지나요?**
+A. 본 도구는 순수 텍스트(Plain Text)만 추출하여 계산하므로 서식(볼드, 색상 등)은 무시됩니다. 정확한 글자수 측정을 위해 오히려 좋습니다.
+    `,
   },
   "line-break-cleaner": {
     usageTips: [
@@ -68,6 +95,31 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
     relatedTools: ["trim-whitespace", "remove-blank-lines"],
     relatedGuides: ["blog-post-cleanup-guide"],
+    guideContent: `
+## 줄바꿈 정리기: 텍스트를 깔끔하게 다듬는 비법
+
+PDF, 워드, 인터넷 기사... 복사해서 붙여넣으면 왜 항상 줄바꿈이 엉망일까요? 텍스터브의 [줄바꿈 정리기](/tools/line-break-cleaner)는 이 문제를 1초 만에 해결해줍니다.
+
+### 상황별 활용 가이드
+
+1.  **PDF/논문 복사 후 정리**:
+    - PDF는 각 줄 끝마다 강제 줄바꿈(Enter)이 들어가는 경우가 많습니다.
+    - **"줄바꿈 제거"** 옵션을 사용하세요. 불필요한 줄바꿈을 모두 공백으로 바꿔 문장을 자연스럽게 이어줍니다. 단, 문단 사이의 빈 줄은 유지됩니다.
+
+2.  **코딩/데이터 전처리**:
+    - JSON이나 코드 덩어리가 한 줄로 뭉쳐있거나, 반대로 너무 퍼져있을 때 사용합니다.
+    - **"빈 줄 제거"** 옵션은 코드 사이의 불필요한 공백 라인을 삭제하여 코드를 콤팩트하게 만듭니다.
+
+3.  **SNS 인스타그램 줄바꿈**:
+    - 인스타그램은 첫 줄에 공백이 있으면 줄바꿈이 무시되는 경우가 있습니다.
+    - **"공백 정리"** 기능을 함께 켜두면, 문장 앞뒤의 투명 공백(Zero-width joiner 등)을 제거하여 깔끔한 포스팅을 도와줍니다.
+
+### 고급 팁: '선택적' 정리
+
+무조건 다 지우는 게 능사는 아닙니다.
+- **문단 유지**: 체크박스를 켜두면, 엔터가 두 번 들어간 곳(빈 줄)은 문단 구분으로 인식하여 보존합니다.
+- **한글/영문 혼용**: 한글과 영어 사이의 간격이 너무 좁다면, 정리 후 맞춤법 검사기 도구와 함께 사용하는 것을 추천합니다.
+    `,
   },
   "slug-generator": {
     usageTips: [

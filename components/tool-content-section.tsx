@@ -15,8 +15,60 @@ export function ToolContentSection({ toolId }: ToolContentSectionProps) {
     return null
   }
 
+  // Markdown to HTML formatter (simple regex based)
+  const formatContent = (text: string) => {
+    let formatted = text
+      // Code blocks
+      .replace(/```([\s\S]*?)```/g, '<pre class="bg-muted p-4 rounded-lg my-4 overflow-x-auto"><code class="text-sm font-mono">$1</code></pre>')
+      // Inline code
+      .replace(/`([^`]+)`/g, '<code class="bg-muted px-1.5 py-0.5 rounded text-sm font-mono text-foreground">$1</code>')
+      // Bold
+      .replace(/\*\*([^*]+)\*\*/g, '<strong class="font-bold text-foreground">$1</strong>')
+      // Italic
+      .replace(/\*([^*]+)\*/g, '<em class="italic">$1</em>')
+      // Headers
+      .replace(/^###\s+(.+)$/gm, '<h3 class="text-lg font-bold text-foreground mt-6 mb-3">$1</h3>')
+      .replace(/^##\s+(.+)$/gm, '<h2 class="text-xl font-bold text-foreground mt-8 mb-4 border-b pb-2">$1</h2>')
+      // Lists (Hyphen or Asterisk)
+      .replace(/^[-*]\s+(.+)$/gm, '<li class="ml-4 mb-1 pl-1">$1</li>')
+      // Ordered Lists
+      .replace(/^(\d+)\.\s+(.+)$/gm, '<li class="ml-4 mb-1 pl-1 list-decimal">$2</li>')
+    // Paragraphs (simplified: double newline to paragraph, but here we handle line by line in split)
+    // Actually regex global replace for block elements is safer if we don't split by newline first for everything.
+    // Let's stick to the BlogDetailClient approach of split/map for simplicity and consistency.
+    return text
+      .split("\n")
+      .map((line, idx) => {
+        const trimmed = line.trim();
+        if (trimmed === "") return '<div class="h-4"></div>';
+        if (trimmed.startsWith("### ")) return `<h3 class="text-lg font-bold text-foreground mt-6 mb-3">${trimmed.substring(4)}</h3>`;
+        if (trimmed.startsWith("## ")) return `<h2 class="text-xl font-bold text-foreground mt-8 mb-4 border-b border-border pb-2 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>${trimmed.substring(3)}</h2>`;
+        if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) return `<li class="ml-4 mb-2 flex gap-2 items-start"><span class="text-primary mt-1.5">•</span><span>${trimmed.substring(2)}</span></li>`;
+        if (/^\d+\.\s/.test(trimmed)) return `<div class="ml-4 mb-2 flex gap-2 items-start"><span class="text-primary font-bold min-w-[1.2em]">${trimmed.match(/^\d+/)![0]}.</span><span>${trimmed.replace(/^\d+\.\s/, "")}</span></div>`;
+        if (trimmed.startsWith("**") && trimmed.endsWith("**")) return `<p class="mb-3 font-bold">${trimmed.replace(/\*\*/g, "")}</p>`;
+
+        // Inline formatting for paragraphs
+        let processedLine = line
+          .replace(/\*\*([^*]+)\*\*/g, '<strong class="font-bold text-foreground">$1</strong>')
+          .replace(/`([^`]+)`/g, '<code class="bg-muted px-1.5 py-0.5 rounded text-sm font-mono text-foreground">$1</code>');
+
+        return `<p class="mb-3 leading-relaxed text-muted-foreground">${processedLine}</p>`;
+      })
+      .join("");
+  }
+
   return (
     <div className="space-y-6 sm:space-y-8">
+      {/* Comprehensive Guide (New High Value Content) */}
+      {content.guideContent && (
+        <section className="bg-card border border-border rounded-lg p-6 sm:p-8 shadow-sm">
+          <div
+            className="prose prose-slate max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground"
+            dangerouslySetInnerHTML={{ __html: formatContent(content.guideContent) }}
+          />
+        </section>
+      )}
+
       {/* Usage Tips */}
       {content.usageTips.length > 0 && (
         <section className="bg-card border border-border rounded-lg p-5 sm:p-6 shadow-sm">

@@ -71,6 +71,34 @@ export default async function ToolPage({ params, searchParams }: ToolPageProps) 
   const resolvedParams = typeof params === "object" && "then" in params ? await params : params
   const resolvedSearchParams = typeof searchParams === "object" && "then" in searchParams ? await searchParams : searchParams
   const slug = resolvedParams.slug
+  const tool = UTILITIES.find((t) => t.slug === slug)
 
-  return <ToolPageClient slug={slug} searchParams={resolvedSearchParams} />
+  if (!tool) {
+    return <ToolPageClient slug={slug} searchParams={resolvedSearchParams} />
+  }
+
+  // SoftwareApplication Schema
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": tool.name,
+    "description": tool.description,
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Web",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "KRW"
+    }
+  }
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ToolPageClient slug={slug} searchParams={resolvedSearchParams} />
+    </>
+  )
 }

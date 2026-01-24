@@ -32,32 +32,40 @@ export function Footer() {
             <h4 className="font-semibold text-sm sm:text-base leading-tight">빠른 링크</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link 
-                  href="/tools" 
+                <Link
+                  href="/tools"
                   className="text-muted-foreground hover:text-foreground transition-colors inline-block py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-1"
                 >
                   전체 도구
                 </Link>
               </li>
               <li>
-                <Link 
-                  href="/workflows" 
+                <Link
+                  href="/workflows"
                   className="text-muted-foreground hover:text-foreground transition-colors inline-block py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-1"
                 >
                   워크플로
                 </Link>
               </li>
               <li>
-                <Link 
-                  href="/guides" 
+                <Link
+                  href="/blog"
+                  className="text-muted-foreground hover:text-foreground transition-colors inline-block py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-1"
+                >
+                  블로그
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/guides"
                   className="text-muted-foreground hover:text-foreground transition-colors inline-block py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-1"
                 >
                   사용 가이드
                 </Link>
               </li>
               <li>
-                <Link 
-                  href="/about" 
+                <Link
+                  href="/about"
                   className="text-muted-foreground hover:text-foreground transition-colors inline-block py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-1"
                 >
                   서비스 소개
@@ -71,16 +79,16 @@ export function Footer() {
             <h4 className="font-semibold text-sm sm:text-base leading-tight">법적 정보</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link 
-                  href="/privacy" 
+                <Link
+                  href="/privacy"
                   className="text-muted-foreground hover:text-foreground transition-colors inline-block py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-1"
                 >
                   개인정보처리방침
                 </Link>
               </li>
               <li>
-                <Link 
-                  href="/terms" 
+                <Link
+                  href="/terms"
                   className="text-muted-foreground hover:text-foreground transition-colors inline-block py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-1"
                 >
                   이용약관
@@ -95,12 +103,12 @@ export function Footer() {
           <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
             <p>© {currentYear} 텍스터브. All rights reserved.</p>
             <div className="flex items-center gap-4">
-              <a
-                href="mailto:contact@texturb.com"
+              <Link
+                href="/contact"
                 className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-1 py-0.5"
               >
                 문의하기
-              </a>
+              </Link>
             </div>
           </div>
         </div>
