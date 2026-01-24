@@ -2,72 +2,80 @@
 
 export type AnalyticsEvent =
   | {
-      name: "tool_use"
-      params: {
-        tool_id: string
-        source: "direct" | "guide" | "workflow" | "embed" | "extension"
-        input_length?: number
-      }
+    name: "tool_use"
+    params: {
+      tool_id: string
+      source: "direct" | "guide" | "workflow" | "embed" | "extension"
+      input_length?: number
     }
+  }
   | {
-      name: "guide_view"
-      params: {
-        guide_id: string
-        device: "mobile" | "tablet" | "desktop"
-        source: string
-      }
+    name: "guide_view"
+    params: {
+      guide_id: string
+      device: "mobile" | "tablet" | "desktop"
+      source: string
     }
+  }
   | {
-      name: "guide_to_tool_click"
-      params: {
-        guide_id: string
-        tool_id: string
-      }
+    name: "blog_view"
+    params: {
+      blog_slug: string
+      device: "mobile" | "tablet" | "desktop"
+      source: string
     }
+  }
   | {
-      name: "workflow_start"
-      params: {
-        workflow_id: string
-      }
+    name: "guide_to_tool_click"
+    params: {
+      guide_id: string
+      tool_id: string
     }
+  }
   | {
-      name: "workflow_step"
-      params: {
-        workflow_id: string
-        step_index: number
-        tool_id: string
-      }
+    name: "workflow_start"
+    params: {
+      workflow_id: string
     }
+  }
   | {
-      name: "tool_feedback"
-      params: {
-        tool_id: string
-        rating: 1 | 2 | 3
-        reason?: string
-      }
+    name: "workflow_step"
+    params: {
+      workflow_id: string
+      step_index: number
+      tool_id: string
     }
+  }
   | {
-      name: "session_end"
-      params: {
-        session_id: string
-        page_count: number
-        tool_use_count: number
-      }
+    name: "tool_feedback"
+    params: {
+      tool_id: string
+      rating: 1 | 2 | 3
+      reason?: string
     }
+  }
   | {
-      name: "tool_view"
-      params: {
-        tool_id: string
-        device: "mobile" | "tablet" | "desktop"
-        source: "direct" | "internal" | "guide" | "workflow" | "embed" | "extension"
-      }
+    name: "session_end"
+    params: {
+      session_id: string
+      page_count: number
+      tool_use_count: number
     }
+  }
+  | {
+    name: "tool_view"
+    params: {
+      tool_id: string
+      device: "mobile" | "tablet" | "desktop"
+      source: "direct" | "internal" | "guide" | "workflow" | "embed" | "extension"
+    }
+  }
 
 // Track events to GA4 or other analytics providers
 export function trackEvent(event: AnalyticsEvent) {
   // GA4 gtag tracking
   if (typeof window !== "undefined" && (window as any).gtag) {
-    ;(window as any).gtag("event", event.name, event.params)
+    ; (window as any).gtag("event", event.name, event.params)
   }
 
   // Console log in development
