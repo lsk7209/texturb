@@ -75,6 +75,40 @@ export async function GET(request: Request) {
       });
     }
 
+    // AI 콘텐츠 자동 생성
+    try {
+      const { getTopicForDate } = await import("@/lib/content/topic-selector");
+      const { generatePost } = await import("@/lib/content/gemini-generator");
+      const { createPost } = await import("@/lib/db/post-queries");
+
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 10, 0, 0);
+
+      const topic = getTopicForDate(new Date());
+      const post = await generatePost(topic);
+
+      await createPost({
+        type: topic.type,
+        slug: post.slug,
+        title: post.title,
+        summary: post.summary,
+        content: post.content,
+        keywords: post.keywords,
+        status: "scheduled",
+        tool_id: topic.toolId,
+        published_at: tomorrow.toISOString(),
+      });
+    } catch (contentError) {
+      logger.error(
+        "콘텐츠 자동 생성 실패",
+        contentError instanceof Error
+          ? contentError
+          : new Error(String(contentError)),
+      );
+      // 크론은 계속 진행
+    }
+
     return NextResponse.json({
       success: true,
       date: dateStr,

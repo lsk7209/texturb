@@ -1,19 +1,20 @@
 # Status | 마지막: 2026-04-14
 
 ## 현재 작업
-프로젝트 초기 검토 및 클린업 완료
+SEO/수익화 설정 완료 (서치콘솔, 사이트맵, RSS, GA4, AdSense)
 
 ## 최근 변경 (최근 5개)
-- 04-14: AdSense 중복 스크립트 제거 (layout.tsx)
-- 04-14: package.json name "my-v0-project" → "texturb"
-- 04-14: next.config.mjs output: 'standalone' 제거
-- 04-14: Cloudflare 잔재 코드·문서 40여 개 삭제 (workers/, functions/, wrangler.toml, CLOUDFLARE-*.md 등)
-- 04-14: DB 레이어 Vercel Postgres → Turso(libsql) 전환, format-tools.tsx 1109줄 → 48줄 리팩토링
+- 04-14: RSS feed 구현 (app/feed.xml/route.ts) — AI 포스트 포함, 최신순 50개
+- 04-14: robots.ts에 AI봇 허용(GPTBot, ClaudeBot, Perplexity 등), Bytespider 차단
+- 04-14: sitemap.ts async로 전환, DB AI 포스트 동적 포함
+- 04-14: AdSense 하드코딩 → NEXT_PUBLIC_ADSENSE_PUB_ID 환경변수
+- 04-14: .env.local 생성 (환경변수 템플릿)
 
 ## TODO
-- [x] 빌드 확인 완료 (✓ 75/75 pages)
-- [ ] Vercel 환경변수 설정: TURSO_DATABASE_URL, TURSO_AUTH_TOKEN, NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_GA_ID, NEXT_PUBLIC_ADSENSE_ID, CRON_SECRET
-- [ ] Turso DB 생성 시 schema.sql 실행 (lib/db/schema.sql)
+- [ ] Vercel 환경변수 설정: TURSO_DATABASE_URL, TURSO_AUTH_TOKEN, NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_GA_ID, NEXT_PUBLIC_ADSENSE_PUB_ID, CRON_SECRET, GEMINI_API_KEY
+- [ ] .env.local에 실제 GA4 측정 ID 입력 (G-XXXXXXXXXX → 실제값)
+- [ ] Turso DB 생성 후 schema.sql 실행 (lib/db/schema.sql)
+- [ ] 네이버 웹마스터도구에 feed.xml RSS 제출
 - [ ] analysis-tools.tsx 747줄 분리 (선택)
 
 ## 결정사항

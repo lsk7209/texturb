@@ -37,10 +37,15 @@ export async function GET(request: Request) {
       args: [],
     });
 
+    // 예약된 posts 발행
+    const { publishScheduledPosts } = await import("@/lib/db/post-queries");
+    const published = await publishScheduledPosts();
+
     return NextResponse.json({
       success: true,
       duration: `${Date.now() - startTime}ms`,
       cleaned: Number(result.rowsAffected) || 0,
+      published: published.count,
     });
   } catch (error) {
     logger.error(

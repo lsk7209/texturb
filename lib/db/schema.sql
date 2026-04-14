@@ -60,3 +60,22 @@ CREATE TABLE IF NOT EXISTS feedback (
 CREATE INDEX IF NOT EXISTS idx_feedback_tool_id ON feedback(tool_id);
 CREATE INDEX IF NOT EXISTS idx_feedback_created_at ON feedback(created_at);
 
+-- AI 자동 생성 콘텐츠
+CREATE TABLE IF NOT EXISTS posts (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  type         TEXT NOT NULL,
+  slug         TEXT UNIQUE NOT NULL,
+  title        TEXT NOT NULL,
+  summary      TEXT NOT NULL,
+  content      TEXT NOT NULL,
+  keywords     TEXT,
+  status       TEXT DEFAULT 'draft',
+  tool_id      TEXT,
+  published_at DATETIME,
+  created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at   DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_posts_status_published ON posts(status, published_at);
+CREATE INDEX IF NOT EXISTS idx_posts_slug ON posts(slug);
+CREATE INDEX IF NOT EXISTS idx_posts_type ON posts(type);
+
