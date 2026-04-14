@@ -1,0 +1,7 @@
+{
+  "tool_name": "Read",
+  "tool_input_preview": "{\"file_path\":\"D:\\\\web\\\\texturb\\\\components\\\\text-studio\\\\tools\\\\format-tools.tsx\"}",
+  "error": "File content (13221 tokens) exceeds maximum allowed tokens (10000). Use offset and limit parameters to read specific portions of the file, or search for specific content instead of reading the whole file.",
+  "timestamp": "2026-04-13T23:43:04.307Z",
+  "retry_count": 1
+}

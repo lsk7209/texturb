@@ -1,0 +1,179 @@
+{
+  "version": "3.0",
+  "lastUpdated": "2026-04-14T00:02:38.908Z",
+  "activeFeatures": [
+    "texturb",
+    "tools",
+    "db",
+    "daily",
+    "hourly"
+  ],
+  "primaryFeature": "texturb",
+  "features": {
+    "texturb": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-13T23:37:26.654Z",
+        "lastUpdated": "2026-04-13T23:50:40.839Z"
+      },
+      "lastFile": "D:\\web\\texturb\\lib\\format-transforms.ts"
+    },
+    "tools": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-13T23:51:41.806Z",
+        "lastUpdated": "2026-04-13T23:52:08.362Z"
+      },
+      "lastFile": "D:\\web\\texturb\\components\\text-studio\\tools\\format-tools.tsx"
+    },
+    "db": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-13T23:53:43.218Z",
+        "lastUpdated": "2026-04-14T00:02:38.906Z"
+      },
+      "lastFile": "D:\\web\\texturb\\lib\\db\\turso-client.ts"
+    },
+    "daily": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-13T23:55:59.628Z",
+        "lastUpdated": "2026-04-14T00:00:33.980Z"
+      },
+      "lastFile": "D:\\web\\texturb\\app\\api\\cron\\daily\\route.ts"
+    },
+    "hourly": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-04-13T23:56:20.697Z",
+        "lastUpdated": "2026-04-13T23:56:20.698Z"
+      },
+      "lastFile": "D:\\web\\texturb\\app\\api\\cron\\hourly\\route.ts"
+    }
+  },
+  "pipeline": {
+    "currentPhase": 1,
+    "level": "Dynamic",
+    "phaseHistory": []
+  },
+  "session": {
+    "startedAt": "2026-04-13T23:28:34.090Z",
+    "onboardingCompleted": false,
+    "lastActivity": "2026-04-14T00:02:38.908Z"
+  },
+  "history": [
+    {
+      "timestamp": "2026-04-13T23:37:26.659Z",
+      "feature": "texturb",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-13T23:50:40.842Z",
+      "feature": "texturb",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-13T23:51:41.808Z",
+      "feature": "tools",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-13T23:52:08.364Z",
+      "feature": "tools",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-13T23:53:43.220Z",
+      "feature": "db",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-13T23:54:10.483Z",
+      "feature": "db",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-13T23:55:59.631Z",
+      "feature": "daily",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-13T23:56:20.699Z",
+      "feature": "hourly",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-14T00:00:33.982Z",
+      "feature": "daily",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-14T00:01:46.413Z",
+      "feature": "db",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-14T00:02:11.683Z",
+      "feature": "db",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-04-14T00:02:38.908Z",
+      "feature": "db",
+      "phase": "do",
+      "action": "updated"
+    }
+  ],
+  "stateMachine": {
+    "defaultWorkflow": "default",
+    "activeWorkflows": {},
+    "totalTransitions": 0
+  },
+  "automation": {
+    "globalLevel": 2,
+    "trustScore": 40,
+    "pendingApprovals": 0,
+    "lastGateResult": null
+  },
+  "team": {
+    "enabled": true,
+    "stateFile": ".bkit/runtime/agent-state.json",
+    "eventsFile": ".bkit/runtime/agent-events.jsonl"
+  }
+}
