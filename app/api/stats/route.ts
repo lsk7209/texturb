@@ -4,7 +4,7 @@
  */
 
 import { NextResponse } from "next/server"
-import { getToolStats, getDailyStats } from "@/lib/db/queries-vercel"
+import { getToolStats, getDailyStats } from "@/lib/db/queries"
 import { logger } from "@/lib/logger"
 import { validateId, validateDateString } from "@/lib/db/validation"
 import { createSafeErrorResponse } from "@/lib/errors/sanitize"

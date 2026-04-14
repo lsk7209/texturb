@@ -102,8 +102,6 @@ const nextConfig = {
   //   POSTGRES_URL: process.env.POSTGRES_URL,
   //   DATABASE_URL: process.env.DATABASE_URL,
   // },
-  // Vercel 최적화 설정
-  output: 'standalone', // Vercel에서 최적화된 빌드
   // 프로덕션 최적화
   productionBrowserSourceMaps: false, // 소스맵 비활성화 (빌드 속도 향상)
 }

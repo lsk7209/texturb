@@ -4,7 +4,7 @@
  */
 
 import { NextResponse } from "next/server"
-import { batchLogUsage } from "@/lib/db/queries-vercel"
+import { batchLogUsage } from "@/lib/db/queries"
 import { logger } from "@/lib/logger"
 import { validateId } from "@/lib/db/validation"
 import { createSafeErrorResponse } from "@/lib/errors/sanitize"
@@ -78,7 +78,7 @@ export async function POST(request: Request) {
     }
 
     // 세션이 없는 경우 사용 기록만 저장
-    const { logToolUsage } = await import("@/lib/db/queries-vercel")
+    const { logToolUsage } = await import("@/lib/db/queries")
     const result = await logToolUsage({
       toolId,
       toolSlug,
