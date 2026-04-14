@@ -1,28 +1,26 @@
-# Status | 마지막: 2026-04-14
+# Status | 마지막: 2026-04-15
 
 ## 현재 작업
-SEO/수익화 설정 완료 (서치콘솔, 사이트맵, RSS, GA4, AdSense)
+블로그 콘텐츠 대량 확장 완료
 
 ## 최근 변경 (최근 5개)
-- 04-14: RSS feed 구현 (app/feed.xml/route.ts) — AI 포스트 포함, 최신순 50개
-- 04-14: robots.ts에 AI봇 허용(GPTBot, ClaudeBot, Perplexity 등), Bytespider 차단
-- 04-14: sitemap.ts async로 전환, DB AI 포스트 동적 포함
-- 04-14: AdSense 하드코딩 → NEXT_PUBLIC_ADSENSE_PUB_ID 환경변수
-- 04-14: .env.local 생성 (환경변수 템플릿)
+- 04-15: 신규 블로그 포스트 30개 추가 (lib/blog-posts-batch2.ts, 2026-04-15~05-14 하루 1개 자동 공개)
+- 04-15: BlogPost 타입에 aeoQuestion/aeoAnswer 필드 추가 (TS 에러 수정)
+- 04-15: getAllBlogPosts() 날짜 필터링 추가 (publishedAt ≤ 오늘만 노출)
+- 04-14: RSS feed 구현 (app/feed.xml/route.ts)
+- 04-14: robots.ts AI봇 허용, sitemap.ts 동적 포함
 
 ## TODO
 - [ ] Vercel 환경변수 설정: TURSO_DATABASE_URL, TURSO_AUTH_TOKEN, NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_GA_ID, NEXT_PUBLIC_ADSENSE_PUB_ID, CRON_SECRET, GEMINI_API_KEY
-- [ ] .env.local에 실제 GA4 측정 ID 입력 (G-XXXXXXXXXX → 실제값)
-- [ ] Turso DB 생성 후 schema.sql 실행 (lib/db/schema.sql)
+- [ ] Turso DB 생성 후 schema.sql 실행
 - [ ] 네이버 웹마스터도구에 feed.xml RSS 제출
-- [ ] analysis-tools.tsx 747줄 분리 (선택)
+- [ ] 기존 포스트 8개 본문 확장 (3,000자 이상) — 선택
 
 ## 결정사항
-- DB: Turso(libsql/SQLite) 사용. DB 없어도 앱 동작(graceful degradation)
-- 배포: Vercel + GitHub
-- Cloudflare 미사용: 관련 코드 전부 제거
+- 블로그 자동 공개: publishedAt 날짜 기반 필터링 (DB 불필요)
+- 신규 포스트: lib/blog-posts-batch2.ts (별도 파일로 분리 관리)
+- DB: Turso(libsql/SQLite). DB 없어도 앱 동작
 
 ## 주의
-- TURSO_DATABASE_URL 미설정 시 통계 기능 비활성화되지만 텍스트 도구는 정상 동작
-- pnpm-lock.yaml 존재하나 npm 사용 중 → 혼용 주의
-- lib/db/schema.sql로 Turso DB 초기화 필요
+- 신규 30개 포스트: 오늘(04-15)부터 매일 1개씩 공개 (2026-05-14까지)
+- 기존 정적 포스트 11개 중 8개는 글자수 부족 (추후 확장 권장)
