@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { ArrowRight, Calendar, Sparkles, Tag } from "lucide-react";
+import { ArrowRight, Calendar, Tag } from "lucide-react";
 import { getAllBlogPosts } from "@/lib/blog-registry";
 import { getPublishedPosts } from "@/lib/db/post-queries";
-import { Badge } from "@/components/ui/badge";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
@@ -39,8 +38,28 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  const posts = getAllBlogPosts();
-  const { data: aiPosts } = await getPublishedPosts("blog", 10);
+  const staticPosts = getAllBlogPosts();
+  const { data: aiPosts } = await getPublishedPosts("blog", 50);
+
+  // 정적 포스트 + AI 포스트 통합, 최신순 정렬
+  const allPosts = [
+    ...staticPosts.map((p) => ({
+      key: p.slug,
+      href: `/blog/${p.slug}`,
+      title: p.title,
+      description: p.description,
+      category: p.category,
+      date: p.publishedAt,
+    })),
+    ...(aiPosts ?? []).map((p) => ({
+      key: `ai-${p.id}`,
+      href: `/blog/ai/${p.slug}`,
+      title: p.title,
+      description: p.summary,
+      category: undefined as string | undefined,
+      date: p.published_at ?? p.created_at,
+    })),
+  ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
     <div className="min-h-screen bg-[#F5F5F7] py-12">
@@ -53,24 +72,26 @@ export default async function BlogPage() {
           </p>
         </div>
 
-        {posts.length === 0 ? (
+        {allPosts.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-slate-600">아직 게시된 글이 없습니다.</p>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 gap-6">
-            {posts.map((post) => (
+            {allPosts.map((post) => (
               <Link
-                key={post.slug}
-                href={`/blog/${post.slug}`}
+                key={post.key}
+                href={post.href}
                 className="group bg-white rounded-2xl p-8 shadow-sm border border-slate-200 hover:shadow-md hover:border-slate-300 transition-all"
               >
                 <div className="flex items-start justify-between mb-6">
-                  {post.category && (
+                  {post.category ? (
                     <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-xs font-medium text-blue-600">
                       <Tag className="w-3 h-3 mr-1.5" />
                       {post.category}
                     </div>
+                  ) : (
+                    <div />
                   )}
                   <div className="flex items-center text-sm font-medium text-slate-500 group-hover:text-slate-900 transition-colors">
                     읽기 <ArrowRight className="w-4 h-4 ml-1" />
@@ -84,7 +105,7 @@ export default async function BlogPage() {
                 </p>
                 <div className="flex items-center text-sm text-slate-500">
                   <Calendar className="w-4 h-4 mr-1.5" />
-                  {new Date(post.publishedAt).toLocaleDateString("ko-KR", {
+                  {new Date(post.date).toLocaleDateString("ko-KR", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
@@ -93,55 +114,6 @@ export default async function BlogPage() {
               </Link>
             ))}
           </div>
-        )}
-
-        {aiPosts && aiPosts.length > 0 && (
-          <section className="mt-16">
-            <div className="flex items-center gap-2 mb-6">
-              <Sparkles className="w-5 h-5 text-purple-500" />
-              <h2 className="text-2xl font-bold text-slate-900">
-                AI 생성 콘텐츠
-              </h2>
-            </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              {aiPosts.map((post) => (
-                <Link
-                  key={post.id}
-                  href={`/blog/ai/${post.slug}`}
-                  className="group bg-white rounded-2xl p-8 shadow-sm border border-slate-200 hover:shadow-md hover:border-slate-300 transition-all"
-                >
-                  <div className="flex items-start justify-between mb-6">
-                    <Badge
-                      variant="secondary"
-                      className="bg-purple-50 text-purple-600 hover:bg-purple-50"
-                    >
-                      <Sparkles className="w-3 h-3 mr-1" />
-                      AI 생성
-                    </Badge>
-                    <div className="flex items-center text-sm font-medium text-slate-500 group-hover:text-slate-900 transition-colors">
-                      읽기 <ArrowRight className="w-4 h-4 ml-1" />
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2 line-clamp-2">
-                    {post.title}
-                  </h3>
-                  <p className="text-slate-600 mb-6 line-clamp-2">
-                    {post.summary}
-                  </p>
-                  {post.published_at && (
-                    <div className="flex items-center text-sm text-slate-500">
-                      <Calendar className="w-4 h-4 mr-1.5" />
-                      {new Date(post.published_at).toLocaleDateString("ko-KR", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </div>
-                  )}
-                </Link>
-              ))}
-            </div>
-          </section>
         )}
       </div>
     </div>
