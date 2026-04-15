@@ -24,58 +24,158 @@ export function BlogDetailClient({ slug }: BlogDetailClientProps) {
     notFound();
   }
 
-  // 마크다운 형식의 텍스트를 HTML로 변환하는 함수
+  // 마크다운을 HTML로 변환 (표, 인용구, 코드블록, 헤더, 리스트, 인라인 지원)
   const formatContent = (text: string) => {
-    let formatted = text
-      // 코드 블록 처리 (```로 감싼 부분)
-      .replace(
-        /```([\s\S]*?)```/g,
-        '<pre class="bg-slate-100 p-4 rounded-lg my-4 overflow-x-auto"><code class="text-sm">$1</code></pre>',
-      )
-      // 인라인 코드 처리 (`로 감싼 부분)
+    // 1. 코드 블록 추출·보호
+    const codeBlocks: string[] = [];
+    let processed = text.replace(/```([\s\S]*?)```/g, (_, code) => {
+      const idx = codeBlocks.length;
+      codeBlocks.push(
+        `<pre class="bg-slate-900 text-slate-100 p-4 rounded-lg my-4 overflow-x-auto"><code class="text-sm">${code.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</code></pre>`,
+      );
+      return `%%CB${idx}%%`;
+    });
+
+    // 2. 인라인 요소 처리
+    processed = processed
       .replace(
         /`([^`]+)`/g,
-        '<code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono">$1</code>',
+        '<code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm font-mono text-blue-700">$1</code>',
       )
-      // 볼드 텍스트 처리 (**텍스트**)
       .replace(
         /\*\*([^*]+)\*\*/g,
         '<strong class="font-bold text-slate-900">$1</strong>',
       )
-      // 이탤릭 텍스트 처리 (*텍스트*)
-      .replace(/\*([^*]+)\*/g, '<em class="italic">$1</em>')
-      // 줄바꿈 처리
-      .split("\n")
-      .map((line, idx, arr) => {
-        // 빈 줄은 <br>로 처리
-        if (line.trim() === "") {
-          return idx < arr.length - 1 ? "<br />" : "";
-        }
-        // 리스트 항목 처리 (- 또는 숫자.)
-        if (/^[-•]\s/.test(line.trim()) || /^\d+\.\s/.test(line.trim())) {
-          return `<li class="ml-4 mb-2">${line.replace(/^[-•]\s/, "").replace(/^\d+\.\s/, "")}</li>`;
-        }
-        // 헤더 처리 (##, ###)
-        if (/^###\s/.test(line.trim())) {
-          return `<h3 class="text-xl font-bold text-slate-900 mt-6 mb-3">${line.replace(/^###\s/, "")}</h3>`;
-        }
-        if (/^##\s/.test(line.trim())) {
-          return `<h2 class="text-2xl font-bold text-slate-900 mt-8 mb-4">${line.replace(/^##\s/, "")}</h2>`;
-        }
-        // 일반 텍스트
-        return `<p class="mb-3 leading-relaxed">${line}</p>`;
-      })
-      .join("");
+      .replace(/\*([^*]+)\*/g, '<em class="italic">$1</em>');
 
-    // 리스트 항목들을 <ul>로 감싸기
-    formatted = formatted.replace(
-      /(<li[^>]*>.*?<\/li>(?:\s*<br \/>)?)+/g,
-      (match) => {
-        return `<ul class="list-disc list-inside space-y-2 my-4">${match.replace(/<br \/>/g, "")}</ul>`;
-      },
-    );
+    // 3. 줄 단위 블록 파싱
+    const lines = processed.split("\n");
+    const output: string[] = [];
+    let i = 0;
 
-    return formatted;
+    const parseRow = (row: string): string[] => {
+      const parts = row.split("|");
+      return parts.slice(1, parts.length - 1).map((c) => c.trim());
+    };
+
+    while (i < lines.length) {
+      const line = lines[i];
+      const trimmed = line.trim();
+
+      // 코드 블록 복원
+      if (/%%CB\d+%%/.test(trimmed)) {
+        output.push(trimmed.replace(/%%CB(\d+)%%/g, (_, n) => codeBlocks[+n]));
+        i++;
+        continue;
+      }
+
+      // 표(table) 처리
+      if (trimmed.startsWith("|")) {
+        const rows: string[] = [];
+        while (i < lines.length && lines[i].trim().startsWith("|")) {
+          rows.push(lines[i].trim());
+          i++;
+        }
+        const sepIdx = rows.findIndex((r) => /^\|[\s\-:|]+\|$/.test(r));
+        if (sepIdx > 0) {
+          const headers = parseRow(rows[0])
+            .map(
+              (h) =>
+                `<th class="px-4 py-2 bg-slate-100 font-semibold text-left text-slate-700 border border-slate-200 text-sm">${h}</th>`,
+            )
+            .join("");
+          const bodyRows = rows
+            .slice(sepIdx + 1)
+            .map((r) => {
+              const cells = parseRow(r)
+                .map(
+                  (c) =>
+                    `<td class="px-4 py-2 border border-slate-200 text-slate-600 text-sm">${c}</td>`,
+                )
+                .join("");
+              return `<tr class="even:bg-slate-50">${cells}</tr>`;
+            })
+            .join("");
+          output.push(
+            `<div class="overflow-x-auto my-6 rounded-lg border border-slate-200"><table class="w-full border-collapse"><thead><tr>${headers}</tr></thead><tbody>${bodyRows}</tbody></table></div>`,
+          );
+        } else {
+          rows.forEach((r) => output.push(`<p class="mb-3">${r}</p>`));
+        }
+        continue;
+      }
+
+      // 인용구(blockquote) 처리
+      if (trimmed.startsWith(">")) {
+        const quoteLines: string[] = [];
+        while (i < lines.length && lines[i].trim().startsWith(">")) {
+          quoteLines.push(lines[i].replace(/^>\s?/, "").trim());
+          i++;
+        }
+        output.push(
+          `<blockquote class="border-l-4 border-blue-400 pl-4 py-3 my-4 bg-blue-50 rounded-r-lg text-slate-700">${quoteLines.join("<br />")}</blockquote>`,
+        );
+        continue;
+      }
+
+      // 헤더
+      if (/^###\s/.test(trimmed)) {
+        output.push(
+          `<h3 class="text-xl font-bold text-slate-900 mt-6 mb-3">${trimmed.replace(/^###\s/, "")}</h3>`,
+        );
+        i++;
+        continue;
+      }
+      if (/^##\s/.test(trimmed)) {
+        output.push(
+          `<h2 class="text-2xl font-bold text-slate-900 mt-8 mb-4">${trimmed.replace(/^##\s/, "")}</h2>`,
+        );
+        i++;
+        continue;
+      }
+      if (/^#\s/.test(trimmed)) {
+        output.push(
+          `<h2 class="text-3xl font-bold text-slate-900 mt-8 mb-6">${trimmed.replace(/^#\s/, "")}</h2>`,
+        );
+        i++;
+        continue;
+      }
+
+      // 리스트
+      if (/^[-•]\s/.test(trimmed) || /^\d+\.\s/.test(trimmed)) {
+        const items: string[] = [];
+        const isOrdered = /^\d+\.\s/.test(trimmed);
+        while (
+          i < lines.length &&
+          (/^[-•]\s/.test(lines[i].trim()) || /^\d+\.\s/.test(lines[i].trim()))
+        ) {
+          const content = lines[i]
+            .trim()
+            .replace(/^[-•]\s/, "")
+            .replace(/^\d+\.\s/, "");
+          items.push(`<li class="mb-1.5">${content}</li>`);
+          i++;
+        }
+        const tag = isOrdered ? "ol" : "ul";
+        const cls = isOrdered
+          ? "list-decimal list-inside space-y-1 my-4 text-slate-600"
+          : "list-disc list-inside space-y-1 my-4 text-slate-600";
+        output.push(`<${tag} class="${cls}">${items.join("")}</${tag}>`);
+        continue;
+      }
+
+      // 빈 줄
+      if (trimmed === "") {
+        i++;
+        continue;
+      }
+
+      // 일반 텍스트
+      output.push(`<p class="mb-3 leading-relaxed">${line}</p>`);
+      i++;
+    }
+
+    return output.join("");
   };
 
   // AEO 요약 섹션용 질문과 답변 — 포스트에 명시된 경우 우선 사용 (GEO 최적화)
