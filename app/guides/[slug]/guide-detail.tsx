@@ -1,24 +1,24 @@
-"use client"
-
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight, Map, PenTool } from "lucide-react"
 import { getGuideBySlug, GUIDES } from "@/lib/guides-registry"
 import { getUtilityBySlug } from "@/lib/utilities-registry"
-import { useGuideView } from "@/hooks/use-analytics"
+import { GuideViewTracker } from "@/components/analytics-tracker"
 import { GuideFAQSection } from "@/components/guide-faq-section"
-import { GuideJsonLd } from "@/components/guide-json-ld"
+import {
+  GuideJsonLd,
+  GuideHowToJsonLd,
+  GuideBreadcrumbJsonLd,
+} from "@/components/guide-json-ld"
 import { getGuideFAQBySlug } from "@/lib/guide-faq-registry"
 
-interface GuideDetailClientProps {
+interface GuideDetailProps {
   slug: string
 }
 
-export function GuideDetailClient({ slug }: GuideDetailClientProps) {
+export function GuideDetail({ slug }: GuideDetailProps) {
   const guide = getGuideBySlug(slug)
   const faqData = getGuideFAQBySlug(slug)
-
-  useGuideView(slug)
 
   if (!guide) {
     notFound()
@@ -26,6 +26,7 @@ export function GuideDetailClient({ slug }: GuideDetailClientProps) {
 
   return (
     <div className="min-h-screen bg-[#F5F5F7] py-12">
+      <GuideViewTracker slug={slug} />
       <div className="container mx-auto px-4 max-w-3xl">
         <Link
           href="/guides"
@@ -205,6 +206,8 @@ export function GuideDetailClient({ slug }: GuideDetailClientProps) {
         </section>
       </div>
 
+      <GuideHowToJsonLd guide={guide} />
+      <GuideBreadcrumbJsonLd guide={guide} />
       {faqData && faqData.items.length > 0 && <GuideJsonLd faqItems={faqData.items} />}
     </div>
   )

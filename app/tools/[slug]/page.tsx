@@ -27,10 +27,12 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"
   const canonicalUrl = `${baseUrl}/tools/${tool.slug}`
-  // 핵심 키워드를 앞쪽에 배치
   const primaryKeyword = tool.keywords[0] || tool.name
-  const metaTitle = `${primaryKeyword} ${tool.name} - 무료 온라인 텍스트 편집 도구 | 텍스터브`
-  const metaDescription = `${primaryKeyword} ${tool.description} ${tool.keywords.slice(1).join(", ")} 등 텍스트 작업을 빠르고 쉽게 처리할 수 있는 무료 온라인 도구입니다.`
+  // 50자 이내 권장: "도구명 - 무료 온라인 도구 | 텍스터브"
+  const metaTitle = `${tool.name} - 무료 온라인 도구 | 텍스터브`
+  // 155자 이내 권장
+  const baseDesc = `${tool.description} ${primaryKeyword} 등 텍스트 작업을 무료로 빠르게 처리합니다.`
+  const metaDescription = baseDesc.length > 155 ? baseDesc.slice(0, 152) + "…" : baseDesc
 
   return {
     title: metaTitle,
@@ -77,14 +79,19 @@ export default async function ToolPage({ params, searchParams }: ToolPageProps) 
     return <ToolPageClient slug={slug} searchParams={resolvedSearchParams} />
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"
+  const toolUrl = `${baseUrl}/tools/${tool.slug}`
+
   // SoftwareApplication Schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": tool.name,
     "description": tool.description,
+    "url": toolUrl,
     "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Web",
+    "inLanguage": "ko-KR",
     "offers": {
       "@type": "Offer",
       "price": "0",

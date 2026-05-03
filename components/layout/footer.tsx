@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { getHomeUtilities, UTILITIES } from "@/lib/utilities-registry"
 
 /**
  * Component: Footer
@@ -8,11 +9,15 @@ import Link from "next/link"
  */
 export function Footer() {
   const currentYear = new Date().getFullYear()
+  // 홈 추천 + 추가 인기 도구로 Top 8 채우기
+  const home = getHomeUtilities()
+  const rest = UTILITIES.filter((u) => !u.showOnHome).slice(0, 8 - home.length)
+  const popularTools = [...home, ...rest].slice(0, 8)
 
   return (
     <footer className="bg-card border-t border-border py-8 sm:py-10 md:py-12" role="contentinfo">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-8">
           {/* Brand Section */}
           <div className="space-y-3 sm:space-y-4">
             <h3 className="font-bold text-base sm:text-lg leading-tight">텍스터브</h3>
@@ -71,6 +76,23 @@ export function Footer() {
                   서비스 소개
                 </Link>
               </li>
+            </ul>
+          </div>
+
+          {/* Popular Tools (인기 도구 - 내부 링크 강화) */}
+          <div className="space-y-3 sm:space-y-4">
+            <h4 className="font-semibold text-sm sm:text-base leading-tight">인기 도구</h4>
+            <ul className="space-y-2 text-sm">
+              {popularTools.map((tool) => (
+                <li key={tool.slug}>
+                  <Link
+                    href={`/tools/${tool.slug}`}
+                    className="text-muted-foreground hover:text-foreground transition-colors inline-block py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md px-1"
+                  >
+                    {tool.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

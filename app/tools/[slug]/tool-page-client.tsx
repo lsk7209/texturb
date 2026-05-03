@@ -24,6 +24,7 @@ import { BreadcrumbJsonLd } from "@/components/breadcrumb-json-ld"
 import { ToolFAQJsonLd } from "@/components/tool-faq-json-ld"
 import { getToolFAQById } from "@/lib/tool-faq-registry"
 import { AEOSummarySection } from "@/components/aeo-summary-section"
+import { RelatedContentWidget } from "@/components/related-content-widget"
 
 interface ToolPageClientProps {
   slug: string
@@ -131,6 +132,7 @@ export function ToolPageClient({ slug, searchParams }: ToolPageClientProps) {
                   <BugReportLink toolId={tool.id} />
                 </div>
                 <ShareEmbedPanel toolSlug={tool.slug} toolName={tool.name} currentOptions={searchParams} />
+                <RelatedContentWidget toolId={tool.id} toolKeywords={tool.keywords} />
               </div>
             </div>
           </div>

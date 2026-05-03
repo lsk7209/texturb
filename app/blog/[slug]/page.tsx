@@ -1,5 +1,5 @@
 import { BLOG_POSTS } from "@/lib/blog-registry"
-import { BlogDetailClient } from "./blog-detail-client"
+import { BlogDetail } from "./blog-detail"
 import type { Metadata } from "next"
 
 interface BlogDetailPageProps {
@@ -42,11 +42,26 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
       locale: "ko_KR",
       siteName: "텍스터브",
       publishedTime: post.publishedAt,
+      modifiedTime: post.publishedAt,
+      authors: ["텍스터브 편집팀"],
+      section: post.category,
+      tags: post.targetKeywords,
     },
     twitter: {
       card: "summary_large_image",
       title: post.metaTitle || post.title,
       description: post.metaDescription || post.description,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
   }
 }
@@ -55,6 +70,6 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const resolvedParams = typeof params === "object" && "then" in params ? await params : params
   const slug = resolvedParams.slug
 
-  return <BlogDetailClient slug={slug} />
+  return <BlogDetail slug={slug} />
 }
 
