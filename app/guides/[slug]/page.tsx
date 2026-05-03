@@ -26,20 +26,26 @@ export async function generateMetadata({ params }: GuideDetailPageProps): Promis
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"
   const canonicalUrl = `${baseUrl}/guides/${guide.slug}`
-  // 핵심 키워드를 앞쪽에 배치
-  const titleKeywords = guide.title.split(" ").slice(0, 3).join(" ")
-  const metaTitle = `${titleKeywords} - 텍스트 편집 가이드 | 텍스터브`
-  const metaDescription = `${guide.description} 단계별 가이드와 실전 팁을 제공합니다.`
+  // 가이드 제목 그대로 사용 (검색 의도 정확히 반영)
+  const metaTitle = `${guide.title} | 텍스터브 가이드`
+  const baseDesc = `${guide.description} 단계별 실전 가이드와 활용 팁을 제공합니다.`
+  const metaDescription = baseDesc.length > 155 ? baseDesc.slice(0, 152) + "…" : baseDesc
+
+  // 가이드 제목/설명에서 키워드 추출
+  const titleWords = guide.title
+    .replace(/[,.|·\-:?!]/g, " ")
+    .split(/\s+/)
+    .filter((w) => w.length > 1)
+    .slice(0, 5)
 
   return {
     title: metaTitle,
     description: metaDescription,
     keywords: [
+      ...titleWords,
       "텍스트 편집 가이드",
-      "블로그 글 정리",
-      "자소서 작성법",
-      guide.title.split(" ")[0],
       "텍스트 작업 가이드",
+      "텍스터브",
     ],
     alternates: {
       canonical: canonicalUrl,
@@ -51,11 +57,23 @@ export async function generateMetadata({ params }: GuideDetailPageProps): Promis
       type: "article",
       locale: "ko_KR",
       siteName: "텍스터브",
+      authors: ["텍스터브 편집팀"],
     },
     twitter: {
       card: "summary_large_image",
       title: metaTitle,
       description: metaDescription,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
   }
 }

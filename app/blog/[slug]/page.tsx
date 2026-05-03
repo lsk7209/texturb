@@ -42,11 +42,26 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
       locale: "ko_KR",
       siteName: "텍스터브",
       publishedTime: post.publishedAt,
+      modifiedTime: post.publishedAt,
+      authors: ["텍스터브 편집팀"],
+      section: post.category,
+      tags: post.targetKeywords,
     },
     twitter: {
       card: "summary_large_image",
       title: post.metaTitle || post.title,
       description: post.metaDescription || post.description,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
   }
 }

@@ -4,7 +4,11 @@ import { ArrowLeft, ArrowRight, Calendar, Tag } from "lucide-react";
 import { getBlogPostBySlug, BLOG_POSTS } from "@/lib/blog-registry";
 import { BlogViewTracker } from "@/components/analytics-tracker";
 import { BlogFAQSection } from "@/components/blog-faq-section";
-import { BlogJsonLd } from "@/components/blog-json-ld";
+import {
+  BlogJsonLd,
+  BlogArticleJsonLd,
+  BlogBreadcrumbJsonLd,
+} from "@/components/blog-json-ld";
 import { getBlogFAQBySlug } from "@/lib/blog-faq-registry";
 import { AEOSummarySection } from "@/components/aeo-summary-section";
 
@@ -333,6 +337,8 @@ export function BlogDetail({ slug }: BlogDetailProps) {
         </section>
       </div>
 
+      <BlogArticleJsonLd post={post} />
+      <BlogBreadcrumbJsonLd post={post} />
       {faqData && faqData.items.length > 0 && (
         <BlogJsonLd faqItems={faqData.items} />
       )}

@@ -5,7 +5,11 @@ import { getGuideBySlug, GUIDES } from "@/lib/guides-registry"
 import { getUtilityBySlug } from "@/lib/utilities-registry"
 import { GuideViewTracker } from "@/components/analytics-tracker"
 import { GuideFAQSection } from "@/components/guide-faq-section"
-import { GuideJsonLd } from "@/components/guide-json-ld"
+import {
+  GuideJsonLd,
+  GuideHowToJsonLd,
+  GuideBreadcrumbJsonLd,
+} from "@/components/guide-json-ld"
 import { getGuideFAQBySlug } from "@/lib/guide-faq-registry"
 
 interface GuideDetailProps {
@@ -202,6 +206,8 @@ export function GuideDetail({ slug }: GuideDetailProps) {
         </section>
       </div>
 
+      <GuideHowToJsonLd guide={guide} />
+      <GuideBreadcrumbJsonLd guide={guide} />
       {faqData && faqData.items.length > 0 && <GuideJsonLd faqItems={faqData.items} />}
     </div>
   )
