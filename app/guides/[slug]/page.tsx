@@ -1,5 +1,5 @@
 import { GUIDES } from "@/lib/guides-registry"
-import { GuideDetailClient } from "./guide-detail-client"
+import { GuideDetail } from "./guide-detail"
 import type { Metadata } from "next"
 
 interface GuideDetailPageProps {
@@ -65,5 +65,5 @@ export default async function GuideDetailPage({ params }: GuideDetailPageProps) 
   const resolvedParams = typeof params === "object" && "then" in params ? await params : params
   const slug = resolvedParams.slug
 
-  return <GuideDetailClient slug={slug} />
+  return <GuideDetail slug={slug} />
 }

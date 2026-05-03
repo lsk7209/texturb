@@ -1,5 +1,5 @@
 import { BLOG_POSTS } from "@/lib/blog-registry"
-import { BlogDetailClient } from "./blog-detail-client"
+import { BlogDetail } from "./blog-detail"
 import type { Metadata } from "next"
 
 interface BlogDetailPageProps {
@@ -55,6 +55,6 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const resolvedParams = typeof params === "object" && "then" in params ? await params : params
   const slug = resolvedParams.slug
 
-  return <BlogDetailClient slug={slug} />
+  return <BlogDetail slug={slug} />
 }
 

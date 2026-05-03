@@ -1,24 +1,20 @@
-"use client";
-
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Calendar, Tag } from "lucide-react";
 import { getBlogPostBySlug, BLOG_POSTS } from "@/lib/blog-registry";
-import { useBlogView } from "@/hooks/use-analytics";
+import { BlogViewTracker } from "@/components/analytics-tracker";
 import { BlogFAQSection } from "@/components/blog-faq-section";
 import { BlogJsonLd } from "@/components/blog-json-ld";
 import { getBlogFAQBySlug } from "@/lib/blog-faq-registry";
 import { AEOSummarySection } from "@/components/aeo-summary-section";
 
-interface BlogDetailClientProps {
+interface BlogDetailProps {
   slug: string;
 }
 
-export function BlogDetailClient({ slug }: BlogDetailClientProps) {
+export function BlogDetail({ slug }: BlogDetailProps) {
   const post = getBlogPostBySlug(slug);
   const faqData = getBlogFAQBySlug(slug);
-
-  useBlogView(slug);
 
   if (!post) {
     notFound();
@@ -186,6 +182,7 @@ export function BlogDetailClient({ slug }: BlogDetailClientProps) {
 
   return (
     <div className="min-h-screen bg-[#F5F5F7] py-12">
+      <BlogViewTracker slug={slug} />
       <div className="container mx-auto px-4 max-w-3xl">
         <Link
           href="/blog"
