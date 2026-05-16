@@ -15,7 +15,7 @@ import { sanitizeErrorStack, sanitizeErrorMessage } from "@/lib/errors/sanitize"
 import { checkRateLimit } from "@/lib/errors/rate-limit"
 
 // 에러 리포팅은 Edge Runtime 사용 (빠른 응답)
-export const runtime = "edge"
+export const runtime = "nodejs"
 export const dynamic = "force-dynamic" // 동적 렌더링
 export const fetchCache = "default-no-store" // 캐시 사용 안 함
 

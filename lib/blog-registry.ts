@@ -1450,8 +1450,23 @@ import { BLOG_POSTS_BATCH12 } from "./blog-posts-batch12";
 import { BLOG_POSTS_BATCH13 } from "./blog-posts-batch13";
 import { BLOG_POSTS_BATCH14 } from "./blog-posts-batch14";
 import { BLOG_POSTS_BATCH15 } from "./blog-posts-batch15";
+import { BLOG_POSTS_BATCH16 } from "./blog-posts-batch16";
+import { BLOG_POSTS_BATCH17 } from "./blog-posts-batch17";
+import { BLOG_POSTS_BATCH18 } from "./blog-posts-batch18";
+import { BLOG_POSTS_BATCH19 } from "./blog-posts-batch19";
+import { BLOG_POSTS_BATCH20 } from "./blog-posts-batch20";
+import { BLOG_POSTS_BATCH21 } from "./blog-posts-batch21";
+import { BLOG_POSTS_BATCH22 } from "./blog-posts-batch22";
+import { BLOG_POSTS_BATCH23 } from "./blog-posts-batch23";
+import { BLOG_POSTS_BATCH24 } from "./blog-posts-batch24";
+import { BLOG_POSTS_BATCH25 } from "./blog-posts-batch25";
+import { BLOG_POSTS_BATCH26 } from "./blog-posts-batch26";
+import { BLOG_POSTS_BATCH27 } from "./blog-posts-batch27";
+import { BLOG_POSTS_BATCH28 } from "./blog-posts-batch28";
+import { BLOG_POSTS_BATCH29 } from "./blog-posts-batch29";
+import { BLOG_POSTS_BATCH30 } from "./blog-posts-batch30";
 
-const ALL_POSTS: BlogPost[] = [...BLOG_POSTS, ...BLOG_POSTS_BATCH2, ...BLOG_POSTS_BATCH3, ...BLOG_POSTS_BATCH4, ...BLOG_POSTS_BATCH5, ...BLOG_POSTS_BATCH6, ...BLOG_POSTS_BATCH7, ...BLOG_POSTS_BATCH8, ...BLOG_POSTS_BATCH9, ...BLOG_POSTS_BATCH10, ...BLOG_POSTS_BATCH11, ...BLOG_POSTS_BATCH12, ...BLOG_POSTS_BATCH13, ...BLOG_POSTS_BATCH14, ...BLOG_POSTS_BATCH15];
+const ALL_POSTS: BlogPost[] = [...BLOG_POSTS, ...BLOG_POSTS_BATCH2, ...BLOG_POSTS_BATCH3, ...BLOG_POSTS_BATCH4, ...BLOG_POSTS_BATCH5, ...BLOG_POSTS_BATCH6, ...BLOG_POSTS_BATCH7, ...BLOG_POSTS_BATCH8, ...BLOG_POSTS_BATCH9, ...BLOG_POSTS_BATCH10, ...BLOG_POSTS_BATCH11, ...BLOG_POSTS_BATCH12, ...BLOG_POSTS_BATCH13, ...BLOG_POSTS_BATCH14, ...BLOG_POSTS_BATCH15, ...BLOG_POSTS_BATCH16, ...BLOG_POSTS_BATCH17, ...BLOG_POSTS_BATCH18, ...BLOG_POSTS_BATCH19, ...BLOG_POSTS_BATCH20, ...BLOG_POSTS_BATCH21, ...BLOG_POSTS_BATCH22, ...BLOG_POSTS_BATCH23, ...BLOG_POSTS_BATCH24, ...BLOG_POSTS_BATCH25, ...BLOG_POSTS_BATCH26, ...BLOG_POSTS_BATCH27, ...BLOG_POSTS_BATCH28, ...BLOG_POSTS_BATCH29, ...BLOG_POSTS_BATCH30];
 
 function isPublished(post: BlogPost): boolean {
   return new Date(post.publishedAt) <= new Date();
