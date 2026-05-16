@@ -1,0 +1,152 @@
+[
+  {
+    "n": 160,
+    "title": "결혼 청첩장 문구 글자수 - 인쇄 공간과 내용 균형",
+    "macro": "B",
+    "lens": "L3",
+    "hook": "H1",
+    "outro": "O1",
+    "schema": "Article",
+    "speakable": true
+  },
+  {
+    "n": 161,
+    "title": "부고 문자·SNS 글자수 기준과 작성 예시",
+    "macro": "E",
+    "lens": "L3",
+    "hook": "H4",
+    "outro": "O1",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 162,
+    "title": "축의금 봉투 문구 글자수 - 상황별 적절한 표현",
+    "macro": "B",
+    "lens": "L2",
+    "hook": "H1",
+    "outro": "O1",
+    "schema": "Article",
+    "speakable": true
+  },
+  {
+    "n": 163,
+    "title": "생일 카드 문구 글자수 - 짧고 임팩트 있게 쓰는 법",
+    "macro": "C",
+    "lens": "L6",
+    "hook": "H2",
+    "outro": "O4",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 164,
+    "title": "감사 편지 글자수 - 진심 전달에 필요한 최소 분량",
+    "macro": "A",
+    "lens": "L6",
+    "hook": "H5",
+    "outro": "O1",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 165,
+    "title": "사과 문자·이메일 글자수 - 신뢰 회복에 필요한 분량",
+    "macro": "C",
+    "lens": "L1",
+    "hook": "H2",
+    "outro": "O4",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 166,
+    "title": "민원 신청서 텍스트 작성 가이드 - 항목별 글자수",
+    "macro": "C",
+    "lens": "L3",
+    "hook": "H2",
+    "outro": "O1",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 167,
+    "title": "내용증명 작성 글자수와 형식 가이드",
+    "macro": "B",
+    "lens": "L4",
+    "hook": "H1",
+    "outro": "O1",
+    "schema": "Article",
+    "speakable": true
+  },
+  {
+    "n": 168,
+    "title": "소비자 불만 접수 텍스트 작성법 - 효과적인 분량",
+    "macro": "F",
+    "lens": "L5",
+    "hook": "H3",
+    "outro": "O2",
+    "schema": "HowTo",
+    "speakable": false
+  },
+  {
+    "n": 169,
+    "title": "온라인 청원 텍스트 작성 전략 - 공감 이끄는 분량",
+    "macro": "B",
+    "lens": "L5",
+    "hook": "H1",
+    "outro": "O1",
+    "schema": "Article",
+    "speakable": true
+  },
+  {
+    "n": 170,
+    "title": "크라우드펀딩 스토리 텍스트 최적화 - 후원 전환율 높이기",
+    "macro": "C",
+    "lens": "L2",
+    "hook": "H2",
+    "outro": "O1",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 171,
+    "title": "스타트업 IR 피치덱 텍스트 분량 기준",
+    "macro": "E",
+    "lens": "L5",
+    "hook": "H4",
+    "outro": "O1",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 172,
+    "title": "투자 제안서 요약본 글자수 - 투자자 집중도 분석",
+    "macro": "E",
+    "lens": "L4",
+    "hook": "H4",
+    "outro": "O2",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 173,
+    "title": "사업계획서 각 항목별 권장 글자수",
+    "macro": "F",
+    "lens": "L4",
+    "hook": "H3",
+    "outro": "O2",
+    "schema": "HowTo",
+    "speakable": false
+  },
+  {
+    "n": 174,
+    "title": "마케팅 기획서 텍스트 작성 가이드",
+    "macro": "F",
+    "lens": "L4",
+    "hook": "H3",
+    "outro": "O1",
+    "schema": "HowTo",
+    "speakable": false
+  }
+]

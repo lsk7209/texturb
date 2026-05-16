@@ -38,14 +38,39 @@ export async function GET(request: Request) {
     });
 
     // 예약된 posts 발행
-    const { publishScheduledPosts } = await import("@/lib/db/post-queries");
+    const { publishScheduledPosts, getPublishedPosts } = await import("@/lib/db/post-queries");
     const published = await publishScheduledPosts();
+
+    // 새 글이 발행되면 IndexNow + GSC 사이트맵 핑
+    let indexNowResult = null;
+    let sitemapPing = null;
+    if (published.count > 0) {
+      const { submitUrlsToIndexNow } = await import("@/lib/indexnow");
+      const { pingAllSearchEngines } = await import("@/lib/gsc-ping");
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com";
+
+      // 방금 발행된 글 URL 목록 수집
+      const { data: recentPosts } = await getPublishedPosts(undefined, published.count + 5);
+      const newUrls = (recentPosts ?? [])
+        .slice(0, published.count)
+        .map((p) => `${baseUrl}/${p.type === "guide" ? "guides" : "blog"}/ai/${p.slug}`);
+
+      // sitemap URL도 추가
+      newUrls.push(`${baseUrl}/sitemap.xml`);
+
+      [indexNowResult, sitemapPing] = await Promise.all([
+        submitUrlsToIndexNow(newUrls),
+        pingAllSearchEngines(),
+      ]);
+    }
 
     return NextResponse.json({
       success: true,
       duration: `${Date.now() - startTime}ms`,
       cleaned: Number(result.rowsAffected) || 0,
       published: published.count,
+      indexNow: indexNowResult,
+      sitemapPing,
     });
   } catch (error) {
     logger.error(

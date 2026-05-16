@@ -1437,8 +1437,21 @@ Python 프로젝트에서 뜬금없이 \`camelCase\` 함수가 튀어나오면, 
 ];
 
 import { BLOG_POSTS_BATCH2 } from "./blog-posts-batch2";
+import { BLOG_POSTS_BATCH3 } from "./blog-posts-batch3";
+import { BLOG_POSTS_BATCH4 } from "./blog-posts-batch4";
+import { BLOG_POSTS_BATCH5 } from "./blog-posts-batch5";
+import { BLOG_POSTS_BATCH6 } from "./blog-posts-batch6";
+import { BLOG_POSTS_BATCH7 } from "./blog-posts-batch7";
+import { BLOG_POSTS_BATCH8 } from "./blog-posts-batch8";
+import { BLOG_POSTS_BATCH9 } from "./blog-posts-batch9";
+import { BLOG_POSTS_BATCH10 } from "./blog-posts-batch10";
+import { BLOG_POSTS_BATCH11 } from "./blog-posts-batch11";
+import { BLOG_POSTS_BATCH12 } from "./blog-posts-batch12";
+import { BLOG_POSTS_BATCH13 } from "./blog-posts-batch13";
+import { BLOG_POSTS_BATCH14 } from "./blog-posts-batch14";
+import { BLOG_POSTS_BATCH15 } from "./blog-posts-batch15";
 
-const ALL_POSTS: BlogPost[] = [...BLOG_POSTS, ...BLOG_POSTS_BATCH2];
+const ALL_POSTS: BlogPost[] = [...BLOG_POSTS, ...BLOG_POSTS_BATCH2, ...BLOG_POSTS_BATCH3, ...BLOG_POSTS_BATCH4, ...BLOG_POSTS_BATCH5, ...BLOG_POSTS_BATCH6, ...BLOG_POSTS_BATCH7, ...BLOG_POSTS_BATCH8, ...BLOG_POSTS_BATCH9, ...BLOG_POSTS_BATCH10, ...BLOG_POSTS_BATCH11, ...BLOG_POSTS_BATCH12, ...BLOG_POSTS_BATCH13, ...BLOG_POSTS_BATCH14, ...BLOG_POSTS_BATCH15];
 
 function isPublished(post: BlogPost): boolean {
   return new Date(post.publishedAt) <= new Date();

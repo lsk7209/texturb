@@ -62,7 +62,7 @@ export function HomePageContent() {
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
         <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10 lg:space-y-12">
           {/* Hero Section */}
-          <div className="text-center space-y-5 sm:space-y-7 pb-6 sm:pb-8">
+          <div className="text-center space-y-5 sm:space-y-7 pb-2">
             <div className="space-y-3 sm:space-y-4">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight">
                 텍스트 작업,{" "}
@@ -74,15 +74,36 @@ export function HomePageContent() {
                 글자수 세기, 줄바꿈 정리, 대소문자 변환 등 텍스트 작업에 필요한 모든 도구를 한곳에서 무료로 사용하세요.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-2">
+
+            {/* 인기 도구 빠른 접근 - GA4 top performers (모바일 이탈률 개선) */}
+            <div className="flex flex-wrap gap-2 justify-center px-2">
+              {[
+                { href: "/tools/word-frequency/", label: "단어 빈도 분석" },
+                { href: "/tools/char-counter/", label: "글자수 세기" },
+                { href: "/tools/fullwidth-halfwidth-converter/", label: "전각/반각 변환" },
+                { href: "/tools/line-break-cleaner/", label: "줄바꿈 정리" },
+                { href: "/tools/date-format-converter/", label: "날짜 형식 변환" },
+                { href: "/tools/table-markdown-converter/", label: "표→마크다운" },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="px-3.5 py-1.5 bg-accent text-accent-foreground text-sm font-medium rounded-full border border-border hover:bg-primary/10 hover:border-primary/30 hover:text-primary transition-all min-h-[36px] flex items-center"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-1">
               <Link
-                href="/tools"
+                href="/tools/"
                 className="px-7 py-3.5 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-all shadow-md hover:shadow-primary hover:scale-[1.02] active:scale-[0.98] text-sm sm:text-base min-h-[48px] flex items-center justify-center"
               >
                 전체 도구 보기
               </Link>
               <Link
-                href="/guides"
+                href="/guides/"
                 className="px-7 py-3.5 bg-card border-2 border-border text-foreground rounded-lg font-semibold hover:bg-accent hover:border-primary/20 transition-all shadow-sm hover:shadow-md hover:scale-[1.02] active:scale-[0.98] text-sm sm:text-base min-h-[48px] flex items-center justify-center"
               >
                 사용 가이드

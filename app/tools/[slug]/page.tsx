@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"
-  const canonicalUrl = `${baseUrl}/tools/${tool.slug}`
+  const canonicalUrl = `${baseUrl}/tools/${tool.slug}/`
   // 핵심 키워드를 앞쪽에 배치
   const primaryKeyword = tool.keywords[0] || tool.name
   const metaTitle = `${primaryKeyword} ${tool.name} - 무료 온라인 텍스트 편집 도구 | 텍스터브`
@@ -43,6 +43,14 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
       title: metaTitle,
       description: metaDescription,
       url: canonicalUrl,
+      images: [
+        {
+          url: `${baseUrl}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: metaTitle,
+        },
+      ],
       type: "website",
       locale: "ko_KR",
       siteName: "텍스터브",

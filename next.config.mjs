@@ -4,11 +4,11 @@ const nextConfig = {
     ignoreBuildErrors: false, // 타입 에러를 빌드 시점에 확인
   },
   images: {
-    formats: ['image/webp', 'image/avif'], // 최신 포맷 지원
-    // Vercel 이미지 최적화 사용
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [],
-    // 이미지 최적화 성능 향상
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 86400, // 24시간 캐시 (60→86400)
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256],
   },
   trailingSlash: true,
   compress: true, // Gzip 압축 활성화
@@ -17,15 +17,20 @@ const nextConfig = {
   // swcMinify는 Next.js 13+에서 기본적으로 활성화되어 있음
   experimental: {
     optimizePackageImports: [
-      'lucide-react', 
-      '@radix-ui/react-icons', 
-      '@radix-ui/react-dialog', 
+      'lucide-react',
+      '@radix-ui/react-icons',
+      '@radix-ui/react-accordion',
+      '@radix-ui/react-dialog',
       '@radix-ui/react-dropdown-menu',
       '@radix-ui/react-tabs',
       '@radix-ui/react-select',
       '@radix-ui/react-popover',
       '@radix-ui/react-toast',
-    ], // 번들 크기 최적화
+      '@radix-ui/react-tooltip',
+      '@radix-ui/react-scroll-area',
+      'recharts',
+      'date-fns',
+    ],
     // Next.js 16 최적화
     serverActions: {
       bodySizeLimit: '2mb',
@@ -72,6 +77,10 @@ const nextConfig = {
           {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=()',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
           },
         ],
       },

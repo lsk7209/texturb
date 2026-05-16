@@ -1,0 +1,252 @@
+[
+  {
+    "n": 1,
+    "title": "글자수 세기 완벽 가이드 - 자소서·블로그·SNS별 글자수 기준",
+    "macro": "B",
+    "lens": "L6",
+    "hook": "H1",
+    "outro": "O1",
+    "schema": "Article",
+    "speakable": true
+  },
+  {
+    "n": 2,
+    "title": "줄바꿈 정리 자동화하는 방법 - 복붙 텍스트 완벽 정리",
+    "macro": "E",
+    "lens": "L3",
+    "hook": "H4",
+    "outro": "O2",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 3,
+    "title": "자기소개서 글자수 맞추는 7가지 실전 팁",
+    "macro": "F",
+    "lens": "L4",
+    "hook": "H3",
+    "outro": "O2",
+    "schema": "HowTo",
+    "speakable": false
+  },
+  {
+    "n": 4,
+    "title": "블로그 포스트 최적 글자수는 몇 자일까?",
+    "macro": "A",
+    "lens": "L3",
+    "hook": "H5",
+    "outro": "O3",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 5,
+    "title": "인스타그램 캡션 글자수 최적화 전략",
+    "macro": "E",
+    "lens": "L6",
+    "hook": "H1",
+    "outro": "O2",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 6,
+    "title": "트위터·X 280자 안에 핵심 담는 법",
+    "macro": "C",
+    "lens": "L3",
+    "hook": "H2",
+    "outro": "O4",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 7,
+    "title": "대소문자 변환 도구 활용법 - Title Case vs Sentence Case 차이",
+    "macro": "B",
+    "lens": "L4",
+    "hook": "H1",
+    "outro": "O1",
+    "schema": "Article",
+    "speakable": true
+  },
+  {
+    "n": 8,
+    "title": "마크다운 to HTML 변환 가이드 - 블로그 퍼블리싱 자동화",
+    "macro": "F",
+    "lens": "L5",
+    "hook": "H3",
+    "outro": "O1",
+    "schema": "HowTo",
+    "speakable": false
+  },
+  {
+    "n": 9,
+    "title": "HTML 태그 제거하는 방법 - 순수 텍스트 추출 완전 정리",
+    "macro": "B",
+    "lens": "L3",
+    "hook": "H1",
+    "outro": "O1",
+    "schema": "Article",
+    "speakable": true
+  },
+  {
+    "n": 10,
+    "title": "특수문자 활용법 - SNS 제목·닉네임에 쓰이는 기호 총정리",
+    "macro": "A",
+    "lens": "L3",
+    "hook": "H5",
+    "outro": "O4",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 11,
+    "title": "CSV to TSV 변환 방법과 실무 활용 사례",
+    "macro": "F",
+    "lens": "L5",
+    "hook": "H3",
+    "outro": "O1",
+    "schema": "HowTo",
+    "speakable": false
+  },
+  {
+    "n": 12,
+    "title": "JSON 텍스트 정렬·포맷팅 완벽 가이드",
+    "macro": "F",
+    "lens": "L5",
+    "hook": "H1",
+    "outro": "O2",
+    "schema": "HowTo",
+    "speakable": false
+  },
+  {
+    "n": 13,
+    "title": "전각·반각 변환이란? 한글 문서 작업 시 주의할 점",
+    "macro": "E",
+    "lens": "L3",
+    "hook": "H4",
+    "outro": "O1",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 14,
+    "title": "줄 정렬 도구로 리스트 한 번에 정리하는 방법",
+    "macro": "C",
+    "lens": "L3",
+    "hook": "H2",
+    "outro": "O4",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 15,
+    "title": "중복 줄 제거로 데이터 클린업하는 실전 가이드",
+    "macro": "E",
+    "lens": "L4",
+    "hook": "H4",
+    "outro": "O2",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 16,
+    "title": "단어 빈도 분석으로 SEO 키워드 밀도 최적화하기",
+    "macro": "B",
+    "lens": "L4",
+    "hook": "H1",
+    "outro": "O1",
+    "schema": "Article",
+    "speakable": true
+  },
+  {
+    "n": 17,
+    "title": "문장 수 세기 - 문서 분량 정확히 측정하는 방법",
+    "macro": "A",
+    "lens": "L4",
+    "hook": "H5",
+    "outro": "O4",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 18,
+    "title": "문단 수 계산으로 글 구조 점검하는 방법",
+    "macro": "C",
+    "lens": "L2",
+    "hook": "H2",
+    "outro": "O4",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 19,
+    "title": "텍스트 정렬 - 가나다순 또는 ABC순 자동 정렬 팁",
+    "macro": "C",
+    "lens": "L2",
+    "hook": "H2",
+    "outro": "O4",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 20,
+    "title": "이메일 주소 추출 자동화 - 대용량 텍스트에서 이메일 분리하기",
+    "macro": "A",
+    "lens": "L6",
+    "hook": "H5",
+    "outro": "O1",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 21,
+    "title": "URL 추출 도구 활용법 - 텍스트에서 링크 한 번에 뽑기",
+    "macro": "C",
+    "lens": "L1",
+    "hook": "H2",
+    "outro": "O4",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 22,
+    "title": "메타 디스크립션 글자수 최적화 - 검색 클릭률 높이는 방법",
+    "macro": "F",
+    "lens": "L4",
+    "hook": "H1",
+    "outro": "O1",
+    "schema": "HowTo",
+    "speakable": false
+  },
+  {
+    "n": 23,
+    "title": "슬러그(Slug) 생성 자동화 - SEO 친화적 URL 만드는 법",
+    "macro": "E",
+    "lens": "L1",
+    "hook": "H4",
+    "outro": "O2",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 24,
+    "title": "제목 글자수 체커 활용 - 구글·네이버 검색 결과 잘림 방지",
+    "macro": "E",
+    "lens": "L5",
+    "hook": "H4",
+    "outro": "O2",
+    "schema": "Article",
+    "speakable": false
+  },
+  {
+    "n": 25,
+    "title": "표→마크다운 변환으로 노션·깃허브에 붙여넣기 쉽게 만드는 법",
+    "macro": "E",
+    "lens": "L4",
+    "hook": "H1",
+    "outro": "O2",
+    "schema": "Article",
+    "speakable": false
+  }
+]

@@ -23,6 +23,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  // trailing slash는 next.config.mjs의 trailingSlash: true로 통일
   openGraph: {
     title: "텍스터브 - 텍스트 작업실",
     description: "블로그·자소서·보고서 쓰다가 막히면, 그냥 여기다 붙여넣으세요.",

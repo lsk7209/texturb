@@ -250,7 +250,7 @@ export const UTILITIES: UtilityTool[] = [
     category: "변환",
     description: "전각(Ｆｕｌｌｗｉｄｔｈ)과 반각(Fullwidth) 문자 사이를 변환합니다.",
     keywords: ["전각", "반각", "fullwidth", "halfwidth"],
-    showOnHome: false,
+    showOnHome: true,
     tabId: "format",
   },
   {
@@ -301,7 +301,7 @@ export const UTILITIES: UtilityTool[] = [
     category: "분석",
     description: "텍스트에서 단어 빈도를 분석하고 시각화합니다.",
     keywords: ["단어 빈도", "빈도수", "통계", "분석"],
-    showOnHome: false,
+    showOnHome: true,
     tabId: "analysis",
   },
   {

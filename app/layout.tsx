@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Analytics } from "@vercel/analytics/react";
 import Script from "next/script";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], display: "swap", preload: true });
 
 export const metadata: Metadata = {
   title: {
@@ -87,6 +87,12 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
+        {/* Preconnect 힌트 - CWV LCP 개선 */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+
         {/* Google 사이트 인증 */}
         <meta
           name="google-site-verification"

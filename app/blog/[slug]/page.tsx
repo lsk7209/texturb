@@ -25,7 +25,9 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"
-  const canonicalUrl = post.canonicalUrl || `${baseUrl}/blog/${post.slug}`
+  const rawCanonical = post.canonicalUrl || `${baseUrl}/blog/${post.slug}`
+  // trailingSlash: true 설정에 맞게 / 통일
+  const canonicalUrl = rawCanonical.endsWith("/") ? rawCanonical : `${rawCanonical}/`
 
   return {
     title: post.metaTitle || post.title,

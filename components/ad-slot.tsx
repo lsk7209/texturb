@@ -23,7 +23,7 @@ export function AdSlot({ slot, format = "auto", responsive = true, className = "
   }, [])
 
   // Don't render if AdSense ID is not configured
-  if (!process.env.NEXT_PUBLIC_ADSENSE_ID) {
+  if (!process.env.NEXT_PUBLIC_ADSENSE_PUB_ID) {
     return null
   }
 
@@ -33,7 +33,7 @@ export function AdSlot({ slot, format = "auto", responsive = true, className = "
         ref={adRef}
         className="adsbygoogle"
         style={{ display: "block" }}
-        data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_ID}
+        data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_PUB_ID}
         data-ad-slot={slot}
         data-ad-format={format}
         data-full-width-responsive={responsive ? "true" : "false"}
