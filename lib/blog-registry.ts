@@ -1,14 +1,17 @@
 export type BlogPost = {
+  id?: string;
   slug: string;
   title: string;
-  description: string;
+  description?: string;
+  excerpt?: string;
   content: string;
   publishedAt: string; // ISO date string
-  metaTitle: string;
-  metaDescription: string;
-  targetKeywords: string[];
+  metaTitle?: string;
+  metaDescription?: string;
+  targetKeywords?: string[];
   category?: string;
   tags?: string[];
+  author?: string;
   cta?: {
     text: string;
     link: string;

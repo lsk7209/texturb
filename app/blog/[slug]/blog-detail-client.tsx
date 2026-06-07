@@ -182,7 +182,9 @@ export function BlogDetailClient({ slug }: BlogDetailClientProps) {
   const aeoQuestion =
     post.aeoQuestion ??
     (post.title.includes("?") ? post.title : `${post.title}에 대해 알아보세요`);
-  const aeoAnswer = post.aeoAnswer ?? post.description;
+  const description = post.description ?? post.excerpt ?? post.title;
+  const aeoAnswer = post.aeoAnswer ?? description;
+  const keywords = post.targetKeywords ?? post.tags ?? [];
 
   return (
     <div className="min-h-screen bg-[#F5F5F7] py-12">
@@ -217,7 +219,7 @@ export function BlogDetailClient({ slug }: BlogDetailClientProps) {
               {post.title}
             </h1>
             <p className="text-lg text-slate-600 leading-relaxed">
-              {post.description}
+              {description}
             </p>
           </div>
 
@@ -226,7 +228,7 @@ export function BlogDetailClient({ slug }: BlogDetailClientProps) {
             <AEOSummarySection
               question={aeoQuestion}
               answer={aeoAnswer}
-              keywords={post.targetKeywords}
+              keywords={keywords}
             />
           </div>
 

@@ -8,8 +8,19 @@ import { getPublishedPosts } from "@/lib/db/post-queries";
 // Sitemap 재생성 주기 설정 (ISR)
 export const revalidate = 3600; // 1시간마다 재생성
 
+function getCanonicalBaseUrl() {
+  const rawSiteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.texturb.com").trim();
+  const siteUrl = new URL(rawSiteUrl);
+
+  if (siteUrl.hostname === "texturb.com") {
+    siteUrl.hostname = "www.texturb.com";
+  }
+
+  return siteUrl.origin.replace(/\/+$/, "");
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com";
+  const baseUrl = getCanonicalBaseUrl();
 
   // 정적 페이지
   const staticPages: MetadataRoute.Sitemap = [
