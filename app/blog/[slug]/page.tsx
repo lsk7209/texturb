@@ -5,6 +5,7 @@ import { notFound } from "next/navigation"
 import { getAbsoluteUrl } from "@/lib/site-config"
 import { getBlogFAQBySlug } from "@/lib/blog-faq-registry"
 import { BlogJsonLd } from "@/components/blog-json-ld"
+import { getBlogContentEnrichment, getEnrichedBlogContent } from "@/lib/blog-content-enrichment"
 
 interface BlogDetailPageProps {
   params: Promise<{ slug: string }> | { slug: string }
@@ -65,6 +66,13 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
     notFound()
   }
 
+  const enrichment = getBlogContentEnrichment(slug)
+  const enrichedPost = {
+    ...post,
+    content: getEnrichedBlogContent(slug, post.content),
+    aeoQuestion: post.aeoQuestion ?? enrichment?.aeoQuestion,
+    aeoAnswer: post.aeoAnswer ?? enrichment?.aeoAnswer,
+  }
   const faqItems = getBlogFAQBySlug(slug)?.items ?? []
   const relatedPosts = getAllBlogPosts()
     .filter((candidate) => candidate.slug !== slug)
@@ -75,11 +83,11 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   return (
     <>
       <BlogDetailClient
-        post={post}
+        post={enrichedPost}
         faqItems={faqItems}
         relatedPosts={relatedPosts}
       />
-      <BlogJsonLd post={post} faqItems={faqItems} />
+      <BlogJsonLd post={enrichedPost} faqItems={faqItems} />
     </>
   )
 }

@@ -1,6 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 import { getAllBlogPosts, type BlogPost } from "../lib/blog-registry"
+import { getBlogContentEnrichment, getEnrichedBlogContent } from "../lib/blog-content-enrichment"
 
 type Finding = {
   label: string
@@ -55,7 +56,8 @@ function countMatches(value: string, pattern: RegExp): number {
 
 function evaluatePost(post: BlogPost): AuditRow {
   const findings: Finding[] = []
-  const content = post.content || ""
+  const enrichment = getBlogContentEnrichment(post.slug)
+  const content = getEnrichedBlogContent(post.slug, post.content || "")
   const words = countWords(content)
   const h2 = countMatches(content, /^##\s+/gm) + countMatches(content, /<h2[\s>]/gi)
   const h3 = countMatches(content, /^###\s+/gm) + countMatches(content, /<h3[\s>]/gi)
@@ -64,7 +66,10 @@ function evaluatePost(post: BlogPost): AuditRow {
   const internalLinks = (post.inlinks?.length ?? 0) + inlineInternalLinks
   const externalLinks = (post.outlinks?.length ?? 0) + inlineExternalLinks
   const hasCta = Boolean(post.cta?.link && post.cta.text)
-  const hasAeo = Boolean(post.aeoQuestion && post.aeoAnswer)
+  const hasAeo = Boolean(
+    (post.aeoQuestion && post.aeoAnswer) ||
+      (enrichment?.aeoQuestion && enrichment.aeoAnswer),
+  )
   const hasMetaTitle = Boolean(post.metaTitle && post.metaTitle.length >= 20)
   const hasMetaDescription = Boolean(
     post.metaDescription &&
