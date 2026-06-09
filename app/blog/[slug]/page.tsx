@@ -1,13 +1,14 @@
-import { BLOG_POSTS } from "@/lib/blog-registry"
+import { getAllBlogPosts, getBlogPostBySlug } from "@/lib/blog-registry"
 import { BlogDetailClient } from "./blog-detail-client"
 import type { Metadata } from "next"
+import { getAbsoluteUrl } from "@/lib/site-config"
 
 interface BlogDetailPageProps {
   params: Promise<{ slug: string }> | { slug: string }
 }
 
 export function generateStaticParams() {
-  return BLOG_POSTS.map((post) => ({
+  return getAllBlogPosts().map((post) => ({
     slug: post.slug,
   }))
 }
@@ -15,7 +16,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: BlogDetailPageProps): Promise<Metadata> {
   const resolvedParams = typeof params === "object" && "then" in params ? await params : params
   const slug = resolvedParams.slug
-  const post = BLOG_POSTS.find((p) => p.slug === slug)
+  const post = getBlogPostBySlug(slug)
 
   if (!post) {
     return {
@@ -24,8 +25,7 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
     }
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"
-  const rawCanonical = post.canonicalUrl || `${baseUrl}/blog/${post.slug}`
+  const rawCanonical = getAbsoluteUrl(`/blog/${post.slug}`)
   // trailingSlash: true 설정에 맞게 / 통일
   const canonicalUrl = rawCanonical.endsWith("/") ? rawCanonical : `${rawCanonical}/`
 

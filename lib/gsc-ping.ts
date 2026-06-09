@@ -3,7 +3,9 @@
  * 새 컨텐츠 발행 시 사이트맵을 GSC에 즉시 제출
  */
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"
+import { getCanonicalSiteUrl } from "@/lib/site-config"
+
+const BASE_URL = getCanonicalSiteUrl()
 
 export interface GscPingResult {
   success: boolean

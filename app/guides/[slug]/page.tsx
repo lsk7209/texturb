@@ -1,6 +1,7 @@
 import { GUIDES } from "@/lib/guides-registry"
 import { GuideDetailClient } from "./guide-detail-client"
 import type { Metadata } from "next"
+import { getAbsoluteUrl } from "@/lib/site-config"
 
 interface GuideDetailPageProps {
   params: Promise<{ slug: string }> | { slug: string }
@@ -24,8 +25,7 @@ export async function generateMetadata({ params }: GuideDetailPageProps): Promis
     }
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"
-  const canonicalUrl = `${baseUrl}/guides/${guide.slug}`
+  const canonicalUrl = getAbsoluteUrl(`/guides/${guide.slug}`)
   // 핵심 키워드를 앞쪽에 배치
   const titleKeywords = guide.title.split(" ").slice(0, 3).join(" ")
   const metaTitle = `${titleKeywords} - 텍스트 편집 가이드 | 텍스터브`

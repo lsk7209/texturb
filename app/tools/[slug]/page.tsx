@@ -1,6 +1,7 @@
 import { UTILITIES } from "@/lib/utilities-registry"
 import { ToolPageClient } from "./tool-page-client"
 import type { Metadata } from "next"
+import { getAbsoluteUrl, getCanonicalSiteUrl } from "@/lib/site-config"
 
 interface ToolPageProps {
   params: Promise<{ slug: string }> | { slug: string }
@@ -25,8 +26,8 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
     }
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"
-  const canonicalUrl = `${baseUrl}/tools/${tool.slug}/`
+  const baseUrl = getCanonicalSiteUrl()
+  const canonicalUrl = `${getAbsoluteUrl(`/tools/${tool.slug}`)}/`
   // 핵심 키워드를 앞쪽에 배치
   const primaryKeyword = tool.keywords[0] || tool.name
   const metaTitle = `${primaryKeyword} ${tool.name} - 무료 온라인 텍스트 편집 도구 | 텍스터브`

@@ -12,7 +12,6 @@ import { ErrorBoundary } from "@/components/error-boundary"
 import { ToolContentSection } from "@/components/tool-content-section"
 import { FeedbackWidget } from "@/components/feedback-widget"
 import { BugReportLink } from "@/components/bug-report-link"
-import { AdSlot } from "@/components/ad-slot"
 import { FavoriteToggle } from "@/components/favorite-toggle"
 import { useRecentTools } from "@/hooks/use-recent-tools"
 import { ToolDetailSection } from "@/components/tool-detail-section"
@@ -107,11 +106,6 @@ export function ToolPageClient({ slug, searchParams }: ToolPageClientProps) {
             <ErrorBoundary>
               <TextStudioMain key={tool.slug} initialTab={activeTab} toolId={tool.slug} searchParams={searchParams} />
             </ErrorBoundary>
-          </div>
-
-          {/* Ad Slot */}
-          <div className="flex justify-center">
-            <AdSlot slot={process.env.NEXT_PUBLIC_AD_SLOT_TOOL_PAGE || ""} format="horizontal" />
           </div>
 
           {/* Additional Content Sections */}

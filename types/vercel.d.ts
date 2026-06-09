@@ -17,6 +17,10 @@ export interface VercelEnv {
   POSTGRES_URL?: string
   DATABASE_URL?: string
   CRON_SECRET?: string
+  GSC_SERVICE_ACCOUNT_JSON?: string
+  GSC_CLIENT_EMAIL?: string
+  GSC_PRIVATE_KEY?: string
+  GSC_SITE_URL?: string
   NODE_ENV?: "development" | "production" | "test"
   [key: string]: string | undefined
 }

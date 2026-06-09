@@ -6,6 +6,7 @@
 import { NextResponse } from "next/server"
 import { submitUrlsToIndexNow } from "@/lib/indexnow"
 import { pingAllSearchEngines } from "@/lib/gsc-ping"
+import { submitSitemapToSearchConsole } from "@/lib/gsc-sitemap"
 
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
@@ -23,15 +24,17 @@ export async function POST(request: Request) {
     const body = await request.json().catch(() => ({}))
     const urls: string[] = body.urls ?? []
 
-    const [indexNowResult, sitemapPing] = await Promise.all([
+    const [indexNowResult, sitemapPing, searchConsole] = await Promise.all([
       urls.length > 0 ? submitUrlsToIndexNow(urls) : Promise.resolve({ success: true, submitted: 0, errors: [] }),
       pingAllSearchEngines(),
+      submitSitemapToSearchConsole(),
     ])
 
     return NextResponse.json({
       success: true,
       indexNow: indexNowResult,
       sitemapPing,
+      searchConsole,
     })
   } catch (err) {
     return NextResponse.json(

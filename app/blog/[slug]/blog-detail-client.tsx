@@ -14,6 +14,43 @@ interface BlogDetailClientProps {
   slug: string;
 }
 
+function stripHtml(value: string): string {
+  return value.replace(/<[^>]+>/g, "").trim();
+}
+
+function slugifyHeading(value: string, index: number): string {
+  const slug = stripHtml(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9가-힣\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+
+  return slug || `section-${index + 1}`;
+}
+
+function extractTableOfContents(content: string) {
+  const items: { id: string; text: string; level: 2 | 3 }[] = [];
+
+  for (const match of content.matchAll(/^#{2,3}\s+(.+)$/gm)) {
+    const level = match[0].startsWith("###") ? 3 : 2;
+    const text = stripHtml(match[1]);
+    items.push({ id: slugifyHeading(text, items.length), text, level });
+  }
+
+  for (const match of content.matchAll(/<h([23])[^>]*>([\s\S]*?)<\/h[23]>/gim)) {
+    const text = stripHtml(match[2]);
+    if (!text) continue;
+    items.push({
+      id: slugifyHeading(text, items.length),
+      text,
+      level: Number(match[1]) as 2 | 3,
+    });
+  }
+
+  return items.slice(0, 12);
+}
+
 export function BlogDetailClient({ slug }: BlogDetailClientProps) {
   const post = getBlogPostBySlug(slug);
   const faqData = getBlogFAQBySlug(slug);
@@ -185,6 +222,16 @@ export function BlogDetailClient({ slug }: BlogDetailClientProps) {
   const description = post.description ?? post.excerpt ?? post.title;
   const aeoAnswer = post.aeoAnswer ?? description;
   const keywords = post.targetKeywords ?? post.tags ?? [];
+  const tocItems = extractTableOfContents(post.content);
+  const contentHtml = formatContent(post.content).replace(
+    /<h([23])([^>]*)>([\s\S]*?)<\/h[23]>/gim,
+    (full, level, attrs, text) => {
+      if (/\sid=/.test(attrs)) return full;
+      const cleanText = stripHtml(text);
+      const tocItem = tocItems.find((item) => item.text === cleanText && item.level === Number(level));
+      return `<h${level}${attrs} id="${tocItem?.id || slugifyHeading(cleanText, 0)}">${text}</h${level}>`;
+    },
+  );
 
   return (
     <div className="min-h-screen bg-[#F5F5F7] py-12">
@@ -198,7 +245,7 @@ export function BlogDetailClient({ slug }: BlogDetailClientProps) {
         </Link>
 
         <article className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-          <div className="p-8 md:p-12 border-b border-slate-100">
+          <div className="p-5 sm:p-8 md:p-12 border-b border-slate-100">
             <div className="flex items-center gap-4 mb-4">
               {post.category && (
                 <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 text-xs font-medium text-blue-600">
@@ -224,7 +271,7 @@ export function BlogDetailClient({ slug }: BlogDetailClientProps) {
           </div>
 
           {/* AEO 요약 섹션 */}
-          <div className="p-8 md:p-12">
+          <div className="p-5 sm:p-8 md:p-12">
             <AEOSummarySection
               question={aeoQuestion}
               answer={aeoAnswer}
@@ -232,17 +279,35 @@ export function BlogDetailClient({ slug }: BlogDetailClientProps) {
             />
           </div>
 
+          {tocItems.length > 2 && (
+            <nav
+              className="mx-5 sm:mx-8 md:mx-12 mb-4 rounded-xl border border-slate-200 bg-slate-50 p-5"
+              aria-label="목차"
+            >
+              <h2 className="text-base font-bold text-slate-900 mb-3">목차</h2>
+              <ol className="space-y-2 text-sm text-slate-600">
+                {tocItems.map((item) => (
+                  <li key={item.id} className={item.level === 3 ? "ml-4" : undefined}>
+                    <a href={`#${item.id}`} className="hover:text-blue-700 hover:underline">
+                      {item.text}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          )}
+
           {/* 본문 내용 */}
-          <div className="p-8 md:p-12">
+          <div className="p-5 sm:p-8 md:p-12">
             <div
-              className="text-slate-600 leading-relaxed text-lg prose prose-slate max-w-none"
-              dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
+              className="text-slate-600 leading-relaxed text-base sm:text-lg prose prose-slate max-w-none"
+              dangerouslySetInnerHTML={{ __html: contentHtml }}
             />
           </div>
 
           {/* CTA 섹션 */}
           {post.cta && (
-            <section className="p-8 md:p-12 bg-gradient-to-r from-blue-50 to-indigo-50 border-t border-slate-100">
+            <section className="p-5 sm:p-8 md:p-12 bg-gradient-to-r from-blue-50 to-indigo-50 border-t border-slate-100">
               <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
                 <div className="flex-1">
                   <h2 className="text-xl font-bold text-slate-900 mb-2">
@@ -338,9 +403,7 @@ export function BlogDetailClient({ slug }: BlogDetailClientProps) {
         </section>
       </div>
 
-      {faqData && faqData.items.length > 0 && (
-        <BlogJsonLd faqItems={faqData.items} />
-      )}
+      <BlogJsonLd post={post} faqItems={faqData?.items ?? []} />
     </div>
   );
 }

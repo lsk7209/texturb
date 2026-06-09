@@ -47,7 +47,9 @@ export async function GET(request: Request) {
     if (published.count > 0) {
       const { submitUrlsToIndexNow } = await import("@/lib/indexnow");
       const { pingAllSearchEngines } = await import("@/lib/gsc-ping");
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com";
+      const { submitSitemapToSearchConsole } = await import("@/lib/gsc-sitemap");
+      const { getCanonicalSiteUrl } = await import("@/lib/site-config");
+      const baseUrl = getCanonicalSiteUrl();
 
       // 방금 발행된 글 URL 목록 수집
       const { data: recentPosts } = await getPublishedPosts(undefined, published.count + 5);
@@ -60,7 +62,7 @@ export async function GET(request: Request) {
 
       [indexNowResult, sitemapPing] = await Promise.all([
         submitUrlsToIndexNow(newUrls),
-        pingAllSearchEngines(),
+        Promise.all([pingAllSearchEngines(), submitSitemapToSearchConsole()]),
       ]);
     }
 

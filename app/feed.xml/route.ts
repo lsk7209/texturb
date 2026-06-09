@@ -1,13 +1,14 @@
-import { BLOG_POSTS } from "@/lib/blog-registry";
+import { getAllBlogPosts } from "@/lib/blog-registry";
 import { getPublishedPosts } from "@/lib/db/post-queries";
+import { getCanonicalSiteUrl } from "@/lib/site-config";
 
 export const revalidate = 3600;
 
 export async function GET() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com";
+  const baseUrl = getCanonicalSiteUrl();
 
   // 정적 블로그 포스트
-  const staticItems = BLOG_POSTS.map((post) => ({
+  const staticItems = getAllBlogPosts().map((post) => ({
     title: post.title,
     link: `${baseUrl}/blog/${post.slug}`,
     description: post.description ?? "",

@@ -3,8 +3,10 @@
  * https://www.indexnow.org/
  */
 
+import { getCanonicalSiteUrl } from "@/lib/site-config"
+
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY || ""
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"
+const BASE_URL = getCanonicalSiteUrl()
 
 export interface IndexNowResult {
   success: boolean

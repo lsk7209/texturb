@@ -2,25 +2,20 @@ import { MetadataRoute } from "next";
 import { UTILITIES } from "@/lib/utilities-registry";
 import { GUIDES } from "@/lib/guides-registry";
 import { WORKFLOW_PRESETS } from "@/lib/workflows-registry";
-import { BLOG_POSTS } from "@/lib/blog-registry";
+import { getAllBlogPosts } from "@/lib/blog-registry";
 import { getPublishedPosts } from "@/lib/db/post-queries";
+import { getCanonicalSiteUrl } from "@/lib/site-config";
 
 // Sitemap 재생성 주기 설정 (ISR)
 export const revalidate = 3600; // 1시간마다 재생성
 
 function getCanonicalBaseUrl() {
-  const rawSiteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.texturb.com").trim();
-  const siteUrl = new URL(rawSiteUrl);
-
-  if (siteUrl.hostname === "texturb.com") {
-    siteUrl.hostname = "www.texturb.com";
-  }
-
-  return siteUrl.origin.replace(/\/+$/, "");
+  return getCanonicalSiteUrl();
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = getCanonicalBaseUrl();
+  const publishedBlogPosts = getAllBlogPosts();
 
   // 정적 페이지
   const staticPages: MetadataRoute.Sitemap = [
@@ -108,7 +103,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.8,
     },
-    ...BLOG_POSTS.map((post) => ({
+    ...publishedBlogPosts.map((post) => ({
       url: `${baseUrl}/blog/${post.slug}`,
       lastModified: new Date(post.publishedAt),
       changeFrequency: "monthly" as const,
