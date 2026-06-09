@@ -7,8 +7,12 @@ import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
 import { Analytics } from "@vercel/analytics/react";
 import Script from "next/script";
+import { getCanonicalSiteUrl } from "@/lib/site-config";
 
 const inter = Inter({ subsets: ["latin"], display: "swap", preload: true });
+const siteUrl = getCanonicalSiteUrl();
+const gaId = process.env.NEXT_PUBLIC_GA_ID?.trim();
+const adsensePubId = process.env.NEXT_PUBLIC_ADSENSE_PUB_ID?.trim();
 
 export const metadata: Metadata = {
   title: {
@@ -37,23 +41,21 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com",
-  ),
+  metadataBase: new URL(siteUrl),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
     locale: "ko_KR",
-    url: process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com",
+    url: siteUrl,
     siteName: "텍스터브",
     title: "텍스터브 - 텍스트 작업실",
     description:
       "블로그·자소서·보고서 쓰다가 막히면, 그냥 여기다 붙여넣으세요.",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://texturb.com"}/opengraph-image`,
+        url: `${siteUrl}/opengraph-image`,
         width: 1200,
         height: 630,
         alt: "텍스터브 - 텍스트 작업실",
@@ -105,10 +107,10 @@ export default function RootLayout({
           content="a1ca64b9740fded60d00d81fb349f78a083727fc"
         />
 
-        {process.env.NEXT_PUBLIC_GA_ID && (
+        {gaId && (
           <>
             <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
               strategy="afterInteractive"
             />
             <Script id="google-analytics" strategy="afterInteractive">
@@ -116,16 +118,16 @@ export default function RootLayout({
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+                gtag('config', '${gaId}');
               `}
             </Script>
           </>
         )}
         {/* Google AdSense */}
-        {process.env.NEXT_PUBLIC_ADSENSE_PUB_ID && (
+        {adsensePubId && (
           <Script
             async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_PUB_ID}`}
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsensePubId}`}
             crossOrigin="anonymous"
             strategy="afterInteractive"
           />
