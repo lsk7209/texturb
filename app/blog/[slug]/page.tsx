@@ -70,6 +70,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
     .filter((candidate) => candidate.slug !== slug)
     .filter((candidate) => !post.category || candidate.category === post.category)
     .slice(0, 2)
+    .map(({ slug, title, description }) => ({ slug, title, description }))
 
   return (
     <>

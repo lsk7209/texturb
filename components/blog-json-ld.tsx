@@ -8,11 +8,26 @@ interface BlogJsonLdProps {
   post?: BlogPost
 }
 
+function stripHtml(value: string): string {
+  return value.replace(/<[^>]*>/g, " ")
+}
+
+function getWordCount(value: string): number {
+  const normalized = stripHtml(value)
+    .replace(/[#*_>`|[\](){}-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+
+  return normalized ? normalized.split(" ").length : 0
+}
+
 export function BlogJsonLd({ faqItems = [], post }: BlogJsonLdProps) {
   const graph: Record<string, unknown>[] = []
 
   if (post) {
     const canonicalUrl = getAbsoluteUrl(`/blog/${post.slug}`)
+    const keywords = post.targetKeywords || post.tags
+    const citations = post.outlinks?.map((link) => link.link).filter(Boolean)
     graph.push(
       {
         "@type": "BlogPosting",
@@ -35,7 +50,14 @@ export function BlogJsonLd({ faqItems = [], post }: BlogJsonLdProps) {
         },
         url: canonicalUrl,
         inLanguage: "ko-KR",
-        keywords: post.targetKeywords || post.tags,
+        articleSection: post.category,
+        wordCount: getWordCount(post.content),
+        keywords,
+        about: keywords?.map((keyword) => ({
+          "@type": "Thing",
+          name: keyword,
+        })),
+        citation: citations && citations.length > 0 ? citations : undefined,
       },
       {
         "@type": "BreadcrumbList",

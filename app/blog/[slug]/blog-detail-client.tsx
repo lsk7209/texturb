@@ -11,7 +11,7 @@ import { AEOSummarySection } from "@/components/aeo-summary-section";
 interface BlogDetailClientProps {
   post: BlogPost;
   faqItems: BlogFAQItem[];
-  relatedPosts: BlogPost[];
+  relatedPosts: Pick<BlogPost, "slug" | "title" | "description">[];
 }
 
 function stripHtml(value: string): string {
