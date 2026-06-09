@@ -1,17 +1,17 @@
 "use client";
 
-import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Calendar, Tag } from "lucide-react";
-import { getBlogPostBySlug, BLOG_POSTS } from "@/lib/blog-registry";
+import type { BlogPost } from "@/lib/blog-registry";
+import type { BlogFAQItem } from "@/lib/blog-faq-registry";
 import { useBlogView } from "@/hooks/use-analytics";
 import { BlogFAQSection } from "@/components/blog-faq-section";
-import { BlogJsonLd } from "@/components/blog-json-ld";
-import { getBlogFAQBySlug } from "@/lib/blog-faq-registry";
 import { AEOSummarySection } from "@/components/aeo-summary-section";
 
 interface BlogDetailClientProps {
-  slug: string;
+  post: BlogPost;
+  faqItems: BlogFAQItem[];
+  relatedPosts: BlogPost[];
 }
 
 function stripHtml(value: string): string {
@@ -51,15 +51,10 @@ function extractTableOfContents(content: string) {
   return items.slice(0, 12);
 }
 
-export function BlogDetailClient({ slug }: BlogDetailClientProps) {
-  const post = getBlogPostBySlug(slug);
-  const faqData = getBlogFAQBySlug(slug);
+export function BlogDetailClient({ post, faqItems, relatedPosts }: BlogDetailClientProps) {
+  const slug = post.slug;
 
   useBlogView(slug);
-
-  if (!post) {
-    notFound();
-  }
 
   // 마크다운을 HTML로 변환 (표, 인용구, 코드블록, 헤더, 리스트, 인라인 지원)
   const formatContent = (text: string) => {
@@ -326,7 +321,7 @@ export function BlogDetailClient({ slug }: BlogDetailClientProps) {
         </article>
 
         {/* FAQ 섹션 */}
-        <BlogFAQSection blogSlug={slug} />
+        <BlogFAQSection items={faqItems} />
 
         {/* 내부 링크 섹션 */}
         {post.inlinks && post.inlinks.length > 0 && (
@@ -383,9 +378,7 @@ export function BlogDetailClient({ slug }: BlogDetailClientProps) {
             다른 글 보기
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
-            {BLOG_POSTS.filter((p) => p.slug !== slug)
-              .slice(0, 2)
-              .map((relatedPost) => (
+            {relatedPosts.map((relatedPost) => (
                 <Link
                   key={relatedPost.slug}
                   href={`/blog/${relatedPost.slug}`}
@@ -402,8 +395,6 @@ export function BlogDetailClient({ slug }: BlogDetailClientProps) {
           </div>
         </section>
       </div>
-
-      <BlogJsonLd post={post} faqItems={faqData?.items ?? []} />
     </div>
   );
 }

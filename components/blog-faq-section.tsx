@@ -2,17 +2,16 @@
 
 import { useState } from "react"
 import { ChevronDown, ChevronUp, HelpCircle } from "lucide-react"
-import { getBlogFAQBySlug } from "@/lib/blog-faq-registry"
+import type { BlogFAQItem } from "@/lib/blog-faq-registry"
 
 interface BlogFAQSectionProps {
-  blogSlug: string
+  items: BlogFAQItem[]
 }
 
-export function BlogFAQSection({ blogSlug }: BlogFAQSectionProps) {
-  const faqData = getBlogFAQBySlug(blogSlug)
+export function BlogFAQSection({ items }: BlogFAQSectionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
-  if (!faqData || faqData.items.length === 0) {
+  if (items.length === 0) {
     return null
   }
 
@@ -33,7 +32,7 @@ export function BlogFAQSection({ blogSlug }: BlogFAQSectionProps) {
       </div>
 
       <div className="space-y-3">
-        {faqData.items.map((item, index) => (
+        {items.map((item, index) => (
           <div key={index} className="border border-slate-200 rounded-lg overflow-hidden">
             <button
               onClick={() => toggleItem(index)}

@@ -1,7 +1,10 @@
 import { getAllBlogPosts, getBlogPostBySlug } from "@/lib/blog-registry"
 import { BlogDetailClient } from "./blog-detail-client"
 import type { Metadata } from "next"
+import { notFound } from "next/navigation"
 import { getAbsoluteUrl } from "@/lib/site-config"
+import { getBlogFAQBySlug } from "@/lib/blog-faq-registry"
+import { BlogJsonLd } from "@/components/blog-json-ld"
 
 interface BlogDetailPageProps {
   params: Promise<{ slug: string }> | { slug: string }
@@ -56,7 +59,27 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const resolvedParams = typeof params === "object" && "then" in params ? await params : params
   const slug = resolvedParams.slug
+  const post = getBlogPostBySlug(slug)
 
-  return <BlogDetailClient slug={slug} />
+  if (!post) {
+    notFound()
+  }
+
+  const faqItems = getBlogFAQBySlug(slug)?.items ?? []
+  const relatedPosts = getAllBlogPosts()
+    .filter((candidate) => candidate.slug !== slug)
+    .filter((candidate) => !post.category || candidate.category === post.category)
+    .slice(0, 2)
+
+  return (
+    <>
+      <BlogDetailClient
+        post={post}
+        faqItems={faqItems}
+        relatedPosts={relatedPosts}
+      />
+      <BlogJsonLd post={post} faqItems={faqItems} />
+    </>
+  )
 }
 

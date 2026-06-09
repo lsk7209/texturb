@@ -1,0 +1,36 @@
+# Texturb
+
+Texturb is a Korean text utility site for writers, marketers, students, and office workers who need fast browser-based tools for editing, counting, cleaning, and restructuring text.
+
+## Site Focus
+
+- Korean text editing utilities
+- Character and word count workflows
+- Blog, resume, report, email, SNS, and SEO writing guidance
+- Practical text cleanup and formatting tools
+- AEO-friendly answers for common writing and document preparation questions
+
+## Important URLs
+
+- Homepage: https://www.texturb.com/
+- Tools: https://www.texturb.com/tools/
+- Blog: https://www.texturb.com/blog/
+- Guides: https://www.texturb.com/guides/
+- Workflows: https://www.texturb.com/workflows/
+- Sitemap: https://www.texturb.com/sitemap.xml
+- RSS feed: https://www.texturb.com/feed.xml
+
+## Core Tools
+
+- Character counter: https://www.texturb.com/tools/char-counter/
+- Slug generator: https://www.texturb.com/tools/slug-generator/
+- Title length checker: https://www.texturb.com/tools/title-length-checker/
+- Meta description checker: https://www.texturb.com/tools/meta-description-checker/
+
+## Editorial Notes
+
+Content is written for practical use, not as legal, medical, financial, or professional advice. When official rules, platform limits, or public standards matter, users should verify the current source directly.
+
+## Crawling
+
+Public pages, blog posts, guides, and tools may be crawled for search and answer-engine discovery when crawlers respect robots.txt and canonical URLs.
