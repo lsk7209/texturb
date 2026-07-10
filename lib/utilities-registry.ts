@@ -5,6 +5,8 @@ export type UtilityTool = {
   category: string
   description: string
   keywords: string[]
+  metaTitle?: string
+  metaDescription?: string
   showOnHome?: boolean
   tabId?: "cleanup" | "count" | "format" | "highlight" | "analysis"
 }
@@ -247,6 +249,9 @@ export const UTILITIES: UtilityTool[] = [
     id: "fullwidth-halfwidth-converter",
     name: "전각·반각 변환기",
     slug: "fullwidth-halfwidth-converter",
+    metaTitle: "전각 반각 변환기 - 무료 온라인 변환 도구 | 텍스터브",
+    metaDescription:
+      "전각(Ｆｕｌｌｗｉｄｔｈ)·반각(Fullwidth) 영문, 숫자, 기호를 서로 변환합니다. 일본어 문서·엑셀·입력 오류를 온라인에서 바로 정리하세요.",
     category: "변환",
     description: "전각(Ｆｕｌｌｗｉｄｔｈ)과 반각(Fullwidth) 문자 사이를 변환합니다.",
     keywords: ["전각", "반각", "fullwidth", "halfwidth"],
