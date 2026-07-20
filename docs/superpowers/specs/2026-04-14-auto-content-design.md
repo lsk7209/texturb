@@ -85,7 +85,7 @@ CREATE INDEX idx_posts_type ON posts(type);
 
 ## Environment Variables (추가 필요)
 ```
-GEMINI_API_KEY=AIzaSyBW_VhE1YDNvDpr5QtOVdbuzTKtVavXkDQ
+GEMINI_API_KEY=<설정필요>
 ADMIN_PASSWORD=<설정필요>
 ```
 
