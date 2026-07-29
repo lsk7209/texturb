@@ -1,6 +1,7 @@
 import { getAllBlogPosts } from "@/lib/blog-registry";
 import { getPublishedPosts } from "@/lib/db/post-queries";
 import { getCanonicalSiteUrl } from "@/lib/site-config";
+import { getIndexableBlogPosts } from "@/lib/blog-search-eligibility";
 
 export const revalidate = 3600;
 
@@ -8,7 +9,7 @@ export async function GET() {
   const baseUrl = getCanonicalSiteUrl();
 
   // 정적 블로그 포스트
-  const staticItems = getAllBlogPosts().map((post) => ({
+  const staticItems = getIndexableBlogPosts(getAllBlogPosts()).map((post) => ({
     title: post.title,
     link: `${baseUrl}/blog/${post.slug}`,
     description: post.description ?? "",

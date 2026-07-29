@@ -6,6 +6,7 @@ import { getAbsoluteUrl } from "@/lib/site-config"
 import { getBlogFAQBySlug } from "@/lib/blog-faq-registry"
 import { BlogJsonLd } from "@/components/blog-json-ld"
 import { getBlogContentEnrichment, getEnrichedBlogContent } from "@/lib/blog-content-enrichment"
+import { isIndexableBlogPost } from "@/lib/blog-search-eligibility"
 
 interface BlogDetailPageProps {
   params: Promise<{ slug: string }> | { slug: string }
@@ -54,6 +55,12 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
       title: post.metaTitle || post.title,
       description: post.metaDescription || post.description,
     },
+    robots: isIndexableBlogPost(post)
+      ? undefined
+      : {
+          index: false,
+          follow: true,
+        },
   }
 }
 
@@ -67,8 +74,13 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   }
 
   const enrichment = getBlogContentEnrichment(slug)
+  const inlinks = post.inlinks?.filter((link) => {
+    const target = link.link.match(/^\/blog\/([^/?#]+)/)?.[1]
+    return !target || isIndexableBlogPost(getBlogPostBySlug(target) ?? post)
+  })
   const enrichedPost = {
     ...post,
+    inlinks,
     content: getEnrichedBlogContent(slug, post.content),
     aeoQuestion: post.aeoQuestion ?? enrichment?.aeoQuestion,
     aeoAnswer: post.aeoAnswer ?? enrichment?.aeoAnswer,
@@ -76,6 +88,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const faqItems = getBlogFAQBySlug(slug)?.items ?? []
   const relatedPosts = getAllBlogPosts()
     .filter((candidate) => candidate.slug !== slug)
+    .filter(isIndexableBlogPost)
     .filter((candidate) => !post.category || candidate.category === post.category)
     .slice(0, 2)
     .map(({ slug, title, description }) => ({ slug, title, description }))

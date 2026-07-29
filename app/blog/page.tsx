@@ -3,6 +3,7 @@ import { ArrowRight, Calendar, Tag, ChevronLeft, ChevronRight } from "lucide-rea
 import { getAllBlogPosts } from "@/lib/blog-registry";
 import { getPublishedPosts } from "@/lib/db/post-queries";
 import type { Metadata } from "next";
+import { getIndexableBlogPosts } from "@/lib/blog-search-eligibility";
 
 export const revalidate = 3600;
 
@@ -89,7 +90,7 @@ export default async function BlogPage({
   const currentPage = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
   const selectedCategory = categoryParam ?? "전체";
 
-  const staticPosts = getAllBlogPosts();
+  const staticPosts = getIndexableBlogPosts(getAllBlogPosts());
   const { data: aiPosts } = await getPublishedPosts("blog", 50);
 
   const allPosts = [

@@ -5,6 +5,7 @@ import { WORKFLOW_PRESETS } from "@/lib/workflows-registry";
 import { getAllBlogPosts } from "@/lib/blog-registry";
 import { getPublishedPosts } from "@/lib/db/post-queries";
 import { getCanonicalSiteUrl } from "@/lib/site-config";
+import { getIndexableBlogPosts } from "@/lib/blog-search-eligibility";
 
 // Sitemap 재생성 주기 설정 (ISR)
 export const revalidate = 3600; // 1시간마다 재생성
@@ -15,7 +16,7 @@ function getCanonicalBaseUrl() {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = getCanonicalBaseUrl();
-  const publishedBlogPosts = getAllBlogPosts();
+  const publishedBlogPosts = getIndexableBlogPosts(getAllBlogPosts());
 
   // 정적 페이지
   const staticPages: MetadataRoute.Sitemap = [

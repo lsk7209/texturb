@@ -8,6 +8,7 @@
     "lint": "eslint .",
     "start": "next start",
     "audit:content": "npx tsx scripts/audit-content-quality.ts",
+    "verify:search-scope": "npx tsx scripts/verify-search-scope.ts",
     "vercel:deploy": "vercel --prod",
     "seed:posts": "npx tsx scripts/seed-posts.ts"
   },
