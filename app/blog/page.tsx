@@ -10,7 +10,7 @@ export const revalidate = 3600;
 const POSTS_PER_PAGE = 12;
 
 export const metadata: Metadata = {
-  title: "블로그 - 텍스트 작업 팁과 가이드 | 텍스터브",
+  title: "블로그 - 텍스트 작업 팁과 가이드",
   description:
     "글자수 세기, 줄바꿈 정리, 텍스트 변환 등 텍스트 작업에 관한 실용적인 팁과 가이드를 확인하세요.",
   keywords: [

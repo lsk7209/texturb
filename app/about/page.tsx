@@ -4,7 +4,7 @@ import { PenTool, Shield, Zap, Heart, Users, Globe } from "lucide-react"
 import { SITE_PERSONA } from "@/lib/persona"
 
 export const metadata: Metadata = {
-  title: "텍스터브 소개 - 글 쓰는 사람을 위한 무료 텍스트 작업실",
+  title: "소개 - 글 쓰는 사람을 위한 무료 텍스트 작업실",
   description:
     "텍스터브는 블로그 운영자, 취업 준비생, 직장인을 위한 텍스트 유틸리티 작업실입니다. 글자수 세기, 줄바꿈 정리, 대소문자 변환 등 30개 이상 도구를 완전 무료로 제공합니다.",
   keywords: [

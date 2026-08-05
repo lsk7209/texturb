@@ -3,7 +3,7 @@ import { Mail, MessageSquare, ExternalLink } from "lucide-react"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-    title: "문의하기 - 텍스터브 | 연락처 및 고객지원",
+    title: "문의하기 | 연락처 및 고객지원",
     description: "텍스터브에 대한 문의사항, 기능 제안, 버그 신고 등을 환영합니다. 이메일 또는 피드백 양식을 통해 연락해 주세요.",
     keywords: ["텍스터브 문의", "고객지원", "연락처", "기능 제안", "버그 신고"],
     alternates: {
