@@ -29,9 +29,17 @@ export async function generateMetadata({ params }: ToolPageProps): Promise<Metad
   const baseUrl = getCanonicalSiteUrl()
   const canonicalUrl = `${getAbsoluteUrl(`/tools/${tool.slug}`)}/`
   // 핵심 키워드를 앞쪽에 배치
-  const primaryKeyword = tool.keywords[0] || tool.name
-  const metaTitle = tool.metaTitle ?? `${primaryKeyword} ${tool.name} - 무료 온라인 텍스트 편집 도구 | 텍스터브`
-  const metaDescription = tool.metaDescription ?? `${primaryKeyword} ${tool.description} ${tool.keywords.slice(1).join(", ")} 등 텍스트 작업을 빠르고 쉽게 처리할 수 있는 무료 온라인 도구입니다.`
+  const primaryKeyword = (tool.keywords[0] || tool.name).trim()
+  const toolName = tool.name.trim()
+  const nextCharacterAfterKeyword = toolName.charAt(primaryKeyword.length)
+  const keywordAlreadyLeadsName =
+    toolName === primaryKeyword ||
+    (toolName.startsWith(primaryKeyword) &&
+      (nextCharacterAfterKeyword.trim() === "" || "·/(),_-".includes(nextCharacterAfterKeyword)))
+  const titleLead = keywordAlreadyLeadsName ? toolName : `${primaryKeyword} ${toolName}`
+  const descriptionLead = keywordAlreadyLeadsName ? "" : `${primaryKeyword} `
+  const metaTitle = tool.metaTitle ?? `${titleLead} - 무료 온라인 텍스트 편집 도구 | 텍스터브`
+  const metaDescription = tool.metaDescription ?? `${descriptionLead}${tool.description} ${tool.keywords.slice(1).join(", ")} 등 텍스트 작업을 빠르고 쉽게 처리할 수 있는 무료 온라인 도구입니다.`
 
   return {
     title: metaTitle,
