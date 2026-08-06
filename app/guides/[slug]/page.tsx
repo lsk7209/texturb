@@ -28,7 +28,8 @@ export async function generateMetadata({ params }: GuideDetailPageProps): Promis
   const canonicalUrl = getAbsoluteUrl(`/guides/${guide.slug}`)
   // 핵심 키워드를 앞쪽에 배치
   const titleKeywords = guide.title.split(" ").slice(0, 3).join(" ")
-  const metaTitle = `${titleKeywords} - 텍스트 편집 가이드 | 텍스터브`
+  const metaTitle = `${titleKeywords} - 텍스트 편집 가이드`
+  const brandedMetaTitle = `${metaTitle} | 텍스터브`
   const metaDescription = `${guide.description} 단계별 가이드와 실전 팁을 제공합니다.`
 
   return {
@@ -45,7 +46,7 @@ export async function generateMetadata({ params }: GuideDetailPageProps): Promis
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: metaTitle,
+      title: brandedMetaTitle,
       description: metaDescription,
       url: canonicalUrl,
       type: "article",
@@ -54,7 +55,7 @@ export async function generateMetadata({ params }: GuideDetailPageProps): Promis
     },
     twitter: {
       card: "summary_large_image",
-      title: metaTitle,
+      title: brandedMetaTitle,
       description: metaDescription,
     },
   }

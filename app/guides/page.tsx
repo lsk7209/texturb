@@ -44,6 +44,25 @@ export default function GuidesPage() {
           </p>
         </div>
 
+        <section className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 mb-10">
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">가이드를 활용하는 순서</h2>
+          <p className="text-slate-600 leading-7">
+            현재 공개된 가이드는 블로그 글 정리, 이력서·자소서, 보고서 표와 숫자,
+            개발 문서, 이메일, SNS 게시물, 논문, 마케팅 콘텐츠, 번역 문서처럼
+            작업 상황별로 나뉘어 있습니다. 먼저 내 작업과 가까운 카드를 고른 뒤,
+            본문 단계에서 제시한 정리 순서를 따라가며 결과를 직접 확인하세요.
+          </p>
+          <ol className="mt-5 list-decimal list-inside space-y-2 text-slate-700">
+            <li>작업 목적과 입력 형식이 비슷한 가이드를 선택합니다.</li>
+            <li>본문의 단계별 설명에서 먼저 확인할 항목을 정리합니다.</li>
+            <li>관련 도구가 표시된 단계는 도구에서 결과를 확인한 뒤 다음 단계로 이동합니다.</li>
+          </ol>
+          <p className="mt-5 text-slate-600">
+            바로 작업을 시작하려면 <Link className="text-blue-600 font-semibold hover:underline" href="/tools">전체 도구 목록</Link>에서
+            필요한 기능을 찾을 수 있습니다.
+          </p>
+        </section>
+
         <div className="grid md:grid-cols-2 gap-6">
           {GUIDES.map((guide) => (
             <Link
