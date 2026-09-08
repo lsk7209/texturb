@@ -1,5 +1,18 @@
 # Current handoff
 
+## Sitemap modification-date repair — 2026-09-08 KST
+
+- User goal: improve AdSense-unapproved sites in current DAU order; Texturb is rank 12 at DAU 10 and `GETTING_READY` in the current fleet evidence.
+- Current source: isolated clone of canonical `lsk7209/texturb` `main` at `df86bf7ba8b2648295126fe6e817ece837c1cbf3`; exact Production deployment `5779654793` is successful. The stale dirty primary at `E:\web\texturb` was preserved.
+- Completed locally: removed generated-current-time `lastModified` claims from static, tool, guide, workflow, and blog-hub sitemap entries. Static posts retain `publishedAt`; DB posts retain stored published/created dates. Added `scripts/verify-sitemap-lastmod.mjs`.
+- Fresh validation: regression was RED before repair and now prints `TEXTURB_SITEMAP_LASTMOD_OK`; `npm exec tsc -- --noEmit`, production build (514 routes), and `git diff --check` pass.
+- Diagnostic gap: existing `npm run verify:search-scope` is stale and fails because it hardcodes 274 posts while current canonical source has 445. `npm run audit:content` independently reports 445 with 155 merge-or-noindex and 290 strengthen; its generated docs change is excluded from this focused release. This is evidence of remaining content-quality work, not a reason to alter the sitemap repair.
+- Side effects/rollback: local isolated clone only at this checkpoint. `npm ci` restored dependencies; no dependency or lockfile change. Revert the eventual focused commit to roll back.
+- Deliberately not run: no DB write, content generation/publication, AdSense/CMP/account action, GSC/IndexNow notification, or direct Vercel mutation.
+- Next step: obtain independent diff review, commit/push only the sitemap/test/handoff allowlist, verify Git-connected production and public sitemap dates.
+
+---
+
 - Timestamp: 2026-07-29 KST
 - User goal: Improve this site fleet for AdSense review readiness and useful Google search content.
 - Scope: `texturb.com` static blog search surface, using the clean isolated clone only.
