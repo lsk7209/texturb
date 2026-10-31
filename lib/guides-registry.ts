@@ -1,4 +1,4 @@
-export type GuideSection = {
+﻿export type GuideSection = {
   title: string
   content: string
   relatedToolId?: string
@@ -149,6 +149,7 @@ export const GUIDES: Guide[] = [
     slug: "email-writing-guide",
     title: "비즈니스 이메일 작성법, 글자수와 톤앤매너까지 완벽 가이드",
     description: "비즈니스 이메일 작성 시 적절한 글자수, 문장 구성, 톤앤매너 조절 방법을 단계별로 알려드립니다.",
+    relatedWorkflowId: "email-writing-format",
     sections: [
       {
         title: "비즈니스 이메일, 왜 글자수가 중요한가요?",
@@ -184,6 +185,7 @@ export const GUIDES: Guide[] = [
     slug: "sns-post-guide",
     title: "SNS 게시물 작성법, 플랫폼별 최적 글자수와 해시태그 전략",
     description: "인스타그램, 페이스북, 트위터 등 플랫폼별 최적 글자수, 해시태그 활용법, 줄바꿈 전략을 알려드립니다.",
+    relatedWorkflowId: "sns-post-format",
     sections: [
       {
         title: "SNS 게시물, 플랫폼마다 다른 글자수 제한",
@@ -219,6 +221,7 @@ export const GUIDES: Guide[] = [
     slug: "academic-paper-guide",
     title: "논문 작성법, 글자수 관리와 인용 형식 완벽 가이드",
     description: "학술 논문 작성 시 글자수 관리, 인용 형식, 표/그림 정리 방법을 단계별로 알려드립니다.",
+    relatedWorkflowId: "academic-paper-format",
     sections: [
       {
         title: "학술 논문, 글자수 관리가 왜 중요한가요?",
@@ -254,6 +257,7 @@ export const GUIDES: Guide[] = [
     slug: "marketing-content-guide",
     title: "마케팅 콘텐츠 작성법, 광고 카피와 랜딩 페이지 완벽 가이드",
     description: "광고 카피, 랜딩 페이지, 이메일 마케팅 텍스트 작성 시 글자수, 제목, 메타 설명 최적화 방법을 알려드립니다.",
+    relatedWorkflowId: "marketing-copy-format",
     sections: [
       {
         title: "마케팅 콘텐츠, 글자수가 전환율을 결정합니다",
@@ -289,6 +293,7 @@ export const GUIDES: Guide[] = [
     slug: "translation-cleanup-guide",
     title: "번역 문서 정리법, 줄바꿈과 공백 한 번에 정리하기",
     description: "번역 후 줄바꿈, 공백, 특수문자를 한 번에 정리하는 방법을 단계별로 알려드립니다.",
+    relatedWorkflowId: "translation-cleanup-format",
     sections: [
       {
         title: "번역 문서, 왜 정리가 필요한가요?",

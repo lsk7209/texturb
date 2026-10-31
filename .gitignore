@@ -40,3 +40,11 @@ next-env.d.ts
 .dev.vars
 .vercel/
 
+
+# logs & agent runtime state
+*.log
+.bkit/
+.gstack/
+.omc/
+.omx/
+meta-hotfix-*/

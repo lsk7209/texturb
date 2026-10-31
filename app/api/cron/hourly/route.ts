@@ -1,6 +1,6 @@
 /**
  * Vercel Cron Job - Hourly (매시간)
- * 오래된 임시 데이터 정리
+ * 오래된 임시 데이터 정리 + 신규 발행 글 IndexNow 및 GSC 사이트맵 자동 제출
  */
 
 import { NextResponse } from "next/server";
@@ -37,29 +37,50 @@ export async function GET(request: Request) {
       args: [],
     });
 
-    // 예약된 posts 발행
+    // 1. 예약된 DB posts 발행
     const { publishScheduledPosts, getPublishedPosts } = await import("@/lib/db/post-queries");
     const published = await publishScheduledPosts();
 
-    // 새 글이 발행되면 IndexNow + GSC 사이트맵 핑
+    // 2. 최근 2시간 이내에 발행 시점(publishedAt)이 도래한 정적 블로그 포스트 감지
+    const { getAllBlogPosts } = await import("@/lib/blog-registry");
+    const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
+    const now = new Date();
+    const newlyPublishedStatic = getAllBlogPosts().filter((p) => {
+      const pubDate = new Date(p.publishedAt);
+      return pubDate >= twoHoursAgo && pubDate <= now;
+    });
+
+    // 새 글(DB 또는 정적 글)이 감지되면 IndexNow + GSC 사이트맵 제출
     let indexNowResult = null;
     let sitemapPing = null;
-    if (published.count > 0) {
+    const totalNewCount = published.count + newlyPublishedStatic.length;
+
+    if (totalNewCount > 0) {
       const { submitUrlsToIndexNow } = await import("@/lib/indexnow");
       const { pingAllSearchEngines } = await import("@/lib/gsc-ping");
       const { submitSitemapToSearchConsole } = await import("@/lib/gsc-sitemap");
       const { getCanonicalSiteUrl } = await import("@/lib/site-config");
       const baseUrl = getCanonicalSiteUrl();
 
-      // 방금 발행된 글 URL 목록 수집
-      const { data: recentPosts } = await getPublishedPosts(undefined, published.count + 5);
-      const newUrls = (recentPosts ?? [])
-        .slice(0, published.count)
-        .map((p) => `${baseUrl}/${p.type === "guide" ? "guides" : "blog"}/ai/${p.slug}`);
+      const newUrls: string[] = [];
 
-      // sitemap URL도 추가
+      // DB 신규 글 URL 추가
+      if (published.count > 0) {
+        const { data: recentPosts } = await getPublishedPosts(undefined, published.count + 5);
+        for (const p of (recentPosts ?? []).slice(0, published.count)) {
+          newUrls.push(`${baseUrl}/${p.type === "guide" ? "guides" : "blog"}/ai/${p.slug}`);
+        }
+      }
+
+      // 정적 신규 글 URL 추가
+      for (const sp of newlyPublishedStatic) {
+        newUrls.push(`${baseUrl}/blog/${sp.slug}`);
+      }
+
+      // sitemap URL도 함께 제출
       newUrls.push(`${baseUrl}/sitemap.xml`);
 
+      // IndexNow 및 GSC 사이트맵 API 병렬 제출
       [indexNowResult, sitemapPing] = await Promise.all([
         submitUrlsToIndexNow(newUrls),
         Promise.all([pingAllSearchEngines(), submitSitemapToSearchConsole()]),
@@ -70,7 +91,9 @@ export async function GET(request: Request) {
       success: true,
       duration: `${Date.now() - startTime}ms`,
       cleaned: Number(result.rowsAffected) || 0,
-      published: published.count,
+      publishedDb: published.count,
+      publishedStatic: newlyPublishedStatic.length,
+      submittedUrlsCount: totalNewCount > 0 ? totalNewCount + 1 : 0,
       indexNow: indexNowResult,
       sitemapPing,
     });

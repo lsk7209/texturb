@@ -1,9 +1,10 @@
 /**
- * Google Search Console 사이트맵 핑
- * 새 컨텐츠 발행 시 사이트맵을 GSC에 즉시 제출
+ * Google Search Console & Naver 사이트맵 핑
+ * 새 컨텐츠 발행 시 사이트맵을 검색엔진에 즉시 제출
  */
 
 import { getCanonicalSiteUrl } from "@/lib/site-config"
+import { submitSitemapToSearchConsole } from "@/lib/gsc-sitemap"
 
 const BASE_URL = getCanonicalSiteUrl()
 
@@ -14,25 +15,34 @@ export interface GscPingResult {
 }
 
 /**
- * Google에 sitemap.xml 핑 전송
- * Google은 공식적으로 sitemap ping을 deprecated했지만
- * 여전히 동작하며 빠른 크롤링을 유도함
+ * Google Search Console API를 통해 sitemap.xml 제출
+ * (구형 google.com/ping 엔드포인트는 2023년 12월 영구 폐지되었으므로 공식 Search Console API 사용)
  */
 export async function pingSitemapToGoogle(): Promise<GscPingResult> {
   const sitemapUrl = `${BASE_URL}/sitemap.xml`
 
   try {
-    // Google Sitemap Ping (deprecated but still works)
-    const pingUrl = `https://www.google.com/ping?sitemap=${encodeURIComponent(sitemapUrl)}`
-    const res = await fetch(pingUrl, {
-      method: "GET",
-      signal: AbortSignal.timeout(10000),
-    })
+    const apiResult = await submitSitemapToSearchConsole()
+    if (apiResult.success) {
+      return {
+        success: true,
+        sitemapUrl,
+      }
+    }
+
+    // 서비스 계정이 미설정된 경우(로컬 개발 등)
+    if (apiResult.skipped) {
+      return {
+        success: true,
+        sitemapUrl,
+        error: "GSC service account skipped (local/dev mode)",
+      }
+    }
 
     return {
-      success: res.ok || res.status === 200,
+      success: false,
       sitemapUrl,
-      error: res.ok ? undefined : `HTTP ${res.status}`,
+      error: apiResult.error || `GSC API HTTP ${apiResult.status}`,
     }
   } catch (err) {
     return {
@@ -80,7 +90,13 @@ export async function pingAllSearchEngines(): Promise<{
   ])
 
   return {
-    google: google.status === "fulfilled" ? google.value : { success: false, sitemapUrl: `${BASE_URL}/sitemap.xml`, error: "Request failed" },
-    naver: naver.status === "fulfilled" ? naver.value : { success: false, sitemapUrl: `${BASE_URL}/sitemap.xml`, error: "Request failed" },
+    google:
+      google.status === "fulfilled"
+        ? google.value
+        : { success: false, sitemapUrl: `${BASE_URL}/sitemap.xml`, error: "Request failed" },
+    naver:
+      naver.status === "fulfilled"
+        ? naver.value
+        : { success: false, sitemapUrl: `${BASE_URL}/sitemap.xml`, error: "Request failed" },
   }
 }
