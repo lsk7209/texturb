@@ -4800,4 +4800,105 @@ HTML head 영역에 반드시 포함되어야 하는 기본 태그 4가지입니
     aeoQuestion: "오픈그래프(Open Graph) og:title과 og:description의 최적 글자수는?",
     aeoAnswer: "카카오톡과 모바일 SNS 환경에서 잘리지 않는 og:title의 최적 글자수는 공백 포함 20~30자(영문 40~50자), og:description은 40~65자(영문 80~110자)입니다. 이미지는 1200x630px(1.91:1 비율)이 글로벌 표준입니다.",
   },
+  {
+    slug: "canonical-url-duplicate-content-seo-guide",
+    title: "캐노니컬 태그(rel=canonical)와 중복 콘텐츠 방지 가이드 2026 — 구글·네이버 대표 URL 지정 공식",
+    description: "파라미터 URL, HTTP/HTTPS 분기, 모바일/PC 분리 등으로 발생하는 중복 콘텐츠(Duplicate Content) 색인 문제를 해결하는 rel=canonical 태그 작성법을 안내합니다. 301 리디렉션과의 차이점, 텍스터브 슬러그 생성기 연계 및 검색엔진 페널티 방지 노하우를 확인하세요.",
+    content: `> **핵심 요약 (Key Takeaway)**
+> - **rel=canonical의 본질**: 하나의 웹페이지가 여러 개의 다른 URL(파라미터, 프로토콜, 서브도메인)로 접근 가능할 때, **검색엔진 로봇에게 '어떤 URL이 원본인가'를 알려주는 대표 표준 주소 선언 태그**입니다.
+> - **중복 콘텐츠(Duplicate Content) 페널티 예방**: 캐노니컬 태그가 없으면 구글과 네이버 검색 로봇이 동일한 글을 표절/스팸으로 오인하여 색인에서 제외하거나 검색 순위(PageRank) 점수를 여러 URL로 분산시킵니다.
+> - **301 리디렉션과의 차이**: URL 자체를 강제로 이동시켜야 하는 영구 페이지 이전은 301 리디렉션을 쓰고, 필터링이나 추적 파라미터처럼 서로 다른 주소를 그대로 열어두어야 할 때는 canonical을 씁니다.
+> - **도구 활용**: [텍스터브 슬러그 생성기](/utilities/slug-generator)와 [URL 인코더/디코더](/utilities/url-encoder-decoder)로 검색 친화적인 표준 대표 URL 구조를 설계하세요.
+
+---
+
+### 왜 캐노니컬(Canonical) 태그가 웹사이트 검색 순위를 좌우하는가?
+
+웹사이트를 운영하다 보면 의도치 않게 동일한 웹페이지가 수십 개의 서로 다른 URL로 생성됩니다.
+- 구글 광고 UTM 파라미터가 붙은 주소 ('/blog/seo-guide?utm_source=facebook')
+- 쇼핑몰 상품 정렬 및 필터링 주소 ('/shop/item?sort=price_asc&color=black')
+- www 포함 주소와 비포함 주소 ('https://www.mysite.com' vs 'https://mysite.com')
+- HTTP와 보안 HTTPS 주소
+
+검색엔진 크롤러(Googlebot, Yeti)는 이 주소들을 **완전히 별개의 4개 페이지**로 인식합니다.
+결과적으로 크롤링 예산(Crawl Budget)이 낭비되고, 백링크 점수와 SEO 신뢰도가 4개로 쪼개져 검색 상위 노출 순위에서 밀려나게 됩니다.
+
+이때 HTML 상단에 **'이 페이지의 진짜 원본은 이 주소 하나뿐이다'**라고 지정해 주는 것이 바로 **rel='canonical' (표준 태그)**입니다.
+
+---
+
+### 중복 콘텐츠가 발생하는 5대 주요 시나리오
+
+| 발생 원인 시나리오 | 파생된 중복 URL 예시 | 해결 방법 |
+| :--- | :--- | :--- |
+| **추적 및 마케팅 파라미터** | /article-123?utm_campaign=winter | 대표 기본 URL('/article-123')로 canonical 지정 |
+| **쇼핑몰 검색/정렬 필터** | /category/shoes?sort=low_price | 정렬 없는 대표 카테고리 URL로 canonical 지정 |
+| **www 서브도메인 분기** | https://example.com vs https://www.example.com | 301 리디렉션 + 대표 도메인 canonical 병기 |
+| **끝 슬래시(Trailing Slash) 유무** | /guide vs /guide/ | 301 정규화 리디렉션 또는 단일 규격 canonical 설정 |
+| **콘텐츠 신디케이션 (외부 기고)** | 브런치/네이버포스트에 동일 글 전재 | 원본 블로그 글 링크를 canonical 태그로 명시 |
+
+> [!NOTE]
+> **자체 참조(Self-Referencing) 캐노니컬의 필수성**:  
+> 아무런 파라미터가 없는 원본 페이지 자체에도 자기 자신의 URL을 canonical로 적어두어야 합니다. 이를 '셀프 캐노니컬(Self-canonical)'이라고 부르며, 외부 스크랩 사이트가 글을 통째로 긁어갈 때 원본 저작권을 구글에 입증하는 핵심 방어막이 됩니다.
+
+---
+
+### rel="canonical" 올바른 HTML 태그 작성법
+
+HTML 문서의 head 영역에 아래와 같이 정확한 절대 경로(Absolute URL)로 작성해야 합니다.
+
+- **올바른 작성 예시**:
+  <link rel="canonical" href="https://texturb.com/blog/canonical-url-duplicate-content-seo-guide" />
+- **절대 피해야 할 실수**:
+  1. 상대 경로 작성: href="/blog/guide" (검색엔진이 도메인을 오인할 수 있음)
+  2. HTTP와 HTTPS 혼용: SSL 인증서가 적용된 사이트라면 반드시 'https://'로 통일
+  3. 한 페이지 내 2개 이상의 canonical 태그: 태그가 중복되면 검색엔진이 모든 태그를 무시함
+
+---
+
+### 301 리디렉션 vs rel="canonical" 실전 선택 가이드
+
+많은 마케터와 개발자가 둘 중 무엇을 써야 할지 혼동합니다.
+
+1. **301 영구 리디렉션 (HTTP 301 Redirect)을 써야 할 때**:
+   - 사이트 도메인을 완전히 변경했거나 이전했을 때
+   - 옛날 URL 주소를 영구 폐기하고 새 주소로 사용자를 즉시 이동시켜야 할 때
+   - HTTP 접속자를 HTTPS로 강제 전환할 때
+2. **rel="canonical"을 써야 할 때**:
+   - 사용자가 쇼핑몰에서 '가격 낮은 순', '인기순' 필터를 유지하며 화면을 보아야 할 때
+   - 광고 트래킹 파라미터(utm_source 등)를 유지해야 분석 툴(GA4)이 동작할 때
+   - 페이지 내용을 그대로 보여주되, 검색엔진의 검색 점수만 원본으로 몰아주고 싶을 때
+
+---
+
+### 텍스터브 도구를 활용한 대표 URL 최적화 워크플로우
+
+1. **[슬러그 생성기](/utilities/slug-generator)**:  
+   한글 제목을 영문 소문자와 하이픈(-) 조합의 깔끔한 kebab-case 슬러그로 변환하여 검색엔진이 선호하는 표준 대표 URL을 설계합니다.
+2. **[URL 인코더/디코더](/utilities/url-encoder-decoder)**:  
+   한글이 포함된 깨진 URL(%EA%B8%80%EC%9E%90%EC%88%98)을 정규화하고 파라미터 구조를 점검하여 안전한 canonical 경로를 추출합니다.
+3. **[제목 길이 검사기](/utilities/title-length-checker)**:  
+   대표 표준 페이지의 타이틀 태그 길이가 검색 결과(SERP)에서 잘리지 않는 최적 글자수(한글 28자 이내)인지 확인합니다.
+
+---
+
+### 자주 묻는 질문 (FAQ)
+
+#### Q1. 다른 도메인(Cross-Domain) 간에도 canonical 태그가 동작하나요?
+네, 완벽히 동작합니다. 예를 들어 브런치스토리나 미디엄(Medium), 회사 테크블로그에 글을 동시에 올릴 때, 개인 블로그 URL을 canonical로 지정하면 구글은 개인 블로그를 진짜 원저작자로 인정하여 검색 우선권을 부여합니다.
+
+#### Q2. canonical 태그를 적어두면 구글이 100% 따르나요?
+구글 공식 문서에 따르면 canonical 태그는 검색엔진에게 보내는 '강력한 힌트(Strong Hint)'이지 절대적 강제 명령은 아닙니다. 만약 canonical로 지정한 페이지와 현재 페이지의 내용이 완전히 딴판이라면, 구글 알고리즘은 canonical을 무시하고 자체적으로 대표 페이지를 결정합니다.
+
+#### Q3. 네이버 검색엔진도 rel="canonical" 태그를 지원하나요?
+네이버 웹마스터도구(서치어드바이저) 공식 가이드에 따르면 네이버 검색 로봇 역시 rel='canonical' 표준 태그를 완벽하게 지원하며, 중복 웹페이지 색인을 병합하는 중요한 기준으로 사용합니다.`,
+    publishedAt: "2026-12-15T09:00:00+09:00",
+    tags: ["캐노니컬 태그", "canonical", "중복 콘텐츠", "SEO 최적화", "구글 색인"],
+    category: "SEO/검색 최적화",
+    metaTitle: "캐노니컬 태그(rel=canonical) 가이드 2026 — 중복 콘텐츠 해결법",
+    metaDescription: "중복 URL 색인 누락을 막는 rel=canonical 태그의 올바른 작성법과 301 리디렉션과의 차이점을 정리했습니다. 텍스터브 슬러그 생성기로 표준 URL을 설계하세요.",
+    targetKeywords: ["캐노니컬 태그", "rel canonical 사용법", "중복 콘텐츠 방지", "대표 URL 지정", "SEO 캐노니컬"],
+    aeoQuestion: "rel=\"canonical\" 태그는 왜 사용해야 하나요?",
+    aeoAnswer: "동일하거나 매우 유사한 콘텐츠가 여러 URL(파라미터, 프로토콜, 서브도메인)로 존재할 때, 검색엔진 로봇에게 어떤 URL이 '원본(대표 페이지)'인지 명시하여 검색 순위 분산과 중복 콘텐츠 감점 페널티를 방지하기 위해 사용합니다.",
+  },
 ];
