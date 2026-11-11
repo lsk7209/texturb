@@ -4901,4 +4901,121 @@ HTML 문서의 head 영역에 아래와 같이 정확한 절대 경로(Absolute 
     aeoQuestion: "rel=\"canonical\" 태그는 왜 사용해야 하나요?",
     aeoAnswer: "동일하거나 매우 유사한 콘텐츠가 여러 URL(파라미터, 프로토콜, 서브도메인)로 존재할 때, 검색엔진 로봇에게 어떤 URL이 '원본(대표 페이지)'인지 명시하여 검색 순위 분산과 중복 콘텐츠 감점 페널티를 방지하기 위해 사용합니다.",
   },
+  {
+    slug: "robots-txt-sitemap-xml-seo-guide",
+    title: "robots.txt 작성법과 sitemap.xml 검색엔진 크롤링 최적화 가이드 2026 — 구글·네이버 수집 허용과 차단 문법",
+    description: "구글봇(Googlebot)과 네이버 서치어드바이저(Yeti) 크롤러를 제어하는 robots.txt의 표준 작성 문법(User-agent, Allow, Disallow, Sitemap)과 sitemap.xml 제출법을 완벽 정리합니다. 관리자 페이지 보안 차단과 텍스터브 정제 도구 활용법을 확인하세요.",
+    content: `> **핵심 요약 (Key Takeaway)**
+> - **robots.txt의 본질**: 검색엔진 로봇이 웹사이트에 방문했을 때 가장 먼저 읽는 '문지기 파일'로, **어떤 페이지를 수집(Crawl)하고 어떤 페이지를 수집하지 말아야 하는지 지시**하는 텍스트 문서입니다.
+> - **sitemap.xml의 역할**: 사이트 내 모든 공개 페이지의 최신 URL 목록과 최종 수정일(lastmod)을 담은 '도로 지도'로, robots.txt 맨 마지막 줄에 주소를 명시해야 합니다.
+> - **색인 차단(Noindex)과의 차이**: robots.txt의 Disallow는 '크롤링(수집)'을 막을 뿐, 외부 링크가 있으면 구글 검색 결과에 제목만 빈 채로 색인될 수 있습니다. 완벽한 검색 제외를 위해서는 HTML noindex 메타태그를 병행해야 합니다.
+> - **도구 활용**: [텍스터브 줄바꿈·공백 정리기](/utilities/line-break-cleaner)와 [중복 줄 제거기](/utilities/dedupe-lines)로 문법 오류 없는 깔끔한 robots.txt를 작성하세요.
+
+---
+
+### 왜 robots.txt와 sitemap.xml이 검색 노출의 출발점인가?
+
+웹사이트를 아무리 멋지게 만들고 좋은 글을 매일 발행하더라도, 검색엔진 로봇(Googlebot, Naver Yeti, Bingbot)이 사이트를 찾아오지 못하거나 엉뚱한 페이지만 수집하고 있다면 검색 유입은 0에 머뭅니다.
+
+- **robots.txt**: 크롤러가 사이트에 도착하자마자 '루트 디렉터리(/robots.txt)'에서 무조건 1등으로 읽는 규칙 파일입니다. 여기서 'Disallow: /'로 잘못 설정하면 사이트 전체가 구글과 네이버 검색에서 영구 퇴출당합니다.
+- **sitemap.xml**: 크롤러에게 사이트의 구조와 최신 글 목록을 한눈에 알려주어 크롤링 예산(Crawl Budget) 낭비 없이 새 글을 1초 만에 수집하도록 돕는 내비게이션입니다.
+
+---
+
+### robots.txt 4대 필수 지시어와 표준 문법표
+
+| 지시어 문법 | 기능 및 역할 | 작성 예시 | 주의사항 |
+| :--- | :--- | :--- | :--- |
+| **User-agent** | 규칙을 적용할 검색 로봇 지정 | User-agent: * (모든 로봇) | Googlebot, Yeti 등 개별 지정 가능 |
+| **Allow** | 특정 경로의 크롤링 명시적 허용 | Allow: / | 전체 허용 또는 상위 차단 내 하위 허용 |
+| **Disallow** | 특정 경로의 크롤링 차단 | Disallow: /admin/ | 빈칸(Disallow:)으로 두면 전체 수집 허용 |
+| **Sitemap** | 사이트맵 XML 파일의 절대 경로 명시 | Sitemap: https://site.com/sitemap.xml | 프로토콜(https)과 전체 도메인 포함 필수 |
+
+> [!NOTE]
+> **대소문자 엄격 구분 (Case Sensitivity)**:  
+> robots.txt 파일명은 반드시 소문자 'robots.txt'여야 합니다. 'Robots.txt'나 'ROBOTS.TXT'로 서버에 올리면 검색엔진이 파일을 인식하지 못하고 전체 사이트를 무제한 크롤링합니다.
+
+---
+
+### 가장 안전하고 표준적인 robots.txt 모범 설정 템플릿
+
+대다수 Next.js, 워드프레스, 일반 웹사이트에서 권장되는 표준 설정입니다.
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /*?*sort=
+Disallow: /*?*filter=
+
+Sitemap: https://texturb.com/sitemap.xml
+
+#### 핵심 보안 및 최적화 포인트:
+1. **관리자 및 API 경로 차단**:
+   '/admin/', '/api/' 등 일반 방문자에게 노출되면 안 되는 민감한 시스템 디렉터리는 수집 차단 목록에 넣어 검색엔진 노출을 방지합니다.
+2. **무한 파라미터 크롤링 방지**:
+   필터링과 정렬로 생성되는 무수한 파라미터 URL을 와일드카드(*)로 차단하여 크롤러가 양질의 블로그 본문만 집중 수집하도록 크롤링 예산을 최적화합니다.
+3. **사이트맵 연결**:
+   맨 마지막 줄에 사이트맵의 완전한 HTTPS 절대 경로를 명시하여 로봇이 즉시 사이트맵을 다운로드할 수 있게 돕습니다.
+
+---
+
+### sitemap.xml의 표준 XML 구조와 작성 규칙
+
+사이트맵은 검색엔진 표준 프로토콜(sitemaps.org)을 준수해야 합니다.
+
+- **urlset xmlns**: 표준 XML 네임스페이스 선언
+- **loc**: 각 웹페이지의 정규화된 대표 URL (반드시 canonical 주소와 일치해야 함)
+- **lastmod**: 최종 수정 일시 (ISO 8601 형식: '2026-11-12T00:00:00+09:00')
+- **changefreq**: 갱신 빈도 (daily, weekly, monthly 등 - 현대 검색엔진은 참고용으로만 사용)
+- **priority**: 상대적 중요도 (0.0 ~ 1.0)
+
+사이트맵 파일 1개의 크기는 압축 전 최대 **50MB 및 URL 50,000개**를 초과할 수 없으며, 이를 넘길 경우 sitemap_index.xml을 통해 여러 사이트맵으로 분할해야 합니다.
+
+---
+
+### 구글 서치 콘솔 & 네이버 서치어드바이저 제출 가이드
+
+1. **Google Search Console**:
+   - 좌측 메뉴 [색인 생성] > [Sitemaps] 클릭
+   - '새 사이트맵 추가' 입력창에 'sitemap.xml' 입력 후 [제출]
+   - 상태가 '성공'으로 뜨는지 확인 (수집된 URL 수 표시)
+2. **네이버 서치어드바이저 (Search Advisor)**:
+   - [웹마스터 도구] > [요청] > [사이트맵 제출] 접속
+   - 'sitemap.xml' 입력 후 [확인]
+   - [검증] > [robots.txt] 메뉴에서 '수집 요청'을 눌러 최신 robots.txt가 정상 반영되었는지 즉시 진단
+
+---
+
+### 텍스터브 도구를 활용한 파일 무결성 정제
+
+1. **[글 정리(줄바꿈·공백)](/utilities/line-break-cleaner)**:  
+   robots.txt 파일에 숨어 있는 윈도우 개행 문자 오류나 불필요한 공백을 깨끗하게 정리하여 크롤러 파싱 에러를 예방합니다.
+2. **[중복 줄 제거기](/utilities/dedupe-lines)**:  
+   수천 개의 URL 목록을 사이트맵으로 변환하기 전, 중복으로 삽입된 주소를 단 1초 만에 제거합니다.
+3. **[슬러그 생성기](/utilities/slug-generator)**:  
+   사이트맵에 등록될 모든 URL 경로가 공백이나 특수문자 없이 정규화된 영문 kebab-case인지 사전 검증합니다.
+
+---
+
+### 자주 묻는 질문 (FAQ)
+
+#### Q1. robots.txt에 Disallow를 걸면 구글 검색 결과에서 완전히 사라지나요?
+아닙니다. robots.txt는 크롤러의 '페이지 본문 읽기(수집)'를 차단할 뿐입니다. 만약 다른 사이트에서 해당 URL 링크를 걸어두었다면, 구글은 페이지를 방문하지 않고도 'URL 제목만 있는 빈 검색 결과'로 색인할 수 있습니다. 검색 결과에서 완전히 지우고 싶다면 HTML head에 '<meta name="robots" content="noindex">'를 삽입해야 합니다.
+
+#### Q2. sitemap.xml을 제출하면 구글 색인이 즉시 완료되나요?
+사이트맵 제출은 검색 로봇에게 '새 URL이 생겼으니 방문해 달라'는 알림을 보내는 것입니다. 일반적으로 1~3일 이내에 크롤링이 이루어지며, 즉각적인 색인을 원한다면 [구글 Search Console API] 또는 [IndexNow 프로토콜]을 활용해야 합니다.
+
+#### Q3. Next.js 14+ App Router에서는 robots.txt와 sitemap.xml을 어떻게 생성하나요?
+Next.js는 'app/robots.ts'와 'app/sitemap.ts' 파일 생성을 공식 지원합니다. 코드로 동적 URL 목록과 lastmod를 리턴하면 빌드 시 자동으로 완벽한 표준 XML과 TXT를 서빙하므로 별도의 수동 파일 관리가 필요 없습니다.`,
+    publishedAt: "2026-12-16T09:00:00+09:00",
+    tags: ["robots txt", "sitemap xml", "구글 서치콘솔", "네이버 서치어드바이저", "SEO 색인"],
+    category: "SEO/검색 최적화",
+    metaTitle: "robots.txt 작성법과 sitemap.xml 최적화 가이드 2026 — 검색엔진 크롤링",
+    metaDescription: "구글봇과 네이버 Yeti를 제어하는 robots.txt 문법과 sitemap.xml 등록법을 안내합니다. 수집 허용/차단 규칙과 텍스터브 정제 도구 활용법을 확인하세요.",
+    targetKeywords: ["robots txt 작성법", "sitemap xml 생성", "검색엔진 크롤링 차단", "네이버 robots txt", "구글봇 수집 허용"],
+    aeoQuestion: "robots.txt와 sitemap.xml의 차이점은 무엇인가요?",
+    aeoAnswer: "robots.txt는 검색엔진 로봇에게 사이트 내 어떤 디렉터리의 수집을 허용하거나 차단할지 지시하는 '출입 규칙 파일'이며, sitemap.xml은 크롤러가 모든 페이지를 빠르게 찾을 수 있도록 공개 URL 목록과 최종 수정일을 안내하는 '지도 파일'입니다.",
+  },
 ];
