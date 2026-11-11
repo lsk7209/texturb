@@ -5018,4 +5018,122 @@ Next.js는 'app/robots.ts'와 'app/sitemap.ts' 파일 생성을 공식 지원합
     aeoQuestion: "robots.txt와 sitemap.xml의 차이점은 무엇인가요?",
     aeoAnswer: "robots.txt는 검색엔진 로봇에게 사이트 내 어떤 디렉터리의 수집을 허용하거나 차단할지 지시하는 '출입 규칙 파일'이며, sitemap.xml은 크롤러가 모든 페이지를 빠르게 찾을 수 있도록 공개 URL 목록과 최종 수정일을 안내하는 '지도 파일'입니다.",
   },
+  {
+    slug: "schema-org-json-ld-structured-data-guide",
+    title: "Schema.org JSON-LD 구조화 데이터와 구글 리치 스니펫 가이드 2026 — FAQ·Article 마크업 공식",
+    description: "구글 검색 결과(SERP)에서 FAQ 아코디언, 별점 평점, 저자 정보를 노출시켜 클릭률(CTR)을 40% 이상 높이는 Schema.org JSON-LD 구조화 데이터 작성법을 완벽 정리합니다. Article, FAQPage 마크업 예시와 리치 결과 테스트 검증법을 확인하세요.",
+    content: `> **핵심 요약 (Key Takeaway)**
+> - **JSON-LD 구조화 데이터의 목적**: 구글 등 검색 로봇에게 본문의 의미론적 맥락(Semantic Context)을 명확히 전달하여, 검색 결과 화면에 **FAQ 질문·답변 드롭다운, 별점 평점, 썸네일 등 리치 스니펫(Rich Snippets)**을 생성하게 만드는 표준 기술입니다.
+> - **구글 권장 표준**: 마이크로데이터(Microdata)나 RDFa 대신 **HTML script 태그 내부의 JSON-LD 포맷**이 구글이 공식적으로 가장 강력하게 권장하는 형식입니다.
+> - **핵심 스키마 타입**: 정보성 블로그에는 **Article(또는 BlogPosting)**과 **FAQPage**, 이커머스에는 **Product**와 **Review**가 가장 높은 클릭률 개선 효과를 제공합니다.
+> - **도구 활용**: [텍스터브 줄바꿈·공백 정리기](/utilities/line-break-cleaner)와 [글자수 계산기](/utilities/char-counter)로 JSON 구문 오류 없는 깨끗한 스크립트를 작성하세요.
+
+---
+
+### 왜 구조화 데이터(Structured Data)가 검색 클릭률을 40% 폭증시키는가?
+
+일반적인 구글 검색 결과는 '파란색 제목 1줄'과 '회색 설명문 2줄'로만 단조롭게 표시됩니다.
+수많은 경쟁 사이트가 똑같은 모양으로 나열된 검색 결과 화면에서 방문자의 시선을 단숨에 낚아채는 비결이 바로 **'리치 스니펫(Rich Snippets)'**입니다.
+
+웹페이지에 **Schema.org 표준 JSON-LD** 마크업을 삽입하면:
+1. 검색 결과 바로 아래에 큼직한 **FAQ 질문/답변 아코디언 드롭다운**이 펼쳐집니다.
+2. 검색 결과 화면에서 차지하는 세로 면적(SERP Real Estate)이 2~3배로 넓어져 다른 경쟁 사이트를 화면 아래로 밀어냅니다.
+3. 시각적 주목도가 압도적으로 높아져 검색 순위가 3~4위에 머물러 있더라도 1위 사이트보다 더 높은 클릭률(CTR)을 기록할 수 있습니다.
+
+---
+
+### 블로그와 웹사이트를 위한 3대 핵심 Schema.org 타입 비교표
+
+| 스키마 타입 | 주요 용도 및 대상 | 검색 결과 노출 형태 | 필수 요구 속성 |
+| :--- | :--- | :--- | :--- |
+| **FAQPage** | 자주 묻는 질문 3문 3답 | 검색 결과 하단 클릭 가능한 Q&A 드롭다운 | mainEntity, Question, Answer |
+| **BlogPosting / Article** | 블로그 포스팅, 뉴스 기사 | 큰 썸네일 이미지, 발행일, 저자 프로필 | headline, image, datePublished, author |
+| **HowTo / Guide** | 단계별 튜토리얼, 사용법 | 1단계, 2단계 프로세스 캐러셀 | step, name, text, image |
+
+> [!NOTE]
+> **FAQPage 마크업의 황금률**:  
+> 본문에 실제로 적혀 있지 않은 내용을 FAQ 스키마에만 몰래 넣으면 구글로부터 '스팸성 구조화 마크업(Spammy Structured Markup)' 페널티를 받아 검색 순위가 강등됩니다. 반드시 방문자가 페이지 본문에서 눈으로 읽을 수 있는 FAQ 내용과 100% 일치시켜야 합니다.
+
+---
+
+### 가장 대표적인 FAQPage JSON-LD 표준 작성 예시
+
+HTML head 영역 또는 body 영역 내에 아래와 같이 script 태그로 삽입합니다.
+
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "글자수 세기 도구에서 공백 포함과 제외는 어떤 차이가 있나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "공백 포함은 띄어쓰기와 줄바꿈을 모두 글자수로 계산하며 채용 자소서의 표준 기준입니다. 공백 제외는 순수 한글과 영문 문자만 집계합니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "SMS 문자 발송 시 한글 45자가 넘어가면 어떻게 되나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "한글 45자(90바이트)를 초과하는 순간 통신사 규정에 따라 건당 발송 비용이 3배 이상인 LMS(장문 문자)로 자동 전환됩니다."
+      }
+    }
+  ]
+}
+
+---
+
+### BlogPosting 스키마 작성 시 필수 5대 속성
+
+1. **headline**: 블로그 글 제목 (110자 이내)
+2. **image**: 대표 썸네일 이미지 절대 경로 (1200x630 권장)
+3. **datePublished & dateModified**: ISO 8601 형식의 작성일 및 최종 수정일
+4. **author**: 작성자 이름 및 프로필 링크 ('@type': 'Person' 또는 'Organization')
+5. **publisher**: 발행 사이트 이름 및 로고 URL
+
+---
+
+### 구글 리치 결과 테스트(Rich Results Test) 검증 절차
+
+코드를 삽입한 후에는 반드시 구글 공식 검증 도구를 통해 문법 오류가 없는지 확인해야 합니다.
+
+1. **[구글 리치 결과 테스트 도구](https://search.google.com/test/rich-results)**에 접속합니다.
+2. 검사할 웹페이지 URL 주소 또는 작성한 JSON-LD 코드 조각을 입력합니다.
+3. [URL 테스트] 버튼을 누른 후 '감지된 구조화 데이터' 항목에 **'FAQ', '기사(Article)'**가 녹색 체크마크로 뜨는지 확인합니다.
+4. 만약 빨간색 '오류'가 뜬다면 콤마(,) 누락이나 따옴표 오타가 없는지 점검합니다.
+
+---
+
+### 텍스터브 도구를 활용한 JSON 코드 무결성 검증
+
+1. **[글 정리(줄바꿈·공백)](/utilities/line-break-cleaner)**:  
+   JSON-LD 코드 복사 과정에서 줄바꿈이 깨져 파싱 에러(JSON Parse Error)가 나는 것을 사전에 방지합니다.
+2. **[글자수 및 바이트 계산기](/utilities/char-counter)**:  
+   FAQ 질문(Question)의 길이가 모바일 SERP 화면 1줄 한계선(한글 30자 이내)에 맞게 간결한지 확인합니다.
+3. **[따옴표·괄호 서식 변환기](/utilities/quote-bracket-converter)**:  
+   워드나 메모장에서 복사할 때 유입되는 왜곡된 곡선 따옴표(스마트 쿼트: “ ”)를 표준 직선 따옴표(\" \")로 교정하여 문법 에러를 차단합니다.
+
+---
+
+### 자주 묻는 질문 (FAQ)
+
+#### Q1. JSON-LD 마크업을 넣으면 구글이 무조건 리치 스니펫을 띄워주나요?
+구글 공식 가이드에 따르면 구조화 데이터를 올바르게 적용하더라도, 리치 스니펫의 실제 노출 여부는 검색 키워드의 경쟁도, 사이트의 전체 권위(Authority), 검색 사용자의 쿼리 의도에 따라 구글 알고리즘이 자동으로 결정합니다. 하지만 마크업이 없는 사이트는 리치 스니펫 노출 기회 자체가 0%이므로 반드시 적용해야 합니다.
+
+#### Q2. 네이버 서치어드바이저도 Schema.org JSON-LD를 수집하나요?
+네, 네이버 역시 웹 표준 가이드라인에 따라 Schema.org 구조화 데이터를 수집하여 통합검색 및 지식스니펫 랭킹 신호로 활용하고 있습니다.
+
+#### Q3. Next.js 14+ 환경에서는 JSON-LD를 어떻게 주입하나요?
+컴포넌트 반환부에 '<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />' 형태로 렌더링하면 서버 사이드 렌더링(SSR) 시 완벽한 HTML로 크롤러에게 전달됩니다.`,
+    publishedAt: "2026-12-17T09:00:00+09:00",
+    tags: ["구조화 데이터", "JSON-LD", "리치 스니펫", "Schema org", "구글 검색 최적화"],
+    category: "SEO/검색 최적화",
+    metaTitle: "Schema.org JSON-LD 구조화 데이터 가이드 2026 — 구글 리치 스니펫",
+    metaDescription: "구글 검색 노출 클릭률을 극대화하는 Schema.org JSON-LD(Article, FAQPage) 구조화 데이터 작성법과 리치 결과 테스트 검증법을 안내합니다.",
+    targetKeywords: ["구조화 데이터", "JSON-LD 작성법", "리치 스니펫", "schema org 마크업", "구글 검색 결과 FAQ"],
+    aeoQuestion: "JSON-LD 구조화 데이터란 무엇이며 왜 적용해야 하나요?",
+    aeoAnswer: "JSON-LD는 웹페이지의 콘텐츠 의미(저자, 게시일, 자주 묻는 질문, 평점 등)를 검색엔진 로봇이 정확히 이해할 수 있도록 구조화된 JSON 코드로 표현하는 글로벌 표준 방식입니다. 이를 적용하면 구글 검색 결과에 FAQ 드롭다운이나 평점 별점 같은 리치 스니펫이 생성되어 클릭률이 40% 이상 상승합니다.",
+  },
 ];
